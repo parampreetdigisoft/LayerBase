@@ -3,31 +3,71 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-/// Default [FirebaseOptions] for use with your Firebase apps.
-///
-/// Example:
-/// ```dart
-/// import 'firebase_options.dart';
-/// // ...
-/// await Firebase.initializeApp(
-///   options: DefaultFirebaseOptions.currentPlatform,
-/// );
-/// ```
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
+    return _getPlatformOptions();
+  }
+
+  static _getPlatformOptions() {
+    return loadSecretKey();
+  }
+
+  static loadSecretKey() {
     if (kIsWeb) {
-      return web;
+      return FirebaseOptions(
+        apiKey: dotenv.env['web_apiKey'] ?? "",
+        appId: dotenv.env['web_appId'] ?? "",
+        messagingSenderId: dotenv.env['web_messagingSenderId'] ?? "",
+        projectId: dotenv.env['web_projectId'] ?? "",
+        authDomain: dotenv.env['web_authDomain'] ?? "",
+        storageBucket: dotenv.env['web_storageBucket'] ?? "",
+        measurementId: dotenv.env['web_measurementId'] ?? "",
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        return android;
+        return FirebaseOptions(
+          apiKey: dotenv.env['android_apiKey'] ?? "",
+          appId: dotenv.env['android_appId'] ?? "",
+          messagingSenderId: dotenv.env['android_messagingSenderId'] ?? "",
+          projectId: dotenv.env['android_projectId'] ?? "",
+          authDomain: dotenv.env['android_authDomain'] ?? "",
+          storageBucket: dotenv.env['android_storageBucket'] ?? "",
+          measurementId: dotenv.env['android_measurementId'] ?? "",
+        );
       case TargetPlatform.iOS:
-        return ios;
+        return FirebaseOptions(
+          apiKey: dotenv.env['ios_apiKey'] ?? "",
+          appId: dotenv.env['ios_appId'] ?? "",
+          messagingSenderId: dotenv.env['ios_messagingSenderId'] ?? "",
+          projectId: dotenv.env['ios_projectId'] ?? "",
+          authDomain: dotenv.env['ios_authDomain'] ?? "",
+          storageBucket: dotenv.env['ios_storageBucket'] ?? "",
+          measurementId: dotenv.env['ios_measurementId'] ?? "",
+        );
       case TargetPlatform.macOS:
-        return macos;
+        return FirebaseOptions(
+          apiKey: dotenv.env['macos_apiKey'] ?? "",
+          appId: dotenv.env['macos_appId'] ?? "",
+          messagingSenderId: dotenv.env['macos_messagingSenderId'] ?? "",
+          projectId: dotenv.env['macos_projectId'] ?? "",
+          authDomain: dotenv.env['macos_authDomain'] ?? "",
+          storageBucket: dotenv.env['macos_storageBucket'] ?? "",
+          measurementId: dotenv.env['macos_measurementId'] ?? "",
+        );
       case TargetPlatform.windows:
-        return windows;
+        return FirebaseOptions(
+          apiKey: dotenv.env['windows_apiKey'] ?? "",
+          appId: dotenv.env['windows_appId'] ?? "",
+          messagingSenderId: dotenv.env['windows_messagingSenderId'] ?? "",
+          projectId: dotenv.env['windows_projectId'] ?? "",
+          authDomain: dotenv.env['windows_authDomain'] ?? "",
+          storageBucket: dotenv.env['windows_storageBucket'] ?? "",
+          measurementId: dotenv.env['windows_measurementId'] ?? "",
+        );
+
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -39,50 +79,4 @@ class DefaultFirebaseOptions {
         );
     }
   }
-
-  static  FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCI7PBYvRlTw-xYFf3Epyq3_HkYgVDPaZk',
-    appId: '1:885748631896:web:7d6b9be28df240de233d2d',
-    messagingSenderId: '885748631896',
-    projectId: 'ecrumedia-f7c49',
-    authDomain: 'ecrumedia-f7c49.firebaseapp.com',
-    storageBucket: 'ecrumedia-f7c49.firebasestorage.app',
-    measurementId: 'G-ZTTNJ60SGN',
-  );
-
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBu6TrlbDw8i37U0dDhBpWLElok5lE_V3s',
-    appId: '1:885748631896:android:68253375a09a30a9233d2d',
-    messagingSenderId: '885748631896',
-    projectId: 'ecrumedia-f7c49',
-    storageBucket: 'ecrumedia-f7c49.firebasestorage.app',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAZ30Jg5HY5M-D7U1zI0qpJS_jCu1QR6dA',
-    appId: '1:885748631896:ios:e27a2c8e62272278233d2d',
-    messagingSenderId: '885748631896',
-    projectId: 'ecrumedia-f7c49',
-    storageBucket: 'ecrumedia-f7c49.firebasestorage.app',
-    iosBundleId: 'com.ecrumedia.app.ecrumedia',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAZ30Jg5HY5M-D7U1zI0qpJS_jCu1QR6dA',
-    appId: '1:885748631896:ios:e27a2c8e62272278233d2d',
-    messagingSenderId: '885748631896',
-    projectId: 'ecrumedia-f7c49',
-    storageBucket: 'ecrumedia-f7c49.firebasestorage.app',
-    iosBundleId: 'com.ecrumedia.app.ecrumedia',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCI7PBYvRlTw-xYFf3Epyq3_HkYgVDPaZk',
-    appId: '1:885748631896:web:cc833a6d11468851233d2d',
-    messagingSenderId: '885748631896',
-    projectId: 'ecrumedia-f7c49',
-    authDomain: 'ecrumedia-f7c49.firebaseapp.com',
-    storageBucket: 'ecrumedia-f7c49.firebasestorage.app',
-    measurementId: 'G-5F95ZV8CER',
-  );
 }

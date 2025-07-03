@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "885748631896",
+    "project_id": "ecrumedia-f7c49",
+    "storage_bucket": "ecrumedia-f7c49.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:885748631896:android:37f6382001bb54db233d2d",
+        "android_client_info": {
+          "package_name": "com.ecrumedia.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "885748631896-1dvrkbpbot9995hjp8tmrh82su0879a1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBu6TrlbDw8i37U0dDhBpWLElok5lE_V3s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "885748631896-1dvrkbpbot9995hjp8tmrh82su0879a1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "885748631896-be1qe91ctnqhik59cbhi5gb24m31jqva.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ecrumedia.app.ecrumedia"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:885748631896:android:68253375a09a30a9233d2d",
+        "android_client_info": {
+          "package_name": "com.ecrumedia.app.ecrumedia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "885748631896-1dvrkbpbot9995hjp8tmrh82su0879a1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBu6TrlbDw8i37U0dDhBpWLElok5lE_V3s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "885748631896-1dvrkbpbot9995hjp8tmrh82su0879a1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "885748631896-be1qe91ctnqhik59cbhi5gb24m31jqva.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ecrumedia.app.ecrumedia"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

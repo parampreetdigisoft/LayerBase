@@ -1,5 +1,5 @@
 import 'package:ecrumedia/base/widgets/base_text.dart';
-import 'package:ecrumedia/utils/app_color.dart';
+import 'package:ecrumedia/utils/app_constants.dart';
 import 'package:flutter/material.dart';
 
 class BaseButton extends StatelessWidget {
@@ -21,30 +21,21 @@ class BaseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        //  controller.login();
-      },
-      style:
-          ElevatedButton.styleFrom(
-            backgroundColor: backgroundColor,
-            padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 5),
-            textStyle: TextStyle(fontSize: fontSize),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            elevation: 5, // Add shadow for depth
-          ).copyWith(
-            overlayColor: WidgetStateProperty.resolveWith<Color?>((
-              Set<WidgetState> states,
-            ) {
-              if (states.contains(WidgetState.pressed)) {
-                return AppColors.antiqueWhite;
-              }
-              return null;
-            }),
-          ),
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: backgroundColor,
+        padding: const EdgeInsets.symmetric(
+          vertical: spacerSize15,
+          horizontal: spacerSize5,
+        ),
+        textStyle: TextStyle(fontSize: fontSize),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(spacerSize30),
+        ),
+        elevation: 5, // Add shadow for depth
+      ),
       child: BaseText(
-        textLabel: buttonLabel ?? "",
+        text: buttonLabel ?? "",
         fontSize: fontSize,
         textColor: Colors.white,
       ),

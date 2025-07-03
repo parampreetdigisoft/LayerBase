@@ -39,6 +39,9 @@ dependencies:
   pro_image_editor: ^10.1.1
   file_picker: ^10.2.0
   firebase_core: ^3.15.0
+  flutter_dotenv: ^5.2.1
+  firebase_auth: ^5.6.1
+  google_sign_in: ^7.1.0
 
 dev_dependencies:
   flutter_test:
@@ -65,6 +68,7 @@ flutter:
 
   assets:
     - assets/images/
+    - secret.env
   #   - images/a_dot_ham.jpeg
 
   # An images asset can refer to one or more resolution-specific "variants", see

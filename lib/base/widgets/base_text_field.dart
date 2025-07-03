@@ -11,6 +11,7 @@ class BaseTextField extends StatelessWidget {
     this.suffixIcon,
     this.keyboardType,
     this.isTextObscure = false,
+    this.hintColor = AppColors.lightBlue,
   });
 
   final TextEditingController? textEditingController;
@@ -20,22 +21,25 @@ class BaseTextField extends StatelessWidget {
   final dynamic suffixIcon;
   final TextInputType? keyboardType;
   final bool isTextObscure;
+  final Color hintColor;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: textEditingController,
+      style: TextStyle(color: Colors.black),
       decoration: InputDecoration(
         labelText: labelText,
         hintText: hintText,
-        prefixIcon: prefixIcon ?? SizedBox(),
+        hintStyle: TextStyle(color: hintColor),
+        prefixIcon: prefixIcon,
+        prefixIconColor: AppColors.darkBlue,
         suffixIcon: suffixIcon ?? SizedBox(),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.0),
-          borderSide: BorderSide(color: AppColors.antiqueWhite),
-        ),focusColor: Colors.white,
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.darkBlue),
+        ),
+        focusColor: Colors.white,
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.0),
           borderSide: BorderSide(color: AppColors.antiqueWhite, width: 1.0),
         ),
         filled: true,

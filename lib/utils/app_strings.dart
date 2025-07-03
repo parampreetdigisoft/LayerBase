@@ -1,14 +1,56 @@
 class AppStrings {
   static const login = 'Login';
   static const email = 'Email';
+  static const emailAddress = 'Email Address';
   static const enterYourEmail = 'Enter your email';
+  static const enterYourFullName = 'Enter your full Name';
+  static const enterYourAnswer = 'Enter your answer';
+  static const yourAnswer = 'Your Answer';
+  static const fullName = 'Full Name';
   static const password = 'Password';
+  static const newPassword = 'New Password';
+  static const confirmPassword = 'Confirm Password';
   static const enterYourPassword = 'Enter your password';
-  static const dontHaveAccount = 'Don\'t have an account? Register';
+  static const createYourPassword = 'Create your password';
+  static const dontHaveAccount = 'Don\'t have an account?';
+  static const alreadyHaveAccount = 'Already have an account?';
+  static const register = 'Register';
   static const or = 'OR';
   static const signInWithGoogle = 'Sign in with Google';
   static const signInWithFacebook = 'Sign in with Facebook';
-  static const signInToYourAccount= 'Sign in to your account';
-  static const forgotPassword= 'Forgot Password?';
-  static const continueWithoutLogin= 'Continue without login';
+  static const signInToYourAccount = 'Sign in to your account';
+  static const forgotPassword = 'Forgot Password?';
+  static const resetPassword = 'Reset Password';
+  static const continueWithoutLogin = 'Continue without login';
+  static const createAndAccount = "Create an account";
+  static const signUp = "Sign Up";
+  static const chooseMySecurityQuestions = "Choose My Security Questions";
+  static const submit = "Submit";
+  static const update = "Update";
+  static const reEnterYourPassword = "Re-enter your password";
+  static const passwordChanged = "Password Changed";
+  static const passwordChangedSuccessfully = "Your password has been successfully reset.\nPlease login with new password.";
+
+  //Security Questions
+  static const whatWasYourChildhoodNickname =
+      'What was your childhood nickname?';
+  static const whatIsYourFavoriteFood = 'What is your favorite food?';
+  static const whereDidYouGoOnYourFirstVacation =
+      'Where did you go on your first vacation?';
+  static const whatIsYourMothersMaidenName =
+      'What is your mother’s maiden name?';
+  static const whatIsTheNameOfTheStreetYouGrewUpOn =
+      'What is the name of the street you grew up on?';
+  static const whatWasTheNameOfTheFirstPet =
+      'What was the name of your first pet?';
+  static const whatIsYourFavoriteTeachersName =
+      'What is your favorite teacher\'s name?';
+  static const whatWasTheNameOfTheElementarySchool =
+      'What was the name of your elementary school?';
+  static const whatIsYourFavoriteMovie = 'What is your favorite movie?';
+  static const whatWasTheMakeAndModelOfTheFirstCar =
+      'What was the make and model of your first car?';
+  static const whoIsYourFavoriteSportsTeam =
+      'Who is your favorite sports team?';
+  static const inWhatCityWereYouBorn = 'In what city were you born?';
 }
