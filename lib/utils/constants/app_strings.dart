@@ -29,7 +29,23 @@ class AppStrings {
   static const update = "Update";
   static const reEnterYourPassword = "Re-enter your password";
   static const passwordChanged = "Password Changed";
-  static const passwordChangedSuccessfully = "Your password has been successfully reset.\nPlease login with new password.";
+  static const passwordChangedSuccessfully =
+      "Your password has been successfully reset.\nPlease login with new password.";
+  static const required = "Required!";
+  static const validate = "Validate!";
+  static const error = "Error!";
+  static const noUserFound = "No user found.";
+  static const wrongPasswordEntered = "Wrong password entered";
+  static const googleSignInFailed = "Google sign-in failed";
+  static const success = "Success";
+  static const sent = "Sent";
+  static const ok = "ok";
+
+  //Message Strings.
+  static const passwordNotStrong = 'The password isn\'t strong enough';
+  static const emailAlreadyUsed = 'That email is already used for an account';
+  static const yourAccountHasBeenCreated = 'Your account has been created successfully.';
+  static const passwordResetLink = 'We\'ve sent a password reset link to your email address.';
 
   //Security Questions
   static const whatWasYourChildhoodNickname =

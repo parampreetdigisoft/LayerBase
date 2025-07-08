@@ -1,4 +1,6 @@
-import 'package:ecrumedia/utils/app_color.dart';
+import 'package:ecrumedia/utils/constants/app_color.dart';
+import 'package:ecrumedia/utils/constants/app_constants.dart';
+import 'package:ecrumedia/utils/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 
 class BaseTextField extends StatelessWidget {
@@ -12,6 +14,7 @@ class BaseTextField extends StatelessWidget {
     this.keyboardType,
     this.isTextObscure = false,
     this.hintColor = AppColors.lightBlue,
+    this.fontSize = fontSize16,
   });
 
   final TextEditingController? textEditingController;
@@ -22,12 +25,13 @@ class BaseTextField extends StatelessWidget {
   final TextInputType? keyboardType;
   final bool isTextObscure;
   final Color hintColor;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: textEditingController,
-      style: TextStyle(color: Colors.black),
+      style: TextStyle(color: Colors.black, fontSize: fontSize),
       decoration: InputDecoration(
         labelText: labelText,
         hintText: hintText,
@@ -38,6 +42,12 @@ class BaseTextField extends StatelessWidget {
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.darkBlue),
         ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.darkBlue),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.darkBlue),
+        ),
         focusColor: Colors.white,
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.antiqueWhite, width: 1.0),
@@ -45,6 +55,12 @@ class BaseTextField extends StatelessWidget {
         filled: true,
         fillColor: Colors.white,
       ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return AppStrings.required;
+        }
+        return null;
+      },
       obscureText: isTextObscure,
       keyboardType: keyboardType,
     );

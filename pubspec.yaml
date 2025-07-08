@@ -37,11 +37,17 @@ dependencies:
   image_picker: ^1.0.6
   get: ^4.7.2
   pro_image_editor: ^10.1.1
+  shared_preferences: ^2.5.3
   file_picker: ^10.2.0
   firebase_core: ^3.15.0
   flutter_dotenv: ^5.2.1
   firebase_auth: ^5.6.1
   google_sign_in: ^7.1.0
+  cloud_firestore: ^5.6.11
+  hive: ^2.2.3
+  path_provider: ^2.1.5
+  extended_image: ^10.0.1
+  flutter_facebook_auth: ^7.1.2
 
 dev_dependencies:
   flutter_test:

@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:extended_image/extended_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pro_image_editor/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
 import 'package:pro_image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
@@ -27,13 +29,10 @@ class _ImageEditorScreenState extends State<ImageEditorScreen> {
 
     if (result != null) {
       File file = File(result.files.single.path!);
-      // Now use this file
       setState(() {
         _imageFile = file;
       });
-
-    } else {
-    }
+    } else {}
   }
 
   @override
@@ -50,15 +49,53 @@ class _ImageEditorScreenState extends State<ImageEditorScreen> {
       );
     }
     return ProImageEditor.file(
-      _imageFile!,
-      configs: const ProImageEditorConfigs(
+      _imageFile,
+      configs: ProImageEditorConfigs(
+        theme: ThemeData.dark(useMaterial3: true),
+        helperLines: HelperLineConfigs(
+          showHorizontalLine: true,
+          showRotateLine: true,
+          showVerticalLine: true,
+        ),
+
         designMode: ImageEditorDesignMode.material,
+        mainEditor: MainEditorConfigs(
+          enableDoubleTapZoom: true,
+          canZoomWhenLayerSelected: true,
+          enableZoom: true,
+        ),
+        imageGeneration: ImageGenerationConfigs(
+          cropToDrawingBounds: true,
+          allowEmptyEditingCompletion: true,
+          enableBackgroundGeneration: true,
+          cropToImageBounds: true,
+          enableIsolateGeneration: true,
+          singleFrame: true,
+        ),
+        paintEditor: PaintEditorConfigs(
+          showLayers: true,
+          enabled: true,
+          enableDoubleTapZoom: true,
+          enableFreeStyleHighPerformanceMoving: true,
+          enableFreeStyleHighPerformanceHero: true,
+          showToggleFillButton: true,
+          isInitiallyFilled: true,
+          enableFreeStyleHighPerformanceScaling: true,
+        ),
+        tuneEditor: TuneEditorConfigs(enabled: true, showLayers: true),
         layerInteraction: LayerInteractionConfigs(
           selectable: LayerInteractionSelectable.enabled,
+          keepSelectionOnInteraction: true,
+          hideVideoControlsOnInteraction: true,
+          hideToolbarOnInteraction: true,
+          initialSelected: true,
         ),
       ),
       callbacks: ProImageEditorCallbacks(
         onImageEditingComplete: (Uint8List bytes) async {
+          print('Image save successfully');
+
+          saveImageToHive(bytes);
           /*
           Your code to process the edited image, such as uploading it to your server.
 
@@ -70,5 +107,10 @@ class _ImageEditorScreenState extends State<ImageEditorScreen> {
         },
       ),
     );
+  }
+
+  Future<void> saveImageToHive(Uint8List imageBytes) async {
+    final box = Hive.box<Uint8List>('imageBox');
+    await box.add(imageBytes);
   }
 }

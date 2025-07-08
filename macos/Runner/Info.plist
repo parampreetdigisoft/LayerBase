@@ -16,9 +16,20 @@
         			<key>CFBundleURLSchemes</key>
         			<array>
         				<string>com.googleusercontent.apps.885748631896-be1qe91ctnqhik59cbhi5gb24m31jqva</string>
+        				<string>fb1993919891452824</string>
         			</array>
         		</dict>
         	</array>
+    <key>LSApplicationQueriesSchemes</key>
+            <array>
+                <string>fitbit</string>
+            </array>
+    <key>FacebookAppID</key>
+    <string>1993919891452824</string>
+    <key>FacebookClientToken</key>
+    <string>22b073663cd35f2ccab4834b7bb7cebe</string>
+    <key>FacebookDisplayName</key>
+    <string>Ecrumedia</string>
 	<key>CFBundleIconFile</key>
 	<string></string>
 	<key>CFBundleIdentifier</key>

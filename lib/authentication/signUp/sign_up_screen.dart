@@ -1,12 +1,14 @@
 import 'package:ecrumedia/authentication/signUp/question_response_model.dart';
 import 'package:ecrumedia/authentication/signUp/sign_up_view_model.dart';
 import 'package:ecrumedia/base/widgets/base_button.dart';
+import 'package:ecrumedia/base/widgets/base_dropdown.dart';
+import 'package:ecrumedia/base/widgets/base_form.dart';
 import 'package:ecrumedia/base/widgets/base_text.dart';
 import 'package:ecrumedia/base/widgets/base_text_field.dart';
-import 'package:ecrumedia/utils/app_assets.dart';
-import 'package:ecrumedia/utils/app_color.dart';
-import 'package:ecrumedia/utils/app_constants.dart';
-import 'package:ecrumedia/utils/app_strings.dart';
+import 'package:ecrumedia/utils/constants/app_assets.dart';
+import 'package:ecrumedia/utils/constants/app_color.dart';
+import 'package:ecrumedia/utils/constants/app_constants.dart';
+import 'package:ecrumedia/utils/constants/app_strings.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,6 +26,7 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
             fit: BoxFit.fill,
             height: MediaQuery.of(context).size.height * 1.2,
           ),
+
           Positioned.fill(
             left: MediaQuery.of(context).size.width * .1,
             child: Align(
@@ -57,92 +60,106 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
                 ),
                 elevation: 5,
                 margin: EdgeInsets.zero,
-                child: Container(
+                child: SizedBox(
                   height: MediaQuery.of(context).size.height,
-                  margin: EdgeInsets.symmetric(
-                    vertical: spacerSize60,
-                    horizontal: MediaQuery.of(context).size.width * .03,
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: isMobile(context)
-                              ? MediaQuery.of(context).size.height * .05
-                              : MediaQuery.of(context).size.height * .1,
-                        ),
-
-                        if (isMobile(context))
-                          appLogo(
-                            context,
-                            AppAssets.appLogo,
-                            MediaQuery.of(context).size.width * .5,
-                          ),
-                        SizedBox(height: spacerSize20),
-                        Center(
-                          child: const BaseText(
-                            text: AppStrings.createAndAccount,
-                            fontSize: fontSize30,
-                            textColor: Colors.black,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        SizedBox(height: spacerSize60),
-
-                        Row(
-                          spacing: spacerSize5,
-                          children: [
-                            Expanded(child: fullName()),
-                            Expanded(child: emailField()),
-                          ],
-                        ),
-
-                        const SizedBox(height: spacerSize30),
-                        passwordField(),
-                        const SizedBox(height: spacerSize30),
-                        Obx(() => questionDropDown()),
-                        const SizedBox(height: spacerSize30),
-                        answerField(),
-                        const SizedBox(height: spacerSize10),
-
-                        const SizedBox(height: spacerSize45),
-                        signUp(context),
-                        const SizedBox(height: spacerSize25),
-
-                        Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(text: AppStrings.alreadyHaveAccount),
-                              WidgetSpan(child: SizedBox(width: spacerSize5)),
-                              TextSpan(
-                                text: AppStrings.login,
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    Navigator.pop(context);
-                                  },
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: AppColors.darkBlue,
+                  child: Scrollbar(
+                    thumbVisibility: true,
+                    controller: controller.scrollController,
+                    child: SingleChildScrollView(
+                      controller: controller.scrollController,
+                      child: BaseForm(
+                        formKey: controller.formKey,
+                        child:
+                            Column(
+                              children: [
+                                SizedBox(
+                                  height: isMobile(context)
+                                      ? MediaQuery.of(context).size.height * .05
+                                      : MediaQuery.of(context).size.height * .1,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
 
-                        Obx(() {
-                          if (controller.isLoading.value) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                          return const SizedBox.shrink();
-                        }),
-                      ],
+                                if (isMobile(context))
+                                  appLogo(
+                                    context,
+                                    AppAssets.appLogo,
+                                    MediaQuery.of(context).size.width * .5,
+                                  ),
+                                SizedBox(height: spacerSize20),
+                                Center(
+                                  child: const BaseText(
+                                    text: AppStrings.createAndAccount,
+                                    fontSize: fontSize30,
+                                    textColor: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                SizedBox(height: spacerSize60),
+
+                                Row(
+                                  spacing: spacerSize5,
+                                  children: [
+                                    Expanded(child: fullName()),
+                                    Expanded(child: emailField()),
+                                  ],
+                                ),
+
+                                const SizedBox(height: spacerSize30),
+                                passwordField(),
+                                const SizedBox(height: spacerSize30),
+                                Obx(() => questionDropDown()),
+                                const SizedBox(height: spacerSize30),
+                                answerField(),
+
+                                const SizedBox(height: spacerSize55),
+                                signUp(context),
+                                const SizedBox(height: spacerSize25),
+
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: AppStrings.alreadyHaveAccount,
+                                      ),
+                                      WidgetSpan(
+                                        child: SizedBox(width: spacerSize5),
+                                      ),
+                                      TextSpan(
+                                        text: AppStrings.login,
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            Navigator.pop(context);
+                                          },
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.darkBlue,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ).marginSymmetric(
+                              vertical: spacerSize20,
+                              horizontal:
+                                  MediaQuery.of(context).size.width * .03,
+                            ),
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
+          ),
+          Positioned.fill(
+            left: MediaQuery.of(context).size.width * .1,
+            child: Obx(() {
+              if (controller.isLoading.value) {
+                return const Center(
+                  child: CircularProgressIndicator(color: AppColors.darkBlue),
+                );
+              }
+              return const SizedBox.shrink();
+            }),
           ),
         ],
       ),
@@ -211,7 +228,11 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
     return SizedBox(
       width: spacerSize250,
       child: BaseButton(
-        onPressed: () {},
+        onPressed: () {
+          if (controller.formKey.currentState!.validate()) {
+            controller.registerUser(context);
+          }
+        },
         backgroundColor: AppColors.darkBlue,
         buttonLabel: AppStrings.signUp,
         fontSize: fontSize18,
@@ -221,24 +242,19 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
   }
 
   questionDropDown() {
-    return DropdownButtonFormField(
-      decoration: InputDecoration(
-        labelText: AppStrings.chooseMySecurityQuestions,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.darkBlue),
-        ),
-        border:OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.darkBlue),
-        ) ,
-        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-      ),
-      items: controller.securityQuestionList.map((QuestionResponseModel model) {
+    return BaseDropdown(
+      labelText: AppStrings.chooseMySecurityQuestions,
+      items: controller.securityQuestionList.map((
+        QuestionResponseModel questionDetail,
+      ) {
         return DropdownMenuItem<QuestionResponseModel>(
-          value: model,
-          child: Text(model.question.toString()),
+          value: questionDetail,
+          child: BaseText(text: questionDetail.question.toString()),
         );
       }).toList(),
-      onChanged: (value) {},
+      onChanged: (value) {
+        controller.selectedQuestion.value = value!.question.toString();
+      },
     );
   }
 

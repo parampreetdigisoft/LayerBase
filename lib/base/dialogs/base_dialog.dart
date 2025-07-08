@@ -1,15 +1,17 @@
 import 'package:ecrumedia/base/widgets/base_button.dart';
 import 'package:ecrumedia/base/widgets/base_text.dart';
-import 'package:ecrumedia/utils/app_color.dart';
-import 'package:ecrumedia/utils/app_constants.dart';
-import 'package:ecrumedia/utils/app_strings.dart';
+import 'package:ecrumedia/utils/constants/app_color.dart';
+import 'package:ecrumedia/utils/constants/app_constants.dart';
+import 'package:ecrumedia/utils/constants/app_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class BaseDialog {
-  static void showPasswordChangedDialog(
+  static void show(
     BuildContext context, {
     String? dialogTitle,
     String? dialogDescription,
+    String? buttonLabel = AppStrings.login,
     VoidCallback? onButtonPressed,
   }) {
     showDialog(
@@ -50,11 +52,11 @@ class BaseDialog {
                   ),
                   SizedBox(height: spacerSize25),
                   SizedBox(
-                    width: double.infinity,
+                    width: MediaQuery.of(Get.context!).size.width*.1,
                     child: BaseButton(
                       onPressed: onButtonPressed,
                       backgroundColor: AppColors.darkBlue,
-                      buttonLabel: AppStrings.login.toUpperCase(),
+                      buttonLabel: buttonLabel!.toUpperCase(),
                       fontSize: fontSize16,
                       textColor: Colors.white,
                     ),

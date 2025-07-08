@@ -1,11 +1,12 @@
 import 'package:ecrumedia/authentication/forgotPassword/forgot_password_view_model.dart';
 import 'package:ecrumedia/base/widgets/base_button.dart';
+import 'package:ecrumedia/base/widgets/base_form.dart';
 import 'package:ecrumedia/base/widgets/base_text.dart';
 import 'package:ecrumedia/base/widgets/base_text_field.dart';
-import 'package:ecrumedia/utils/app_assets.dart';
-import 'package:ecrumedia/utils/app_color.dart';
-import 'package:ecrumedia/utils/app_constants.dart';
-import 'package:ecrumedia/utils/app_strings.dart';
+import 'package:ecrumedia/utils/constants/app_assets.dart';
+import 'package:ecrumedia/utils/constants/app_color.dart';
+import 'package:ecrumedia/utils/constants/app_constants.dart';
+import 'package:ecrumedia/utils/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -93,19 +94,8 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
                             ),
                             SizedBox(height: spacerSize60),
                             emailField(),
-                            Obx(
-                              () => controller.isEmailValidated.value
-                                  ? Wrap(
-                                      spacing: spacerSize30,
-                                      children: [
-                                        const SizedBox(height: spacerSize30),
-                                        passwordField(),
-                                        const SizedBox(height: spacerSize30),
-                                        confirmPasswordField(),
-                                      ],
-                                    )
-                                  : SizedBox(),
-                            ),
+
+                            resetPasswordFields(),
 
                             const SizedBox(height: spacerSize45),
                             submit(context),
@@ -157,12 +147,15 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
   emailField() {
     return Obx(
       () => !controller.isEmailValidated.value
-          ? BaseTextField(
-              textEditingController: controller.emailController,
-              hintText: AppStrings.enterYourEmail,
-              labelText: AppStrings.email,
-              prefixIcon: const Icon(Icons.email),
-              keyboardType: TextInputType.emailAddress,
+          ? BaseForm(
+              formKey: controller.formKey,
+              child: BaseTextField(
+                textEditingController: controller.emailController,
+                hintText: AppStrings.enterYourEmail,
+                labelText: AppStrings.email,
+                prefixIcon: const Icon(Icons.email),
+                keyboardType: TextInputType.emailAddress,
+              ),
             )
           : SizedBox(),
     );
@@ -209,9 +202,14 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
         width: spacerSize250,
         child: BaseButton(
           onPressed: () {
+            if (controller.formKey.currentState!.validate()) {
+              controller.sendResetPasswordEmail();
+            }
+
+            /*
             controller.isEmailValidated.value
                 ? controller.changePassword(context)
-                : controller.validateEmail();
+                : controller.validateEmail();*/
           },
           backgroundColor: AppColors.darkBlue,
           buttonLabel: controller.isEmailValidated.value
@@ -226,5 +224,21 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
 
   isMobile(BuildContext context) {
     return MediaQuery.of(context).size.width < 600;
+  }
+
+  resetPasswordFields() {
+    return Obx(
+      () => controller.isEmailValidated.value
+          ? Wrap(
+              spacing: spacerSize30,
+              children: [
+                const SizedBox(height: spacerSize30),
+                passwordField(),
+                const SizedBox(height: spacerSize30),
+                confirmPasswordField(),
+              ],
+            )
+          : SizedBox(),
+    );
   }
 }

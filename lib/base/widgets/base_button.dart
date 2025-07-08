@@ -1,5 +1,5 @@
 import 'package:ecrumedia/base/widgets/base_text.dart';
-import 'package:ecrumedia/utils/app_constants.dart';
+import 'package:ecrumedia/utils/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 
 class BaseButton extends StatelessWidget {
