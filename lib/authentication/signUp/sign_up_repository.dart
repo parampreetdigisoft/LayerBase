@@ -1,5 +1,5 @@
-import 'package:ecrumedia/authentication/signUp/question_response_model.dart';
-import 'package:ecrumedia/utils/constants/app_strings.dart';
+import 'package:layerbase/authentication/signUp/question_response_model.dart';
+import 'package:layerbase/utils/constants/app_strings.dart';
 
 class SignUpRepository {
   fetchSecurityQuestion() {

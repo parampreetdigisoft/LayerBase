@@ -1,6 +1,6 @@
-import 'package:ecrumedia/utils/constants/app_keys.dart';
-import 'package:ecrumedia/utils/constants/app_strings.dart';
-import 'package:ecrumedia/utils/routes.dart' show Routes;
+import 'package:layerbase/utils/constants/app_keys.dart';
+import 'package:layerbase/utils/constants/app_strings.dart';
+import 'package:layerbase/utils/routes.dart' show Routes;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -67,7 +67,7 @@ class LoginViewModel extends GetxController {
         AppKeys.idToken,
         userCredential.user!.refreshToken.toString(),
       );
-      Navigator.pushReplacementNamed(Get.context!, Routes.editor);
+      Navigator.pushReplacementNamed(Get.context!, Routes.imageEditor);
     } on FirebaseAuthException catch (exception) {
       if (exception.code == AppKeys.userNotFound) {
         BaseSnackBar.show(
@@ -97,29 +97,25 @@ class LoginViewModel extends GetxController {
     }
   }
 
-
   Future<void> logInWithFacebook() async {
     try {
-      // 1. Log in with Facebook
       final LoginResult result = await FacebookAuth.instance.login();
-final OAuthCredential facebookauthCredential = FacebookAuthProvider.credential(result.accessToken!.tokenString);
+      final OAuthCredential facebookAuthCredential =
+          FacebookAuthProvider.credential(result.accessToken!.tokenString);
 
       if (result.status == LoginStatus.success) {
-        print(result.accessToken);
-        // 2. Create a credential from the access token
-        final OAuthCredential credential = FacebookAuthProvider.credential(result.accessToken!.tokenString);
+        final OAuthCredential credential = FacebookAuthProvider.credential(
+          result.accessToken!.tokenString,
+        );
 
-        // 3. Sign in to Firebase with the credential
         await FirebaseAuth.instance.signInWithCredential(credential);
 
-        // 4. (Optional) Get user data from Facebook
         final userData = await FacebookAuth.instance.getUserData();
-        print(userData);
       } else {
-        print(result.message);
+        debugPrint(result.message);
       }
     } catch (e) {
-      print(e);
+      debugPrint("Unexpected error: $e");
     }
   }
 
@@ -133,8 +129,5 @@ final OAuthCredential facebookauthCredential = FacebookAuthProvider.credential(r
     emailController.dispose();
     passwordController.dispose();
     scrollController.dispose();
-
   }
-
-
 }

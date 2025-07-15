@@ -1,4 +1,4 @@
-name: ecrumedia
+name: layerbase
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -46,8 +46,10 @@ dependencies:
   cloud_firestore: ^5.6.11
   hive: ^2.2.3
   path_provider: ^2.1.5
-  extended_image: ^10.0.1
   flutter_facebook_auth: ^7.1.2
+  flutter_libraw: ^0.0.2
+  extended_image: ^10.0.1
+  change_app_package_name: ^1.5.0
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +61,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  rename_app: ^1.6.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

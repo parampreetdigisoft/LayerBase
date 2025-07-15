@@ -1,15 +1,15 @@
 {
   "project_info": {
     "project_number": "885748631896",
-    "project_id": "ecrumedia-f7c49",
-    "storage_bucket": "ecrumedia-f7c49.firebasestorage.app"
+    "project_id": "layerbase-f7c49",
+    "storage_bucket": "layerbase-f7c49.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:885748631896:android:37f6382001bb54db233d2d",
         "android_client_info": {
-          "package_name": "com.ecrumedia.app"
+          "package_name": "com.layerbase.app"
         }
       },
       "oauth_client": [
@@ -34,7 +34,7 @@
               "client_id": "885748631896-be1qe91ctnqhik59cbhi5gb24m31jqva.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.ecrumedia.app.ecrumedia"
+                "bundle_id": "com.layerbase.app.layerbase"
               }
             }
           ]
@@ -45,7 +45,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:885748631896:android:68253375a09a30a9233d2d",
         "android_client_info": {
-          "package_name": "com.ecrumedia.app.ecrumedia"
+          "package_name": "com.layerbase.app.layerbase"
         }
       },
       "oauth_client": [
@@ -70,7 +70,7 @@
               "client_id": "885748631896-be1qe91ctnqhik59cbhi5gb24m31jqva.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.ecrumedia.app.ecrumedia"
+                "bundle_id": "com.layerbase.app.layerbase"
               }
             }
           ]

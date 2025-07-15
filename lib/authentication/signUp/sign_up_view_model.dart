@@ -1,10 +1,10 @@
-import 'package:ecrumedia/authentication/signUp/question_response_model.dart';
-import 'package:ecrumedia/authentication/signUp/sign_up_repository.dart';
-import 'package:ecrumedia/base/dialogs/base_dialog.dart';
-import 'package:ecrumedia/utils/constants/app_constants.dart';
-import 'package:ecrumedia/utils/constants/app_keys.dart';
-import 'package:ecrumedia/utils/constants/app_strings.dart';
-import 'package:ecrumedia/utils/routes.dart';
+import 'package:layerbase/authentication/signUp/question_response_model.dart';
+import 'package:layerbase/authentication/signUp/sign_up_repository.dart';
+import 'package:layerbase/base/dialogs/base_dialog.dart';
+import 'package:layerbase/utils/constants/app_constants.dart';
+import 'package:layerbase/utils/constants/app_keys.dart';
+import 'package:layerbase/utils/constants/app_strings.dart';
+import 'package:layerbase/utils/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

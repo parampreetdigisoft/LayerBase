@@ -1,5 +1,6 @@
-import 'package:ecrumedia/base/widgets/base_text.dart';
-import 'package:ecrumedia/utils/constants/app_constants.dart';
+import 'package:layerbase/base/widgets/base_text.dart';
+import 'package:layerbase/utils/constants/app_color.dart';
+import 'package:layerbase/utils/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 
 class BaseButton extends StatelessWidget {
@@ -20,24 +21,29 @@ class BaseButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor,
-        padding: const EdgeInsets.symmetric(
-          vertical: spacerSize15,
-          horizontal: spacerSize5,
-        ),
-        textStyle: TextStyle(fontSize: fontSize),
-        shape: RoundedRectangleBorder(
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: spacerSize250,
+        height: spacerSize50,
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [AppColors.violet, AppColors.brightCyan],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
           borderRadius: BorderRadius.circular(spacerSize30),
         ),
-        elevation: 5, // Add shadow for depth
-      ),
-      child: BaseText(
-        text: buttonLabel ?? "",
-        fontSize: fontSize,
-        textColor: Colors.white,
+        alignment: Alignment.center,
+        child: Text(
+          buttonLabel! ?? "",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: fontSize18,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
+          ),
+        ),
       ),
     );
   }

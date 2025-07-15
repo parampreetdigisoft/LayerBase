@@ -10,7 +10,7 @@
 	<true/>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)com.ecrumedia.app</string>
+		<string>$(AppIdentifierPrefix)com.layerbase.app</string>
 	</array>
 </dict>
 </plist>

@@ -40,6 +40,13 @@ class AppStrings {
   static const success = "Success";
   static const sent = "Sent";
   static const ok = "ok";
+  static const cloudStorageAccess = "Cloud Storage Access";
+  static const toAccessCloudStorageFiles = "To access the cloud storage files, you first need to ";
+  static const withYourEmailAccount = "\twith your email account.";
+  static const localFiles = "Local Files";
+  static const cloudFiles = "Cloud Files";
+  static const browseImage = "Browse Image";
+  static const delete = "Delete";
 
   //Message Strings.
   static const passwordNotStrong = 'The password isn\'t strong enough';

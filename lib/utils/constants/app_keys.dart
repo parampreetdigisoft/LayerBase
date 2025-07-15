@@ -11,4 +11,7 @@ class AppKeys {
   static const securityAnswer = 'security_answer';
   static const weakPassword = 'weak-password';
   static const emailAlreadyInUse = 'email-already-in-use';
+  static const imageBox = 'imageBox';
+  static const image = 'image';
+  static const imageIndex = 'image_index';
 }

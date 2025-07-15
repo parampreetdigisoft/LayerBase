@@ -1,16 +1,15 @@
-
-import 'package:ecrumedia/authentication/forgotPassword/forgot_password.dart';
-import 'package:ecrumedia/authentication/forgotPassword/forgot_password_view_model.dart';
-import 'package:ecrumedia/authentication/login/login_screen.dart';
-import 'package:ecrumedia/authentication/signUp/sign_up_screen.dart';
-import 'package:ecrumedia/authentication/signUp/sign_up_view_model.dart';
-import 'package:ecrumedia/imageEditor/gallery_screen_view_model.dart';
-import 'package:ecrumedia/imageEditor/image_editor_screen.dart';
-import 'package:ecrumedia/components/firebase_options.dart';
-import 'package:ecrumedia/imageEditor/gallery_screen.dart';
-import 'package:ecrumedia/utils/routes.dart';
-import 'package:ecrumedia/splash_screen.dart';
-import 'package:ecrumedia/utils/shared_prefs_service.dart';
+import 'package:layerbase/authentication/forgotPassword/forgot_password.dart';
+import 'package:layerbase/authentication/forgotPassword/forgot_password_view_model.dart';
+import 'package:layerbase/authentication/login/login_screen.dart';
+import 'package:layerbase/authentication/signUp/sign_up_screen.dart';
+import 'package:layerbase/authentication/signUp/sign_up_view_model.dart';
+import 'package:layerbase/components/firebase_options.dart';
+import 'package:layerbase/imageEditor/components/gallery/gallery_screen_view_model.dart';
+import 'package:layerbase/imageEditor/image_editor_screen.dart';
+import 'package:layerbase/imageEditor/image_editor_view_model.dart';
+import 'package:layerbase/utils/routes.dart';
+import 'package:layerbase/splash_screen.dart';
+import 'package:layerbase/utils/shared_prefs_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +20,7 @@ import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'authentication/login/login_view_model.dart';
-import 'imageEditor/gallery_browse_file_screen.dart';
+import 'imageEditor/components/gallery_browse_file_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -80,7 +79,13 @@ class MyApp extends StatelessWidget {
           () => Get.lazyPut(() => ForgotPasswordViewModel()),
         ),
       ),
-      GetPage(name: Routes.editor, page: () => const ImageEditorScreen()),
+      GetPage(
+        name: Routes.imageEditor,
+        page: () => const ImageEditorScreen(),
+        binding: BindingsBuilder(
+          () => Get.lazyPut(() => ImageEditorViewModel()),
+        ),
+      ),
 
       GetPage(
         name: Routes.imageGallery,

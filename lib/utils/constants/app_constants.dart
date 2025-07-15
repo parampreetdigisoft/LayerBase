@@ -13,17 +13,22 @@ const double fontSize30 = 30;
 /*Size*/
 
 const double spacerSize0 = 0;
+const double spacerSize2 = 2;
+const double spacerSize4 = 4;
 const double spacerSize5 = 5;
+const double spacerSize8 = 8;
 const double spacerSize10 = 10;
 const double spacerSize12 = 12;
 const double spacerSize15 = 15;
 const double spacerSize16 = 16;
 const double spacerSize20 = 20;
+const double spacerSize24 = 24;
 const double spacerSize25 = 25;
 const double spacerSize30 = 30;
 const double spacerSize35 = 35;
 const double spacerSize40 = 40;
 const double spacerSize45 = 45;
+const double spacerSize48 = 48;
 const double spacerSize50 = 50;
 const double spacerSize55 = 55;
 const double spacerSize60 = 60;
