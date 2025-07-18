@@ -1,14 +1,14 @@
-import 'package:layerbase/authentication/login/login_view_model.dart';
-import 'package:layerbase/base/widgets/base_button.dart';
-import 'package:layerbase/base/widgets/base_form.dart';
-import 'package:layerbase/base/widgets/base_text.dart';
-import 'package:layerbase/base/widgets/base_text_button.dart';
-import 'package:layerbase/base/widgets/base_text_field.dart';
-import 'package:layerbase/utils/routes.dart';
-import 'package:layerbase/utils/constants/app_assets.dart';
-import 'package:layerbase/utils/constants/app_color.dart';
-import 'package:layerbase/utils/constants/app_constants.dart';
-import 'package:layerbase/utils/constants/app_strings.dart';
+import 'package:Layerbase/authentication/login/login_view_model.dart';
+import 'package:Layerbase/base/widgets/base_button.dart';
+import 'package:Layerbase/base/widgets/base_form.dart';
+import 'package:Layerbase/base/widgets/base_text.dart';
+import 'package:Layerbase/base/widgets/base_text_button.dart';
+import 'package:Layerbase/base/widgets/base_text_field.dart';
+import 'package:Layerbase/utils/routes.dart';
+import 'package:Layerbase/utils/constants/app_assets.dart';
+import 'package:Layerbase/utils/constants/app_color.dart';
+import 'package:Layerbase/utils/constants/app_constants.dart';
+import 'package:Layerbase/utils/constants/app_strings.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -171,15 +171,22 @@ class LoginScreen extends GetWidget<LoginViewModel> {
                                       controller.signInWithGoogle().then((
                                         value,
                                       ) {
-                                        Navigator.pushReplacementNamed(
-                                          Get.context!,
-                                          Routes.imageEditor,
-                                        );
+                                        if (value != null) {
+                                          Navigator.pushReplacementNamed(
+                                            Get.context!,
+                                            Routes.imageGallery,
+                                          );
+                                        } else {
+                                          Navigator.pushReplacementNamed(
+                                            Get.context!,
+                                            Routes.logIn,
+                                          );
+                                        }
                                       });
                                     },
                                     tooltip: AppStrings.signInWithGoogle,
                                   ),
-                                  const SizedBox(width: spacerSize25),
+                                  /*  const SizedBox(width: spacerSize25),
                                   // Spacing between icons
                                   IconButton(
                                     icon: Image.asset(
@@ -188,10 +195,26 @@ class LoginScreen extends GetWidget<LoginViewModel> {
                                       scale: 2,
                                     ),
                                     onPressed: () {
-                                      controller.logInWithFacebook();
+                                      controller.logInWithFacebook().then((
+                                        value,
+                                      ) {
+                                        if(value!=null){
+                                          Navigator.pushReplacementNamed(
+                                            Get.context!,
+                                            Routes.imageGallery,
+                                          );
+                                        }else{
+                                          Navigator.pushReplacementNamed(
+                                            Get.context!,
+                                            Routes.logIn
+                                          );
+                                        }
+
+
+                                      });
                                     },
                                     tooltip: AppStrings.signInWithFacebook,
-                                  ),
+                                  ),*/
                                 ],
                               ),
                               const SizedBox(height: spacerSize16),

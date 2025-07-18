@@ -1,10 +1,10 @@
-import 'package:layerbase/authentication/signUp/question_response_model.dart';
-import 'package:layerbase/authentication/signUp/sign_up_repository.dart';
-import 'package:layerbase/base/dialogs/base_dialog.dart';
-import 'package:layerbase/utils/constants/app_constants.dart';
-import 'package:layerbase/utils/constants/app_keys.dart';
-import 'package:layerbase/utils/constants/app_strings.dart';
-import 'package:layerbase/utils/routes.dart';
+import 'package:Layerbase/authentication/signUp/question_response_model.dart';
+import 'package:Layerbase/authentication/signUp/sign_up_repository.dart';
+import 'package:Layerbase/base/dialogs/base_dialog.dart';
+import 'package:Layerbase/utils/constants/app_constants.dart';
+import 'package:Layerbase/utils/constants/app_keys.dart';
+import 'package:Layerbase/utils/constants/app_strings.dart';
+import 'package:Layerbase/utils/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -61,7 +61,11 @@ class SignUpViewModel extends GetxController {
           dialogTitle: AppStrings.success,
           dialogDescription: AppStrings.yourAccountHasBeenCreated,
           onButtonPressed: () {
-            Navigator.pushReplacementNamed(Get.context!, Routes.logIn);
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              Routes.logIn,
+              (Route<dynamic> route) => false,
+            );
           },
         );
       }

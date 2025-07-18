@@ -1,15 +1,15 @@
-import 'package:layerbase/authentication/forgotPassword/forgot_password.dart';
-import 'package:layerbase/authentication/forgotPassword/forgot_password_view_model.dart';
-import 'package:layerbase/authentication/login/login_screen.dart';
-import 'package:layerbase/authentication/signUp/sign_up_screen.dart';
-import 'package:layerbase/authentication/signUp/sign_up_view_model.dart';
-import 'package:layerbase/components/firebase_options.dart';
-import 'package:layerbase/imageEditor/components/gallery/gallery_screen_view_model.dart';
-import 'package:layerbase/imageEditor/image_editor_screen.dart';
-import 'package:layerbase/imageEditor/image_editor_view_model.dart';
-import 'package:layerbase/utils/routes.dart';
-import 'package:layerbase/splash_screen.dart';
-import 'package:layerbase/utils/shared_prefs_service.dart';
+import 'package:Layerbase/authentication/forgotPassword/forgot_password.dart';
+import 'package:Layerbase/authentication/forgotPassword/forgot_password_view_model.dart';
+import 'package:Layerbase/authentication/login/login_screen.dart';
+import 'package:Layerbase/authentication/signUp/sign_up_screen.dart';
+import 'package:Layerbase/authentication/signUp/sign_up_view_model.dart';
+import 'package:Layerbase/components/firebase_options.dart';
+import 'package:Layerbase/imageEditor/components/gallery/gallery_screen_view_model.dart';
+import 'package:Layerbase/imageEditor/image_editor_screen.dart';
+import 'package:Layerbase/imageEditor/image_editor_view_model.dart';
+import 'package:Layerbase/utils/routes.dart';
+import 'package:Layerbase/splash_screen.dart';
+import 'package:Layerbase/utils/shared_prefs_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
       ),
       color: Colors.white,
       initialRoute: Routes.splash,
-      getPages: routes(),
+      getPages: routes()
     );
   }
 

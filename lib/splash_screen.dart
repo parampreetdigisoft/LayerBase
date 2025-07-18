@@ -1,6 +1,6 @@
-import 'package:layerbase/utils/routes.dart';
-import 'package:layerbase/utils/constants/app_assets.dart';
-import 'package:layerbase/utils/constants/app_constants.dart';
+import 'package:Layerbase/utils/routes.dart';
+import 'package:Layerbase/utils/constants/app_assets.dart';
+import 'package:Layerbase/utils/constants/app_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,8 +10,10 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsFlutterBinding.ensureInitialized();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-        FirebaseAuth.instance.signOut();
+        /*FirebaseAuth.instance.signOut();*/
+
       _checkLoginStatus(context);
     });
     return Scaffold(
@@ -38,11 +40,10 @@ class SplashScreen extends StatelessWidget {
     String? token = sharedPreference.getString(AppKeys.idToken);
     print('value of token $token');*/
 
-    Future.delayed(const Duration(milliseconds: 1000  )).then((value) {
+    Future.delayed(const Duration(milliseconds: 1000)).then((value) {
       User? user = FirebaseAuth.instance.currentUser;
       navigateToLogin(Get.context!, user);
-    },);
-
+    });
   }
 
   navigateToLogin(BuildContext context, User? user) {

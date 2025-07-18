@@ -1,77 +1,34 @@
 {
   "project_info": {
-    "project_number": "885748631896",
-    "project_id": "layerbase-f7c49",
-    "storage_bucket": "layerbase-f7c49.firebasestorage.app"
+    "project_number": "206309069393",
+    "project_id": "layerbase-2b71d",
+    "storage_bucket": "layerbase-2b71d.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:885748631896:android:37f6382001bb54db233d2d",
+        "mobilesdk_app_id": "1:206309069393:android:c33fadf7353a3d581f9e70",
         "android_client_info": {
-          "package_name": "com.layerbase.app"
+          "package_name": "com.layerbase.layerbase"
         }
       },
       "oauth_client": [
         {
-          "client_id": "885748631896-1dvrkbpbot9995hjp8tmrh82su0879a1.apps.googleusercontent.com",
+          "client_id": "206309069393-5hv2snlpitguganaanvp6p3rtt2og060.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBu6TrlbDw8i37U0dDhBpWLElok5lE_V3s"
+          "current_key": "AIzaSyD6njITsxJQzmHmdfXRgiSPIbjrTeTvABM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "885748631896-1dvrkbpbot9995hjp8tmrh82su0879a1.apps.googleusercontent.com",
+              "client_id": "206309069393-5hv2snlpitguganaanvp6p3rtt2og060.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "885748631896-be1qe91ctnqhik59cbhi5gb24m31jqva.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.layerbase.app.layerbase"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:885748631896:android:68253375a09a30a9233d2d",
-        "android_client_info": {
-          "package_name": "com.layerbase.app.layerbase"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "885748631896-1dvrkbpbot9995hjp8tmrh82su0879a1.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBu6TrlbDw8i37U0dDhBpWLElok5lE_V3s"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "885748631896-1dvrkbpbot9995hjp8tmrh82su0879a1.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "885748631896-be1qe91ctnqhik59cbhi5gb24m31jqva.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.layerbase.app.layerbase"
-              }
             }
           ]
         }

@@ -1,10 +1,10 @@
-import 'package:layerbase/base/widgets/base_text.dart';
-import 'package:layerbase/imageEditor/components/gallery/gallery_screen.dart';
-import 'package:layerbase/imageEditor/components/gallery/gallery_screen_view_model.dart';
-import 'package:layerbase/utils/constants/app_assets.dart';
-import 'package:layerbase/utils/constants/app_color.dart';
-import 'package:layerbase/utils/constants/app_constants.dart';
-import 'package:layerbase/utils/constants/app_strings.dart';
+import 'package:Layerbase/base/widgets/base_text.dart';
+import 'package:Layerbase/components/bottom_navigation_sheet.dart';
+import 'package:Layerbase/imageEditor/components/gallery/gallery_screen.dart';
+import 'package:Layerbase/imageEditor/components/gallery/gallery_screen_view_model.dart';
+import 'package:Layerbase/utils/constants/app_color.dart';
+import 'package:Layerbase/utils/constants/app_constants.dart';
+import 'package:Layerbase/utils/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,18 +16,22 @@ class GalleryBrowseFileScreen extends GetWidget<GalleryScreenViewModel> {
     return Scaffold(
       backgroundColor: AppColors.darkJungleGreen,
       appBar: AppBar(
-        backgroundColor:  AppColors.darkJungleGreen,
+        backgroundColor: AppColors.darkJungleGreen,
         iconTheme: IconThemeData(color: Colors.white),
       ),
-      body: Container(
-        margin: EdgeInsets.only(
-          bottom: spacerSize50,
-          left: spacerSize50,
-          right: spacerSize50,
+      bottomNavigationBar: BottomAppBar(
+        height: spacerSize50,
+        color: AppColors.darkJungleGreen,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[BottomNavigationSheet()],
         ),
+      ),
+      body: Container(
+        margin: EdgeInsets.only(left: spacerSize50, right: spacerSize50),
         decoration: BoxDecoration(
           color: Colors.transparent,
-          border: Border.all(color: AppColors.darkGunMetal),
+          // border: Border.all(color: AppColors.darkGunMetal),
           borderRadius: BorderRadius.circular(spacerSize25),
         ),
         child: Container(
@@ -41,12 +45,10 @@ class GalleryBrowseFileScreen extends GetWidget<GalleryScreenViewModel> {
               Expanded(
                 flex: 2,
                 child: Container(
-                  margin: EdgeInsets.all(spacerSize25,
-
-                  ),
+                  margin: EdgeInsets.all(spacerSize25),
                   decoration: BoxDecoration(
                     color: AppColors.darkGunMetal,
-                    border: Border.all(color: Colors.transparent),
+                    border: Border.all(color: AppColors.chineseBlack),
                     borderRadius: BorderRadius.circular(spacerSize25),
                   ),
                   child: Column(
@@ -55,8 +57,14 @@ class GalleryBrowseFileScreen extends GetWidget<GalleryScreenViewModel> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       IconButton(
-                        onPressed: controller.pickImage,color: Colors.white,
-                        icon: Image.asset(AppAssets.uploadFileIcon),
+                        onPressed: controller.pickImage,
+                        color: Colors.white,
+                        iconSize: spacerSize60,
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        icon: Icon(Icons.upload_file_rounded),
                       ),
                       BaseText(
                         text: AppStrings.browseImage,
@@ -77,7 +85,6 @@ class GalleryBrowseFileScreen extends GetWidget<GalleryScreenViewModel> {
                   child: GalleryScreen(),
                 ),
               ),
-
             ],
           ),
         ),

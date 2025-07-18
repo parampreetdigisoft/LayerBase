@@ -1,6 +1,8 @@
-import 'package:layerbase/utils/constants/app_keys.dart';
-import 'package:layerbase/utils/constants/app_strings.dart';
-import 'package:layerbase/utils/routes.dart' show Routes;
+import 'dart:async';
+
+import 'package:Layerbase/utils/constants/app_keys.dart';
+import 'package:Layerbase/utils/constants/app_strings.dart';
+import 'package:Layerbase/utils/routes.dart' show Routes;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -39,12 +41,14 @@ class LoginViewModel extends GetxController {
       var data = await FirebaseAuth.instance.signInWithCredential(credential);
       return data;
     } on FirebaseAuthException catch (e) {
+      debugPrint(e.message);
       BaseSnackBar.show(
         title: AppStrings.error,
         message: e.message ?? AppStrings.googleSignInFailed,
       );
       return null;
     } catch (e) {
+      debugPrint(e.toString());
       BaseSnackBar.show(
         title: AppStrings.error,
         message: "${AppStrings.googleSignInFailed}: $e",
@@ -67,7 +71,8 @@ class LoginViewModel extends GetxController {
         AppKeys.idToken,
         userCredential.user!.refreshToken.toString(),
       );
-      Navigator.pushReplacementNamed(Get.context!, Routes.imageEditor);
+
+      Navigator.pushReplacementNamed(Get.context!, Routes.imageGallery);
     } on FirebaseAuthException catch (exception) {
       if (exception.code == AppKeys.userNotFound) {
         BaseSnackBar.show(
@@ -97,25 +102,31 @@ class LoginViewModel extends GetxController {
     }
   }
 
-  Future<void> logInWithFacebook() async {
+  Future<UserCredential?> logInWithFacebook() async {
     try {
       final LoginResult result = await FacebookAuth.instance.login();
-      final OAuthCredential facebookAuthCredential =
-          FacebookAuthProvider.credential(result.accessToken!.tokenString);
 
       if (result.status == LoginStatus.success) {
         final OAuthCredential credential = FacebookAuthProvider.credential(
           result.accessToken!.tokenString,
         );
 
-        await FirebaseAuth.instance.signInWithCredential(credential);
+        final data = await FirebaseAuth.instance.signInWithCredential(
+          credential,
+        );
+        sharedPreferences!.setString(
+          AppKeys.idToken,
+          result.accessToken!.tokenString.toString(),
+        );
 
-        final userData = await FacebookAuth.instance.getUserData();
+        return data;
       } else {
         debugPrint(result.message);
+        return null;
       }
     } catch (e) {
       debugPrint("Unexpected error: $e");
+      return null;
     }
   }
 

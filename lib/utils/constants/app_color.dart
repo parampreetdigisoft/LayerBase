@@ -8,7 +8,8 @@ class AppColors{
   static const darkJungleGreen = Color(0xff171d29);
   static const darkGunMetal = Color(0xff202735);
   static const chineseBlack = Color(0xff0D121C);
-  static const gray = Color(0xff7f7f7f);
+  static const grey = Color(0xff7f7f7f);
+  static const lightGrey = Color(0x327f7f7f);
   static const violet = Color(0xFF7B2FF7);
   static const brightCyan = Color(0xFF00C6FF);
 }

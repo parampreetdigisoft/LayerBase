@@ -1,8 +1,8 @@
-import 'package:layerbase/base/widgets/base_button.dart';
-import 'package:layerbase/base/widgets/base_text.dart';
-import 'package:layerbase/utils/constants/app_color.dart';
-import 'package:layerbase/utils/constants/app_constants.dart';
-import 'package:layerbase/utils/constants/app_strings.dart';
+import 'package:Layerbase/base/widgets/base_button.dart';
+import 'package:Layerbase/base/widgets/base_text.dart';
+import 'package:Layerbase/utils/constants/app_color.dart';
+import 'package:Layerbase/utils/constants/app_constants.dart';
+import 'package:Layerbase/utils/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -52,7 +52,7 @@ class BaseDialog {
                   ),
                   SizedBox(height: spacerSize25),
                   SizedBox(
-                    width: MediaQuery.of(Get.context!).size.width*.1,
+                    width: MediaQuery.of(Get.context!).size.width * .1,
                     child: BaseButton(
                       onPressed: onButtonPressed,
                       backgroundColor: AppColors.darkBlue,
@@ -66,6 +66,29 @@ class BaseDialog {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  static void showLogoutDialog(BuildContext context, VoidCallback logout) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(), // Cancel
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              logout();
+            },
+            child: const Text('Logout'),
+          ),
+        ],
       ),
     );
   }

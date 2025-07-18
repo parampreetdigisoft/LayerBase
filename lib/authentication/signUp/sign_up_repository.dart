@@ -1,5 +1,5 @@
-import 'package:layerbase/authentication/signUp/question_response_model.dart';
-import 'package:layerbase/utils/constants/app_strings.dart';
+import 'package:Layerbase/authentication/signUp/question_response_model.dart';
+import 'package:Layerbase/utils/constants/app_strings.dart';
 
 class SignUpRepository {
   fetchSecurityQuestion() {

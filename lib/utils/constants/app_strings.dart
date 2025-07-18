@@ -1,5 +1,6 @@
 class AppStrings {
   static const login = 'Login';
+  static const logOut = 'Logout';
   static const email = 'Email';
   static const emailAddress = 'Email Address';
   static const enterYourEmail = 'Enter your email';

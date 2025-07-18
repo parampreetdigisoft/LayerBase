@@ -1,10 +1,10 @@
-import 'package:layerbase/imageEditor/components/cloud_storage_access_tooltip.dart';
-import 'package:layerbase/imageEditor/components/gallery/gallery_screen_view_model.dart';
-import 'package:layerbase/utils/constants/app_color.dart';
-import 'package:layerbase/utils/constants/app_constants.dart';
-import 'package:layerbase/utils/constants/app_keys.dart';
-import 'package:layerbase/utils/constants/app_strings.dart';
-import 'package:layerbase/utils/routes.dart';
+import 'package:Layerbase/imageEditor/components/cloud_storage_access_tooltip.dart';
+import 'package:Layerbase/imageEditor/components/gallery/gallery_screen_view_model.dart';
+import 'package:Layerbase/utils/constants/app_color.dart';
+import 'package:Layerbase/utils/constants/app_constants.dart';
+import 'package:Layerbase/utils/constants/app_keys.dart';
+import 'package:Layerbase/utils/constants/app_strings.dart';
+import 'package:Layerbase/utils/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,7 +16,7 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(spacerSize25),
-        border: Border.all( color:AppColors.darkJungleGreen),
+        border: Border.all(color: AppColors.lightGrey),
       ),
       child: Scaffold(
         body: Container(
@@ -28,13 +28,13 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
-                  height: spacerSize48,
-                  width: MediaQuery.of(context).size.width * .3,
+                  height: spacerSize50,
+                  width: spacerSize350,
                   padding: const EdgeInsets.all(spacerSize4),
                   decoration: BoxDecoration(
                     color: AppColors.chineseBlack,
                     borderRadius: BorderRadius.circular(spacerSize10),
-                    border: Border.all(color: Colors.transparent),
+                    border: Border.all(color: AppColors.lightGrey),
                   ),
                   child: TabBar(
                     onTap: (index) {
@@ -42,7 +42,7 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
                         _showCloudFeatureDialog(context);
                       }
                     },
-                    enableFeedback: true,
+                    enableFeedback: false,
                     controller: controller.tabController,
                     indicator: BoxDecoration(
                       color: AppColors.darkJungleGreen,
@@ -50,7 +50,8 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
                     ),
                     labelColor: Colors.white,
                     dividerColor: Colors.transparent,
-                    unselectedLabelColor: AppColors.gray,
+                    indicatorColor: Colors.transparent,
+                    unselectedLabelColor: AppColors.grey,
                     labelStyle: const TextStyle(fontWeight: FontWeight.bold),
                     indicatorSize: TabBarIndicatorSize.tab,
                     overlayColor: WidgetStateProperty.all(Colors.transparent),
@@ -66,7 +67,6 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
               Expanded(
                 child: TabBarView(
                   controller: controller.tabController,
-                  physics: CarouselScrollPhysics(),
                   children: [
                     buildHistoryGallery(),
                     Center(child: Text("")),
@@ -147,7 +147,7 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
         },
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4,
-          childAspectRatio: 1.6,
+          childAspectRatio: 2,
           mainAxisSpacing: 20,
           crossAxisSpacing: 20,
         ),
@@ -163,7 +163,7 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
     showMenu(
       context: context,
       position: RelativeRect.fromLTRB(
-        tabBarPosition.dx + tabBarBox.size.width / spacerSize4,
+        tabBarPosition.dx + tabBarBox.size.width / spacerSize5,
         tabBarPosition.dy + spacerSize75,
         tabBarPosition.dx + tabBarBox.size.width / spacerSize2 + spacerSize100,
         tabBarPosition.dy,

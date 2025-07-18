@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>GIDClientID</key>
-    <string>885748631896-be1qe91ctnqhik59cbhi5gb24m31jqva.apps.googleusercontent.com</string>
+    <string>206309069393-pj0h844n7c3g81gf0kfi37fms5sgulc3.apps.googleusercontent.com</string>
 	<key>CFBundleURLTypes</key>
         	<array>
         		<dict>
@@ -15,21 +15,22 @@
         			<string>Editor</string>
         			<key>CFBundleURLSchemes</key>
         			<array>
-        				<string>com.googleusercontent.apps.885748631896-be1qe91ctnqhik59cbhi5gb24m31jqva</string>
-        				<string>fb1993919891452824</string>
+        				<string>com.googleusercontent.apps.206309069393-pj0h844n7c3g81gf0kfi37fms5sgulc3</string>
+        				<string>fb1049246573988064</string>
         			</array>
         		</dict>
         	</array>
-    <key>LSApplicationQueriesSchemes</key>
-            <array>
-                <string>fitbit</string>
-            </array>
     <key>FacebookAppID</key>
-    <string>1993919891452824</string>
+    <string>1049246573988064</string>
     <key>FacebookClientToken</key>
-    <string>22b073663cd35f2ccab4834b7bb7cebe</string>
+    <string>59990a4e391b000656d30056cab8d66d</string>
     <key>FacebookDisplayName</key>
     <string>layerbase</string>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+      <string>fbapi</string>
+      <string>fb-messenger-share-api</string>
+    </array>
 	<key>CFBundleIconFile</key>
 	<string></string>
 	<key>CFBundleIdentifier</key>
