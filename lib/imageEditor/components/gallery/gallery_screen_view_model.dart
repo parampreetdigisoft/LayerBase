@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 
 class GalleryScreenViewModel extends GetxController
@@ -62,16 +63,37 @@ class GalleryScreenViewModel extends GetxController
     } else {}
   }
 
-  fetchImagesFromDb() {
+  fetchImagesFromDb() async {
     imageList!.clear();
     isLoading.value = true;
     hiveBox = Hive.box<Uint8List>(AppKeys.imageBox);
-    imageList!.value = hiveBox!.values.toList();
+    List<Uint8List> tempImageList = [];
+    for (var bytes in hiveBox!.values) {
+      // Attempt to load as TIFF first
+      dynamic loadedImage = await loadTiffAsImage(bytes);
+      if (loadedImage != null) {
+        tempImageList.add(loadedImage);
+      } else {
+        // If not a TIFF or loading failed, add the original bytes
+        tempImageList.add(bytes);
+      }
+    }
+    imageList!.value = tempImageList;
     isLoading.value = false;
   }
 
   Future<void> saveImageToHive(Uint8List imageBytes) async {
     final box = Hive.box<Uint8List>(AppKeys.imageBox);
     await box.add(imageBytes);
+  }
+
+  Future<dynamic> loadTiffAsImage(var imageData) async {
+    // Decode the TIFF image
+    final decoded = img.decodeTiff(imageData);
+    if (decoded == null) return null;
+
+    // Convert to PNG bytes
+    final pngBytes = img.encodePng(decoded);
+    return pngBytes;
   }
 }

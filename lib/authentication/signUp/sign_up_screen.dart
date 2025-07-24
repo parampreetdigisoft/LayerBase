@@ -22,8 +22,9 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
       body: Stack(
         children: [
           Image.asset(
-            AppAssets.splashImage,
+            AppAssets.authBackgroundImage,
             fit: BoxFit.fill,
+            width:MediaQuery.of(context).size.width * .6 ,
             height: MediaQuery.of(context).size.height * 1.2,
           ),
 

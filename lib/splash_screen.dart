@@ -1,9 +1,11 @@
+import 'package:Layerbase/utils/constants/app_keys.dart';
 import 'package:Layerbase/utils/routes.dart';
 import 'package:Layerbase/utils/constants/app_assets.dart';
 import 'package:Layerbase/utils/constants/app_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -12,7 +14,7 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     WidgetsFlutterBinding.ensureInitialized();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-        /*FirebaseAuth.instance.signOut();*/
+      /*FirebaseAuth.instance.signOut();*/
 
       _checkLoginStatus(context);
     });
@@ -36,20 +38,27 @@ class SplashScreen extends StatelessWidget {
   }
 
   _checkLoginStatus(BuildContext context) async {
-    /*   SharedPreferences sharedPreference = await SharedPreferences.getInstance();
-    String? token = sharedPreference.getString(AppKeys.idToken);
-    print('value of token $token');*/
+    SharedPreferences sharedPreference = await SharedPreferences.getInstance();
+    bool? isGuestLoggedIn = sharedPreference.getBool(AppKeys.isGuestLoggedIn);
 
     Future.delayed(const Duration(milliseconds: 1000)).then((value) {
       User? user = FirebaseAuth.instance.currentUser;
-      navigateToLogin(Get.context!, user);
+      navigateToLogin(
+        Get.context!,
+        user,
+        isGuestLoggedIn: isGuestLoggedIn ?? false,
+      );
     });
   }
 
-  navigateToLogin(BuildContext context, User? user) {
-    if (user?.refreshToken != null) {
+  navigateToLogin(
+    BuildContext context,
+    User? user, {
+    bool isGuestLoggedIn = false,
+  }) {
+    if (user?.refreshToken != null||isGuestLoggedIn) {
       Navigator.pushReplacementNamed(context, Routes.imageGallery);
-    } else {
+    }  else {
       Navigator.pushReplacementNamed(context, Routes.logIn);
     }
   }

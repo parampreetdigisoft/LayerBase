@@ -28,6 +28,7 @@ class LoginViewModel extends GetxController {
   }
 
   Future<UserCredential?> signInWithGoogle() async {
+    sharedPreferences!.clear();
     isLoading.value = true;
     try {
       final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
@@ -60,6 +61,7 @@ class LoginViewModel extends GetxController {
   }
 
   Future<void> signInWithEmailAndPassword() async {
+    sharedPreferences!.clear();
     isLoading.value = true;
     try {
       UserCredential userCredential = await FirebaseAuth.instance

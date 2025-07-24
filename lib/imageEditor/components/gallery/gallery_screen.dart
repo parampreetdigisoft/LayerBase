@@ -5,6 +5,7 @@ import 'package:Layerbase/utils/constants/app_constants.dart';
 import 'package:Layerbase/utils/constants/app_keys.dart';
 import 'package:Layerbase/utils/constants/app_strings.dart';
 import 'package:Layerbase/utils/routes.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -38,7 +39,8 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
                   ),
                   child: TabBar(
                     onTap: (index) {
-                      if (index == 1) {
+                      if (index == 1 &&
+                          FirebaseAuth.instance.currentUser == null) {
                         _showCloudFeatureDialog(context);
                       }
                     },
@@ -67,10 +69,7 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
               Expanded(
                 child: TabBarView(
                   controller: controller.tabController,
-                  children: [
-                    buildHistoryGallery(),
-                    Center(child: Text("")),
-                  ],
+                  children: [buildHistoryGallery(), buildHistoryGallery()],
                 ),
               ),
             ],

@@ -37,16 +37,16 @@ class BaseTextField extends StatelessWidget {
         hintText: hintText,
         hintStyle: TextStyle(color: hintColor),
         prefixIcon: prefixIcon,
-        prefixIconColor: AppColors.darkBlue,
+        prefixIconColor: AppColors.grey,
         suffixIcon: suffixIcon ?? SizedBox(),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.darkBlue),
+          borderSide: BorderSide(color: AppColors.borderGrey),
         ),
         errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.darkBlue),
+          borderSide: BorderSide(color: AppColors.borderGrey),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.darkBlue),
+          borderSide: BorderSide(color: AppColors.borderGrey),
         ),
         focusColor: Colors.white,
         focusedBorder: OutlineInputBorder(
@@ -55,6 +55,7 @@ class BaseTextField extends StatelessWidget {
         filled: true,
         fillColor: Colors.white,
       ),
+      autovalidateMode: AutovalidateMode.disabled,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return AppStrings.required;

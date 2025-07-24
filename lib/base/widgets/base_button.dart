@@ -35,7 +35,7 @@ class BaseButton extends StatelessWidget {
         ),
         alignment: Alignment.center,
         child: Text(
-          buttonLabel! ?? "",
+          buttonLabel!,
           style: TextStyle(
             color: Colors.white,
             fontSize: fontSize18,

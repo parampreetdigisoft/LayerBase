@@ -1,5 +1,6 @@
 class AppKeys {
   static const idToken = 'id_token';
+  static const isGuestLoggedIn = 'is_guest_logged_in';
   static const wrongPassword = 'wrong-password';
   static const userNotFound = 'user-not-found';
   static const users = 'users';
@@ -13,5 +14,6 @@ class AppKeys {
   static const emailAlreadyInUse = 'email-already-in-use';
   static const imageBox = 'imageBox';
   static const image = 'image';
+  static const layers = 'layer';
   static const imageIndex = 'image_index';
 }

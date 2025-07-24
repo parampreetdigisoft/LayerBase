@@ -47,9 +47,7 @@ dependencies:
   hive: ^2.2.3
   path_provider: ^2.1.5
   flutter_facebook_auth: ^7.1.2
-  flutter_libraw: ^0.0.2
   extended_image: ^10.0.1
-  change_app_package_name: ^1.5.0
   image: ^4.5.4
 
 

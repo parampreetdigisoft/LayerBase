@@ -4,6 +4,7 @@ import 'package:Layerbase/base/widgets/base_form.dart';
 import 'package:Layerbase/base/widgets/base_text.dart';
 import 'package:Layerbase/base/widgets/base_text_button.dart';
 import 'package:Layerbase/base/widgets/base_text_field.dart';
+import 'package:Layerbase/utils/constants/app_keys.dart';
 import 'package:Layerbase/utils/routes.dart';
 import 'package:Layerbase/utils/constants/app_assets.dart';
 import 'package:Layerbase/utils/constants/app_color.dart';
@@ -22,8 +23,9 @@ class LoginScreen extends GetWidget<LoginViewModel> {
       body: Stack(
         children: [
           Image.asset(
-            AppAssets.splashImage,
+            AppAssets.authBackgroundImage,
             fit: BoxFit.fill,
+            width:MediaQuery.of(context).size.width * .6 ,
             height: MediaQuery.of(context).size.height * 1.2,
           ),
           Positioned.fill(
@@ -218,8 +220,13 @@ class LoginScreen extends GetWidget<LoginViewModel> {
                                 ],
                               ),
                               const SizedBox(height: spacerSize16),
+
                               BaseTextButton(
                                 onPressed: () {
+                                  controller.sharedPreferences!.setBool(
+                                    AppKeys.isGuestLoggedIn,
+                                    true
+                                  );
                                   Navigator.pushNamed(
                                     context,
                                     Routes.imageGallery,

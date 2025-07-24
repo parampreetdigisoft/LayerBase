@@ -19,9 +19,10 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
       body: Stack(
         children: [
           Image.asset(
-            AppAssets.splashImage,
+            AppAssets.authBackgroundImage,
             fit: BoxFit.fill,
-            height: MediaQuery.of(context).size.height * 1.2,
+            width: MediaQuery.of(context).size.width * .6,
+            height: MediaQuery.of(context).size.height * 1.5,
           ),
           Positioned.fill(
             left: MediaQuery.of(context).size.width * .1,
