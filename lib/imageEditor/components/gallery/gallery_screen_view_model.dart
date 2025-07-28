@@ -16,9 +16,9 @@ class GalleryScreenViewModel extends GetxController
   Rx<File>? imageFile;
   final picker = ImagePicker();
   Rx<Uint8List>? imageBytes;
-  Box<Uint8List>? hiveBox;
+  Box<dynamic>? hiveBox;
 
-  RxList<Uint8List>? imageList = <Uint8List>[].obs;
+  RxList<dynamic>? imageList = <Uint8List>[].obs;
 
   @override
   void onInit() {
@@ -54,7 +54,7 @@ class GalleryScreenViewModel extends GetxController
       Navigator.pushNamed(
         Get.context!,
         Routes.imageEditor,
-        arguments: {'image': imageBytes!.value},
+        arguments: {AppKeys.imageData: {AppKeys.image: imageBytes!.value}},
       ).then((value) {
         fetchImagesFromDb();
       });
@@ -66,16 +66,17 @@ class GalleryScreenViewModel extends GetxController
   fetchImagesFromDb() async {
     imageList!.clear();
     isLoading.value = true;
-    hiveBox = Hive.box<Uint8List>(AppKeys.imageBox);
+    hiveBox = Hive.box<dynamic>(AppKeys.imageLayerBox);
+
     List<Uint8List> tempImageList = [];
     for (var bytes in hiveBox!.values) {
       // Attempt to load as TIFF first
-      dynamic loadedImage = await loadTiffAsImage(bytes);
+      dynamic loadedImage = await loadTiffAsImage(bytes[AppKeys.imageThumbnail]);
       if (loadedImage != null) {
         tempImageList.add(loadedImage);
       } else {
         // If not a TIFF or loading failed, add the original bytes
-        tempImageList.add(bytes);
+        tempImageList.add(bytes[AppKeys.imageThumbnail]);
       }
     }
     imageList!.value = tempImageList;
@@ -83,7 +84,7 @@ class GalleryScreenViewModel extends GetxController
   }
 
   Future<void> saveImageToHive(Uint8List imageBytes) async {
-    final box = Hive.box<Uint8List>(AppKeys.imageBox);
+    final box = Hive.box<dynamic>(AppKeys.imageLayerBox);
     await box.add(imageBytes);
   }
 

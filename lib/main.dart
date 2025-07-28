@@ -7,6 +7,7 @@ import 'package:Layerbase/components/firebase_options.dart';
 import 'package:Layerbase/imageEditor/components/gallery/gallery_screen_view_model.dart';
 import 'package:Layerbase/imageEditor/image_editor_screen.dart';
 import 'package:Layerbase/imageEditor/image_editor_view_model.dart';
+import 'package:Layerbase/utils/constants/app_keys.dart';
 import 'package:Layerbase/utils/routes.dart';
 import 'package:Layerbase/splash_screen.dart';
 import 'package:Layerbase/utils/shared_prefs_service.dart';
@@ -29,7 +30,7 @@ Future<void> main() async {
   await SharedPrefsService().init();
   final dir = await getApplicationDocumentsDirectory();
   Hive.init(dir.path);
-  await Hive.openBox<Uint8List>('imageBox');
+  await Hive.openBox<dynamic>(AppKeys.imageLayerBox);
 
   if (defaultTargetPlatform == TargetPlatform.macOS) {
     await FacebookAuth.i.webAndDesktopInitialize(
@@ -81,7 +82,7 @@ class MyApp extends StatelessWidget {
       ),
       GetPage(
         name: Routes.imageEditor,
-        page: () => const ImageEditorScreen(),
+        page: () =>  ImageEditorScreen(),
         binding: BindingsBuilder(
           () => Get.lazyPut(() => ImageEditorViewModel()),
         ),
