@@ -1,10 +1,10 @@
-import 'package:Layerbase/base/dialogs/base_dialog.dart';
+import 'package:layerbase/base/dialogs/base_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:Layerbase/base/widgets/base_text.dart';
-import 'package:Layerbase/utils/constants/app_constants.dart';
-import 'package:Layerbase/utils/constants/app_strings.dart';
-import 'package:Layerbase/utils/routes.dart';
+import 'package:layerbase/base/widgets/base_text.dart';
+import 'package:layerbase/utils/constants/app_constants.dart';
+import 'package:layerbase/utils/constants/app_strings.dart';
+import 'package:layerbase/utils/routes.dart';
 import 'package:get/get.dart';
 
 class BottomNavigationSheet extends StatelessWidget {

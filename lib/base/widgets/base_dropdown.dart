@@ -1,4 +1,4 @@
-import 'package:Layerbase/utils/constants/app_color.dart';
+import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/constants/app_strings.dart' show AppStrings;

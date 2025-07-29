@@ -1,10 +1,10 @@
-import 'package:Layerbase/imageEditor/components/cloud_storage_access_tooltip.dart';
-import 'package:Layerbase/imageEditor/components/gallery/gallery_screen_view_model.dart';
-import 'package:Layerbase/utils/constants/app_color.dart';
-import 'package:Layerbase/utils/constants/app_constants.dart';
-import 'package:Layerbase/utils/constants/app_keys.dart';
-import 'package:Layerbase/utils/constants/app_strings.dart';
-import 'package:Layerbase/utils/routes.dart';
+import 'package:layerbase/imageEditor/components/cloud_storage_access_tooltip.dart';
+import 'package:layerbase/imageEditor/components/gallery/gallery_screen_view_model.dart';
+import 'package:layerbase/utils/constants/app_color.dart';
+import 'package:layerbase/utils/constants/app_constants.dart';
+import 'package:layerbase/utils/constants/app_keys.dart';
+import 'package:layerbase/utils/constants/app_strings.dart';
+import 'package:layerbase/utils/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

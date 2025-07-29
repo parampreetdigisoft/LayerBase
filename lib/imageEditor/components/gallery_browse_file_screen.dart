@@ -1,10 +1,10 @@
-import 'package:Layerbase/base/widgets/base_text.dart';
-import 'package:Layerbase/components/bottom_navigation_sheet.dart';
-import 'package:Layerbase/imageEditor/components/gallery/gallery_screen.dart';
-import 'package:Layerbase/imageEditor/components/gallery/gallery_screen_view_model.dart';
-import 'package:Layerbase/utils/constants/app_color.dart';
-import 'package:Layerbase/utils/constants/app_constants.dart';
-import 'package:Layerbase/utils/constants/app_strings.dart';
+import 'package:layerbase/base/widgets/base_text.dart';
+import 'package:layerbase/components/bottom_navigation_sheet.dart';
+import 'package:layerbase/imageEditor/components/gallery/gallery_screen.dart';
+import 'package:layerbase/imageEditor/components/gallery/gallery_screen_view_model.dart';
+import 'package:layerbase/utils/constants/app_color.dart';
+import 'package:layerbase/utils/constants/app_constants.dart';
+import 'package:layerbase/utils/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

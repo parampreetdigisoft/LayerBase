@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:Layerbase/utils/constants/app_keys.dart';
-import 'package:Layerbase/utils/constants/app_strings.dart';
-import 'package:Layerbase/utils/routes.dart' show Routes;
+import 'package:layerbase/utils/constants/app_keys.dart';
+import 'package:layerbase/utils/constants/app_strings.dart';
+import 'package:layerbase/utils/routes.dart' show Routes;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
