@@ -25,6 +25,7 @@ import 'imageEditor/components/gallery_browse_file_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await dotenv.load(fileName: "secret.env");
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await SharedPrefsService().init();

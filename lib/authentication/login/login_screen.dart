@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:layerbase/authentication/login/login_view_model.dart';
 import 'package:layerbase/base/widgets/base_button.dart';
 import 'package:layerbase/base/widgets/base_form.dart';
@@ -25,7 +26,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
           Image.asset(
             AppAssets.authBackgroundImage,
             fit: BoxFit.fill,
-            width:MediaQuery.of(context).size.width * .6 ,
+            width: MediaQuery.of(context).size.width * .6,
             height: MediaQuery.of(context).size.height * 1.2,
           ),
           Positioned.fill(
@@ -170,21 +171,19 @@ class LoginScreen extends GetWidget<LoginViewModel> {
                                       scale: 2,
                                     ),
                                     onPressed: () {
-                                      controller.signInWithGoogle().then((
-                                        value,
-                                      ) {
-                                        if (value != null) {
-                                          Navigator.pushReplacementNamed(
-                                            Get.context!,
-                                            Routes.imageGallery,
-                                          );
-                                        } else {
-                                          Navigator.pushReplacementNamed(
-                                            Get.context!,
-                                            Routes.logIn,
-                                          );
-                                        }
-                                      });
+                                      controller.sharedPreferences!.clear();
+                                      defaultTargetPlatform ==
+                                              TargetPlatform.windows
+                                          ? controller
+                                                .signInWithGoogleWindow()
+                                                .then((value) {
+                                                  navigateToGallery(value);
+                                                })
+                                          : controller.signInWithGoogle().then((
+                                              value,
+                                            ) {
+                                              navigateToGallery(value);
+                                            });
                                     },
                                     tooltip: AppStrings.signInWithGoogle,
                                   ),
@@ -225,7 +224,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
                                 onPressed: () {
                                   controller.sharedPreferences!.setBool(
                                     AppKeys.isGuestLoggedIn,
-                                    true
+                                    true,
                                   );
                                   Navigator.pushNamed(
                                     context,
@@ -321,5 +320,14 @@ class LoginScreen extends GetWidget<LoginViewModel> {
 
   isMobile(BuildContext context) {
     return MediaQuery.of(context).size.width < 600;
+  }
+
+  navigateToGallery(var value) {
+    if (value != null) {
+      Navigator.pushReplacementNamed(Get.context!, Routes.imageGallery);
+    } else {
+      Navigator.pushReplacementNamed(Get.context!, Routes.logIn);
+    }
+    ;
   }
 }
