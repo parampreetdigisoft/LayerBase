@@ -2,9 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:googleapis_auth/auth_io.dart';
 import 'package:layerbase/utils/constants/app_keys.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
 import 'package:layerbase/utils/routes.dart' show Routes;
@@ -27,9 +25,6 @@ class LoginViewModel extends GetxController {
   final formKey = GlobalKey<FormState>();
   SharedPreferences? sharedPreferences;
   ScrollController scrollController = ScrollController();
-  final List<String> _scopes = [
-    'https://www.googleapis.com/auth/userinfo.email',
-  ];
 
   @override
   Future<void> onInit() async {
