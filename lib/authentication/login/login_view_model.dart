@@ -48,7 +48,6 @@ class LoginViewModel extends GetxController {
       return data;
     } on FirebaseAuthException catch (e) {
       debugPrint(e.message);
-      print(e.message);
 
       BaseSnackBar.show(
         title: AppStrings.error,
@@ -178,7 +177,7 @@ class LoginViewModel extends GetxController {
     request.response
       ..statusCode = 200
       ..headers.set('Content-Type', 'text/html')
-      ..write('<html><h2>You can now close this window.</h2></html>');
+      ..write('<html lang="en"><h2>You can now close this window.</h2></html>');
     await request.response.close();
     await server.close(force: true);
 
@@ -216,7 +215,6 @@ class LoginViewModel extends GetxController {
         'grant_type': 'authorization_code',
       },
     );
-    print(response.body);
     if (response.statusCode != 200) {
       throw Exception('Token exchange failed: ${response.body}');
     }
