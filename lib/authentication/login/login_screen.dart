@@ -1,15 +1,16 @@
-import 'package:Layerbase/authentication/login/login_view_model.dart';
-import 'package:Layerbase/base/widgets/base_button.dart';
-import 'package:Layerbase/base/widgets/base_form.dart';
-import 'package:Layerbase/base/widgets/base_text.dart';
-import 'package:Layerbase/base/widgets/base_text_button.dart';
-import 'package:Layerbase/base/widgets/base_text_field.dart';
-import 'package:Layerbase/utils/constants/app_keys.dart';
-import 'package:Layerbase/utils/routes.dart';
-import 'package:Layerbase/utils/constants/app_assets.dart';
-import 'package:Layerbase/utils/constants/app_color.dart';
-import 'package:Layerbase/utils/constants/app_constants.dart';
-import 'package:Layerbase/utils/constants/app_strings.dart';
+import 'package:flutter/foundation.dart';
+import 'package:layerbase/authentication/login/login_view_model.dart';
+import 'package:layerbase/base/widgets/base_button.dart';
+import 'package:layerbase/base/widgets/base_form.dart';
+import 'package:layerbase/base/widgets/base_text.dart';
+import 'package:layerbase/base/widgets/base_text_button.dart';
+import 'package:layerbase/base/widgets/base_text_field.dart';
+import 'package:layerbase/utils/constants/app_keys.dart';
+import 'package:layerbase/utils/routes.dart';
+import 'package:layerbase/utils/constants/app_assets.dart';
+import 'package:layerbase/utils/constants/app_color.dart';
+import 'package:layerbase/utils/constants/app_constants.dart';
+import 'package:layerbase/utils/constants/app_strings.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,7 +26,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
           Image.asset(
             AppAssets.authBackgroundImage,
             fit: BoxFit.fill,
-            width:MediaQuery.of(context).size.width * .6 ,
+            width: MediaQuery.of(context).size.width * .6,
             height: MediaQuery.of(context).size.height * 1.2,
           ),
           Positioned.fill(
@@ -160,35 +161,36 @@ class LoginScreen extends GetWidget<LoginViewModel> {
                               ),
                               const SizedBox(height: spacerSize25),
 
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  IconButton(
-                                    icon: Image.asset(
-                                      AppAssets.googleIcon,
-                                      fit: BoxFit.fill,
-                                      scale: 2,
+                              if (defaultTargetPlatform != TargetPlatform.linux)
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    IconButton(
+                                      icon: Image.asset(
+                                        AppAssets.googleIcon,
+                                        fit: BoxFit.fill,
+                                        scale: 2,
+                                      ),
+                                      onPressed: () {
+                                        controller.signInWithGoogle().then((
+                                          value,
+                                        ) {
+                                          if (value != null) {
+                                            Navigator.pushReplacementNamed(
+                                              Get.context!,
+                                              Routes.imageGallery,
+                                            );
+                                          } else {
+                                            Navigator.pushReplacementNamed(
+                                              Get.context!,
+                                              Routes.logIn,
+                                            );
+                                          }
+                                        });
+                                      },
+                                      tooltip: AppStrings.signInWithGoogle,
                                     ),
-                                    onPressed: () {
-                                      controller.signInWithGoogle().then((
-                                        value,
-                                      ) {
-                                        if (value != null) {
-                                          Navigator.pushReplacementNamed(
-                                            Get.context!,
-                                            Routes.imageGallery,
-                                          );
-                                        } else {
-                                          Navigator.pushReplacementNamed(
-                                            Get.context!,
-                                            Routes.logIn,
-                                          );
-                                        }
-                                      });
-                                    },
-                                    tooltip: AppStrings.signInWithGoogle,
-                                  ),
-                                  /*  const SizedBox(width: spacerSize25),
+                                    /*  const SizedBox(width: spacerSize25),
                                   // Spacing between icons
                                   IconButton(
                                     icon: Image.asset(
@@ -217,15 +219,15 @@ class LoginScreen extends GetWidget<LoginViewModel> {
                                     },
                                     tooltip: AppStrings.signInWithFacebook,
                                   ),*/
-                                ],
-                              ),
+                                  ],
+                                ),
                               const SizedBox(height: spacerSize16),
 
                               BaseTextButton(
                                 onPressed: () {
                                   controller.sharedPreferences!.setBool(
                                     AppKeys.isGuestLoggedIn,
-                                    true
+                                    true,
                                   );
                                   Navigator.pushNamed(
                                     context,
@@ -308,7 +310,14 @@ class LoginScreen extends GetWidget<LoginViewModel> {
       child: BaseButton(
         onPressed: () {
           if (controller.formKey.currentState!.validate()) {
-            controller.signInWithEmailAndPassword();
+            if (defaultTargetPlatform == TargetPlatform.linux) {
+              controller.signInWithEmailRest(
+                controller.emailController.text,
+                controller.passwordController.text,
+              );
+            } else {
+              controller.signInWithEmailAndPassword();
+            }
           }
         },
         backgroundColor: AppColors.darkBlue,

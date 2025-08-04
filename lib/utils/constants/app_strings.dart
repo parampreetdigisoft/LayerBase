@@ -42,18 +42,22 @@ class AppStrings {
   static const sent = "Sent";
   static const ok = "ok";
   static const cloudStorageAccess = "Cloud Storage Access";
-  static const toAccessCloudStorageFiles = "To access the cloud storage files, you first need to ";
+  static const toAccessCloudStorageFiles =
+      "To access the cloud storage files, you first need to ";
   static const withYourEmailAccount = "\twith your email account.";
   static const localFiles = "Local Files";
   static const cloudFiles = "Cloud Files";
   static const browseImage = "Browse Image";
   static const delete = "Delete";
+  static const invalidDataEntered = "Invalid Data Entered";
 
   //Message Strings.
   static const passwordNotStrong = 'The password isn\'t strong enough';
   static const emailAlreadyUsed = 'That email is already used for an account';
-  static const yourAccountHasBeenCreated = 'Your account has been created successfully.';
-  static const passwordResetLink = 'We\'ve sent a password reset link to your email address.';
+  static const yourAccountHasBeenCreated =
+      'Your account has been created successfully.';
+  static const passwordResetLink =
+      'We\'ve sent a password reset link to your email address.';
 
   //Security Questions
   static const whatWasYourChildhoodNickname =

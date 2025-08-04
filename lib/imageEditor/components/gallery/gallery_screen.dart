@@ -1,10 +1,11 @@
-import 'package:Layerbase/imageEditor/components/cloud_storage_access_tooltip.dart';
-import 'package:Layerbase/imageEditor/components/gallery/gallery_screen_view_model.dart';
-import 'package:Layerbase/utils/constants/app_color.dart';
-import 'package:Layerbase/utils/constants/app_constants.dart';
-import 'package:Layerbase/utils/constants/app_keys.dart';
-import 'package:Layerbase/utils/constants/app_strings.dart';
-import 'package:Layerbase/utils/routes.dart';
+import 'package:flutter/foundation.dart';
+import 'package:layerbase/imageEditor/components/cloud_storage_access_tooltip.dart';
+import 'package:layerbase/imageEditor/components/gallery/gallery_screen_view_model.dart';
+import 'package:layerbase/utils/constants/app_color.dart';
+import 'package:layerbase/utils/constants/app_constants.dart';
+import 'package:layerbase/utils/constants/app_keys.dart';
+import 'package:layerbase/utils/constants/app_strings.dart';
+import 'package:layerbase/utils/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,7 +31,7 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
                 alignment: Alignment.centerLeft,
                 child: Container(
                   height: spacerSize50,
-                  width: spacerSize350,
+                  width: spacerSize400,
                   padding: const EdgeInsets.all(spacerSize4),
                   decoration: BoxDecoration(
                     color: AppColors.chineseBlack,
@@ -40,7 +41,11 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
                   child: TabBar(
                     onTap: (index) {
                       if (index == 1 &&
-                          FirebaseAuth.instance.currentUser == null) {
+                          (defaultTargetPlatform == TargetPlatform.linux
+                              ? controller.sharedPrefsService
+                                    .getString(AppKeys.idToken)!
+                                    .isEmpty
+                              : FirebaseAuth.instance.currentUser == null)) {
                         _showCloudFeatureDialog(context);
                       }
                     },
@@ -91,7 +96,7 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
                 context,
                 Routes.imageEditor,
                 arguments: {
-                  AppKeys.image: controller.imageList![imageIndex],
+                  AppKeys.imageData: controller.hiveBox!.getAt(imageIndex),
                   AppKeys.imageIndex: imageIndex,
                 },
               ).then((value) {
@@ -162,7 +167,7 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
     showMenu(
       context: context,
       position: RelativeRect.fromLTRB(
-        tabBarPosition.dx + tabBarBox.size.width / spacerSize5,
+        spacerSize300,
         tabBarPosition.dy + spacerSize75,
         tabBarPosition.dx + tabBarBox.size.width / spacerSize2 + spacerSize100,
         tabBarPosition.dy,

@@ -1,8 +1,8 @@
-import 'package:Layerbase/base/widgets/base_button.dart';
-import 'package:Layerbase/base/widgets/base_text.dart';
-import 'package:Layerbase/utils/constants/app_color.dart';
-import 'package:Layerbase/utils/constants/app_constants.dart';
-import 'package:Layerbase/utils/constants/app_strings.dart';
+import 'package:layerbase/base/widgets/base_button.dart';
+import 'package:layerbase/base/widgets/base_text.dart';
+import 'package:layerbase/utils/constants/app_color.dart';
+import 'package:layerbase/utils/constants/app_constants.dart';
+import 'package:layerbase/utils/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

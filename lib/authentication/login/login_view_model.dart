@@ -1,15 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
 
-import 'package:Layerbase/utils/constants/app_keys.dart';
-import 'package:Layerbase/utils/constants/app_strings.dart';
-import 'package:Layerbase/utils/routes.dart' show Routes;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:layerbase/utils/constants/app_keys.dart';
+import 'package:layerbase/utils/constants/app_strings.dart';
+import 'package:layerbase/utils/routes.dart' show Routes;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:layerbase/utils/shared_prefs_service.dart';
 import '../../utils/constants/app_constants.dart';
+import 'package:http/http.dart' as http;
 
 class LoginViewModel extends GetxController {
   RxBool isLoading = false.obs;
@@ -18,18 +21,19 @@ class LoginViewModel extends GetxController {
   TextEditingController passwordController = TextEditingController();
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
   final formKey = GlobalKey<FormState>();
-  SharedPreferences? sharedPreferences;
+  SharedPrefsService? sharedPreferences;
   ScrollController scrollController = ScrollController();
 
   @override
-  Future<void> onInit() async {
+  onInit() {
     super.onInit();
-    sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences = SharedPrefsService.instance;
   }
 
   Future<UserCredential?> signInWithGoogle() async {
     sharedPreferences!.clear();
     isLoading.value = true;
+
     try {
       final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
@@ -134,6 +138,43 @@ class LoginViewModel extends GetxController {
 
   forgotPassword(BuildContext context) {
     Navigator.pushNamed(context, Routes.forgotPassword);
+  }
+
+  Future<void> signInWithEmailRest(String email, String password) async {
+    sharedPreferences!.clear();
+    isLoading.value = true;
+    isLoading.refresh();
+    final url = Uri.parse(
+      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${dotenv.env['web_apiKey'] ?? ""}',
+    );
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        "email": email,
+        "password": password,
+        "returnSecureToken": true,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+
+      print(data);
+      sharedPreferences!.setString(
+        AppKeys.idToken,
+        data['refreshToken'].toString(),
+      );
+      isLoading.value = false;
+      Navigator.pushReplacementNamed(Get.context!, Routes.imageGallery);
+    } else {
+      isLoading.value = false;
+      BaseSnackBar.show(
+        title: AppStrings.validate,
+        message: AppStrings.noUserFound,
+      );
+    }
   }
 
   @override

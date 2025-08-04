@@ -1,12 +1,13 @@
-import 'package:Layerbase/authentication/forgotPassword/forgot_password_view_model.dart';
-import 'package:Layerbase/base/widgets/base_button.dart';
-import 'package:Layerbase/base/widgets/base_form.dart';
-import 'package:Layerbase/base/widgets/base_text.dart';
-import 'package:Layerbase/base/widgets/base_text_field.dart';
-import 'package:Layerbase/utils/constants/app_assets.dart';
-import 'package:Layerbase/utils/constants/app_color.dart';
-import 'package:Layerbase/utils/constants/app_constants.dart';
-import 'package:Layerbase/utils/constants/app_strings.dart';
+import 'package:flutter/foundation.dart';
+import 'package:layerbase/authentication/forgotPassword/forgot_password_view_model.dart';
+import 'package:layerbase/base/widgets/base_button.dart';
+import 'package:layerbase/base/widgets/base_form.dart';
+import 'package:layerbase/base/widgets/base_text.dart';
+import 'package:layerbase/base/widgets/base_text_field.dart';
+import 'package:layerbase/utils/constants/app_assets.dart';
+import 'package:layerbase/utils/constants/app_color.dart';
+import 'package:layerbase/utils/constants/app_constants.dart';
+import 'package:layerbase/utils/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -204,13 +205,10 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
         child: BaseButton(
           onPressed: () {
             if (controller.formKey.currentState!.validate()) {
-              controller.sendResetPasswordEmail();
+              defaultTargetPlatform == TargetPlatform.linux
+                  ? controller.sendPasswordResetEmailWithRest()
+                  : controller.sendResetPasswordEmail();
             }
-
-            /*
-            controller.isEmailValidated.value
-                ? controller.changePassword(context)
-                : controller.validateEmail();*/
           },
           backgroundColor: AppColors.darkBlue,
           buttonLabel: controller.isEmailValidated.value
