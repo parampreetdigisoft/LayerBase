@@ -18,7 +18,6 @@ import 'package:get/get.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 
 class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
-class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
   const ImageEditorScreen({super.key});
 
   @override

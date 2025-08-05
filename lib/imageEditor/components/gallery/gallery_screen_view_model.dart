@@ -20,7 +20,6 @@ class GalleryScreenViewModel extends GetxController
   final picker = ImagePicker();
   Rx<Uint8List>? imageBytes;
   Box<dynamic>? hiveBox;
-  Box<dynamic>? hiveBox;
 
   RxList<dynamic>? imageList = <Uint8List>[].obs;
   late SharedPrefsService sharedPrefsService;
@@ -76,8 +75,6 @@ class GalleryScreenViewModel extends GetxController
     isLoading.value = true;
     hiveBox = Hive.box<dynamic>(AppKeys.imageLayerBox);
 
-    hiveBox = Hive.box<dynamic>(AppKeys.imageLayerBox);
-
     List<Uint8List> tempImageList = [];
     for (var bytes in hiveBox!.values) {
       // Attempt to load as TIFF first
@@ -97,7 +94,6 @@ class GalleryScreenViewModel extends GetxController
   }
 
   Future<void> saveImageToHive(Uint8List imageBytes) async {
-    final box = Hive.box<dynamic>(AppKeys.imageLayerBox);
     final box = Hive.box<dynamic>(AppKeys.imageLayerBox);
     await box.add(imageBytes);
   }
