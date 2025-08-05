@@ -1,9 +1,9 @@
 [Desktop Entry]
 Version=1.0.0
-Name= Layerbase
-Comment= A Image Editing App
-Exec= layerbase
-Icon = snap/gui/icon.png
+Name=Layerbase
+Comment=A Image Editing App
+Exec=layerbase
+Icon=${SNAP}/meta/gui/layerbase.png
 Terminal=false
 Type=Application
 Categories=Utility;
