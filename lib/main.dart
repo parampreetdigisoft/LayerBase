@@ -11,7 +11,6 @@ import 'package:layerbase/utils/constants/app_keys.dart';
 import 'package:layerbase/utils/routes.dart';
 import 'package:layerbase/splash_screen.dart';
 import 'package:layerbase/utils/shared_prefs_service.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';

@@ -1,28 +1,48 @@
 name: layerbase
-base: core22
+base: core24
 version: '1.0.0'
 summary: My Flutter Linux App
 description: |
   A Linux desktop application built with Flutter and packaged as a Snap.
- 
-
-apps:
-  layerbase:
-    command: layerbase
-    desktop: snap/gui/layerbase.desktop
-    plugs:
-      - network
-    
-    
 
 grade: stable
 confinement: strict
-icon: snap/gui/icon.png
+icon: snap/gui/icon.png 
+
+apps:
+  layerbase:
+    command: bin/layerbase
+    desktop: snap/gui/layerbase.desktop
+    plugs:
+       - desktop
+       - desktop-legacy
+       - x11
+       - wayland
+       - unity7
+       - browser-support
+       - network
+       - home
+       - opengl
+       - password-manager-service
+    
+    
+
+
 
 
 parts:
   layerbase:
     plugin: dump
     source: build/linux/arm64/release/bundle/
- 
+    stage-packages:
+      - libgtk-3-0
+      - libatk1.0-0
+      - libgdk-pixbuf2.0-0
+      - libpango-1.0-0
+      - libpangocairo-1.0-0
+      - libglib2.0-0
+      - libglu1-mesa
+      - libsecret-1-0
 
+    organize:
+      layerbase: bin/layerbase

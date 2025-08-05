@@ -2,7 +2,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:layerbase/base/dialogs/base_dialog.dart';
 import 'package:layerbase/utils/constants/app_constants.dart';
 import 'package:layerbase/utils/constants/app_keys.dart';
-import 'package:layerbase/utils/routes.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
