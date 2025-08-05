@@ -32,6 +32,7 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
                 child: Container(
                   height: spacerSize50,
                   width: spacerSize400,
+                  width: spacerSize400,
                   padding: const EdgeInsets.all(spacerSize4),
                   decoration: BoxDecoration(
                     color: AppColors.chineseBlack,
@@ -96,6 +97,7 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
                 context,
                 Routes.imageEditor,
                 arguments: {
+                  AppKeys.imageData: controller.hiveBox!.getAt(imageIndex),
                   AppKeys.imageData: controller.hiveBox!.getAt(imageIndex),
                   AppKeys.imageIndex: imageIndex,
                 },
@@ -167,6 +169,7 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
     showMenu(
       context: context,
       position: RelativeRect.fromLTRB(
+        spacerSize300,
         spacerSize300,
         tabBarPosition.dy + spacerSize75,
         tabBarPosition.dx + tabBarBox.size.width / spacerSize2 + spacerSize100,

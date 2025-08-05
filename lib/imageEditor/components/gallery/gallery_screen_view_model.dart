@@ -2,6 +2,8 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:layerbase/utils/constants/app_keys.dart';
 import 'package:layerbase/utils/routes.dart';
+import 'package:layerbase/utils/constants/app_keys.dart';
+import 'package:layerbase/utils/routes.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,6 +19,7 @@ class GalleryScreenViewModel extends GetxController
   Rx<File>? imageFile;
   final picker = ImagePicker();
   Rx<Uint8List>? imageBytes;
+  Box<dynamic>? hiveBox;
   Box<dynamic>? hiveBox;
 
   RxList<dynamic>? imageList = <Uint8List>[].obs;
@@ -73,6 +76,8 @@ class GalleryScreenViewModel extends GetxController
     isLoading.value = true;
     hiveBox = Hive.box<dynamic>(AppKeys.imageLayerBox);
 
+    hiveBox = Hive.box<dynamic>(AppKeys.imageLayerBox);
+
     List<Uint8List> tempImageList = [];
     for (var bytes in hiveBox!.values) {
       // Attempt to load as TIFF first
@@ -84,6 +89,7 @@ class GalleryScreenViewModel extends GetxController
       } else {
         // If not a TIFF or loading failed, add the original bytes
         tempImageList.add(bytes[AppKeys.imageThumbnail]);
+        tempImageList.add(bytes[AppKeys.imageThumbnail]);
       }
     }
     imageList!.value = tempImageList;
@@ -91,6 +97,7 @@ class GalleryScreenViewModel extends GetxController
   }
 
   Future<void> saveImageToHive(Uint8List imageBytes) async {
+    final box = Hive.box<dynamic>(AppKeys.imageLayerBox);
     final box = Hive.box<dynamic>(AppKeys.imageLayerBox);
     await box.add(imageBytes);
   }

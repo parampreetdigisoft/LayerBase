@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
       ),
       GetPage(
         name: Routes.imageEditor,
-        page: () => const ImageEditorScreen(),
+        page: () =>  ImageEditorScreen(),
         binding: BindingsBuilder(
           () => Get.lazyPut(() => ImageEditorViewModel()),
         ),

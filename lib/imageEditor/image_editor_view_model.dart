@@ -8,7 +8,7 @@ import '../utils/constants/app_keys.dart';
 class ImageEditorViewModel extends GetxController {
   Box<dynamic>? hiveBox;
   final editorKey = GlobalKey<ProImageEditorState>();
-  var layerData = "".obs;
+  var layerData="".obs;
 
   @override
   void onInit() {
@@ -36,11 +36,7 @@ class ImageEditorViewModel extends GetxController {
       });
     }
   }
-
-  void applyFiltersToReferences(
-    Map<String, dynamic> data,
-    List<List<double>> filters,
-  ) {
+  void applyFiltersToReferences(Map<String, dynamic> data, List<List<double>> filters) {
     final references = data['references'] as Map<String, dynamic>;
     int index = 0;
 
@@ -53,4 +49,5 @@ class ImageEditorViewModel extends GetxController {
       index++;
     }
   }
+
 }
