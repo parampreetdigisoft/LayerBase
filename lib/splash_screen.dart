@@ -61,7 +61,7 @@ class SplashScreen extends StatelessWidget {
     bool isGuestLoggedIn = false,
     bool isLoggedIn = false,
   }) {
-    if (user?.refreshToken != null || isGuestLoggedIn || isGuestLoggedIn) {
+    if (user != null || isGuestLoggedIn || isLoggedIn) {
       Navigator.pushReplacementNamed(context, Routes.imageGallery);
     } else {
       Navigator.pushReplacementNamed(context, Routes.logIn);

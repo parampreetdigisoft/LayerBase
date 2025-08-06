@@ -43,6 +43,5 @@ parts:
       - libglib2.0-0
       - libglu1-mesa
       - libsecret-1-0
-
     organize:
-      layerbase: bin/layerbase
+      layerbase/layerbase: bin/layerbase
