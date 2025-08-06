@@ -31,7 +31,7 @@ class GalleryBrowseFileScreen extends GetWidget<GalleryScreenViewModel> {
         margin: EdgeInsets.only(left: spacerSize50, right: spacerSize50),
         decoration: BoxDecoration(
           color: Colors.transparent,
-          // border: Border.all(color: AppColors.darkGunMetal),
+
           borderRadius: BorderRadius.circular(spacerSize25),
         ),
         child: Container(

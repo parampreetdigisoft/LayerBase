@@ -2,12 +2,15 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:layerbase/utils/constants/app_keys.dart';
 import 'package:layerbase/utils/routes.dart';
+import 'package:layerbase/utils/constants/app_keys.dart';
+import 'package:layerbase/utils/routes.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
+import 'package:layerbase/utils/shared_prefs_service.dart';
 
 class GalleryScreenViewModel extends GetxController
     with GetTickerProviderStateMixin {
@@ -19,10 +22,12 @@ class GalleryScreenViewModel extends GetxController
   Box<dynamic>? hiveBox;
 
   RxList<dynamic>? imageList = <Uint8List>[].obs;
+  late SharedPrefsService sharedPrefsService;
 
   @override
   void onInit() {
     super.onInit();
+    sharedPrefsService = SharedPrefsService.instance;
     tabController = TabController(length: 2, vsync: this);
     tabController.addListener(() {
       if (tabController.indexIsChanging) {
@@ -54,7 +59,9 @@ class GalleryScreenViewModel extends GetxController
       Navigator.pushNamed(
         Get.context!,
         Routes.imageEditor,
-        arguments: {AppKeys.imageData: {AppKeys.image: imageBytes!.value}},
+        arguments: {
+          AppKeys.imageData: {AppKeys.image: imageBytes!.value},
+        },
       ).then((value) {
         fetchImagesFromDb();
       });
@@ -71,11 +78,14 @@ class GalleryScreenViewModel extends GetxController
     List<Uint8List> tempImageList = [];
     for (var bytes in hiveBox!.values) {
       // Attempt to load as TIFF first
-      dynamic loadedImage = await loadTiffAsImage(bytes[AppKeys.imageThumbnail]);
+      dynamic loadedImage = await loadTiffAsImage(
+        bytes[AppKeys.imageThumbnail],
+      );
       if (loadedImage != null) {
         tempImageList.add(loadedImage);
       } else {
         // If not a TIFF or loading failed, add the original bytes
+        tempImageList.add(bytes[AppKeys.imageThumbnail]);
         tempImageList.add(bytes[AppKeys.imageThumbnail]);
       }
     }

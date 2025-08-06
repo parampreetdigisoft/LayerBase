@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:layerbase/authentication/forgotPassword/forgot_password_view_model.dart';
 import 'package:layerbase/base/widgets/base_button.dart';
 import 'package:layerbase/base/widgets/base_form.dart';
@@ -204,13 +205,10 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
         child: BaseButton(
           onPressed: () {
             if (controller.formKey.currentState!.validate()) {
-              controller.sendResetPasswordEmail();
+              defaultTargetPlatform == TargetPlatform.linux
+                  ? controller.sendPasswordResetEmailWithRest()
+                  : controller.sendResetPasswordEmail();
             }
-
-            /*
-            controller.isEmailValidated.value
-                ? controller.changePassword(context)
-                : controller.validateEmail();*/
           },
           backgroundColor: AppColors.darkBlue,
           buttonLabel: controller.isEmailValidated.value

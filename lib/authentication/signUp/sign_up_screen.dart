@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:layerbase/authentication/signUp/question_response_model.dart';
 import 'package:layerbase/authentication/signUp/sign_up_view_model.dart';
 import 'package:layerbase/base/widgets/base_button.dart';
@@ -24,7 +25,7 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
           Image.asset(
             AppAssets.authBackgroundImage,
             fit: BoxFit.fill,
-            width:MediaQuery.of(context).size.width * .6 ,
+            width: MediaQuery.of(context).size.width * .6,
             height: MediaQuery.of(context).size.height * 1.2,
           ),
 
@@ -231,7 +232,9 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
       child: BaseButton(
         onPressed: () {
           if (controller.formKey.currentState!.validate()) {
-            controller.registerUser(context);
+            defaultTargetPlatform == TargetPlatform.linux
+                ? controller.registerUserUsingRestApi()
+                : controller.registerUser(context);
           }
         },
         backgroundColor: AppColors.darkBlue,

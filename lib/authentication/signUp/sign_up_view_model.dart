@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:layerbase/authentication/signUp/question_response_model.dart';
 import 'package:layerbase/authentication/signUp/sign_up_repository.dart';
 import 'package:layerbase/base/dialogs/base_dialog.dart';
@@ -9,6 +10,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class SignUpViewModel extends GetxController {
   RxBool isLoading = false.obs;
@@ -38,6 +41,7 @@ class SignUpViewModel extends GetxController {
 
   Future<void> registerUser(BuildContext context) async {
     isLoading.value = true;
+    isLoading.refresh();
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
@@ -56,18 +60,7 @@ class SignUpViewModel extends GetxController {
           AppKeys.securityQuestion: selectedQuestion.value,
           AppKeys.securityAnswer: answerController.text,
         });
-        BaseDialog.show(
-          Get.context!,
-          dialogTitle: AppStrings.success,
-          dialogDescription: AppStrings.yourAccountHasBeenCreated,
-          onButtonPressed: () {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              Routes.logIn,
-              (Route<dynamic> route) => false,
-            );
-          },
-        );
+        registerSuccessDialog();
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == AppKeys.weakPassword) {
@@ -93,6 +86,36 @@ class SignUpViewModel extends GetxController {
     }
   }
 
+  Future<void> registerUserUsingRestApi() async {
+    isLoading.value = true;
+    isLoading.refresh();
+    final url = Uri.parse(
+      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${dotenv.env['web_apiKey'] ?? ""}',
+    );
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        AppKeys.email: emailController.text,
+        AppKeys.password: passwordController.text,
+        AppKeys.name: fullNameController.text,
+        AppKeys.securityQuestion: selectedQuestion.value,
+        AppKeys.securityAnswer: answerController.text,
+        'returnSecureToken': true,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      registerSuccessDialog();
+    } else {
+      BaseSnackBar.show(
+        title: AppStrings.validate,
+        message: AppStrings.invalidDataEntered,
+      );
+    }
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -101,5 +124,20 @@ class SignUpViewModel extends GetxController {
     passwordController.dispose();
     answerController.dispose();
     scrollController.dispose();
+  }
+
+  registerSuccessDialog() {
+    return BaseDialog.show(
+      Get.context!,
+      dialogTitle: AppStrings.success,
+      dialogDescription: AppStrings.yourAccountHasBeenCreated,
+      onButtonPressed: () {
+        Navigator.pushNamedAndRemoveUntil(
+          Get.context!,
+          Routes.logIn,
+          (Route<dynamic> route) => false,
+        );
+      },
+    );
   }
 }

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Layerbase
+Comment=A Flutter desktop app on Linux
+Exec=/home/vboxuser/StudioProjects/layerbase/build/linux/arm64/release/bundle/layerbase
+Icon=/home/vboxuser/StudioProjects/layerbase/linux/icon.png
+Terminal=false
+Type=Application
+Categories=Utility;

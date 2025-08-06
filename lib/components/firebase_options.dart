@@ -69,9 +69,14 @@ class DefaultFirebaseOptions {
         );
 
       case TargetPlatform.linux:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for linux - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+        return FirebaseOptions(
+          apiKey: dotenv.env['windows_apiKey'] ?? "",
+          appId: dotenv.env['windows_appId'] ?? "",
+          messagingSenderId: dotenv.env['windows_messagingSenderId'] ?? "",
+          projectId: dotenv.env['windows_projectId'] ?? "",
+          authDomain: dotenv.env['windows_authDomain'] ?? "",
+          storageBucket: dotenv.env['windows_storageBucket'] ?? "",
+          measurementId: dotenv.env['windows_measurementId'] ?? "",
         );
       default:
         throw UnsupportedError(

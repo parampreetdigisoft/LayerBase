@@ -6,6 +6,7 @@ class AppKeys {
   static const users = 'users';
   static const uid = 'uid';
   static const email = 'email';
+  static const password = 'password';
   static const name = 'name';
   static const createdAt = 'created_at';
   static const securityQuestion = 'security_question';

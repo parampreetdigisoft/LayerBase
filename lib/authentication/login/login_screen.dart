@@ -307,7 +307,14 @@ class LoginScreen extends GetWidget<LoginViewModel> {
       child: BaseButton(
         onPressed: () {
           if (controller.formKey.currentState!.validate()) {
-            controller.signInWithEmailAndPassword();
+            if (defaultTargetPlatform == TargetPlatform.linux) {
+              controller.signInWithEmailRest(
+                controller.emailController.text,
+                controller.passwordController.text,
+              );
+            } else {
+              controller.signInWithEmailAndPassword();
+            }
           }
         },
         backgroundColor: AppColors.darkBlue,

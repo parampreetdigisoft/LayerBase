@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:layerbase/imageEditor/components/cloud_storage_access_tooltip.dart';
 import 'package:layerbase/imageEditor/components/gallery/gallery_screen_view_model.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
@@ -40,7 +41,11 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
                   child: TabBar(
                     onTap: (index) {
                       if (index == 1 &&
-                          FirebaseAuth.instance.currentUser == null) {
+                          (defaultTargetPlatform == TargetPlatform.linux
+                              ? controller.sharedPrefsService
+                                    .getString(AppKeys.idToken)!
+                                    .isEmpty
+                              : FirebaseAuth.instance.currentUser == null)) {
                         _showCloudFeatureDialog(context);
                       }
                     },
@@ -91,6 +96,7 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
                 context,
                 Routes.imageEditor,
                 arguments: {
+                  AppKeys.imageData: controller.hiveBox!.getAt(imageIndex),
                   AppKeys.imageData: controller.hiveBox!.getAt(imageIndex),
                   AppKeys.imageIndex: imageIndex,
                 },

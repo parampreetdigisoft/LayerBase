@@ -5,6 +5,13 @@ import 'package:layerbase/utils/constants/app_assets.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:layerbase/utils/constants/app_constants.dart';
 import 'package:layerbase/utils/constants/app_keys.dart';
+import 'dart:convert';
+import 'package:layerbase/components/bottom_navigation_sheet.dart';
+import 'package:layerbase/imageEditor/image_editor_view_model.dart';
+import 'package:layerbase/utils/constants/app_assets.dart';
+import 'package:layerbase/utils/constants/app_color.dart';
+import 'package:layerbase/utils/constants/app_constants.dart';
+import 'package:layerbase/utils/constants/app_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -17,16 +24,15 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
   Widget build(BuildContext context) {
     dynamic imageData;
 
-
     Uint8List? imageFile;
     int? imageIndex;
     imageData = Get.arguments[AppKeys.imageData];
     imageFile = imageData[AppKeys.image];
-    controller.layerData.value = imageData[AppKeys.layerJson]??"";
+    controller.layerData.value = imageData[AppKeys.layerJson] ?? "";
     imageIndex = Get.arguments[AppKeys.imageIndex];
 
     return Obx(
-      ()=>Stack(
+      () => Stack(
         alignment: Alignment.centerRight,
         children: [
           ProImageEditor.memory(
@@ -35,7 +41,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
             configs: ProImageEditorConfigs(
               emojiEditor: EmojiEditorConfigs(
                 checkPlatformCompatibility: true,
-                enablePreloadWebFont: true,
+                enablePreloadWebFont: false,
               ),
               textEditor: TextEditorConfigs(widgets: TextEditorWidgets()),
               i18n: I18n(done: 'Save', undo: 'Undo', redo: 'Redo'),
@@ -115,9 +121,9 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
               ),
               stateHistory: StateHistoryConfigs(
                 stateHistoryLimit: 1000,
-                initStateHistory: controller.layerData.value != null &&  controller.layerData.value.isNotEmpty
+                initStateHistory: controller.layerData.value.isNotEmpty
                     ? ImportStateHistory.fromJson(
-                  controller.layerData.value,
+                        controller.layerData.value,
                         configs: ImportEditorConfigs(
                           enableInitialEmptyState: true,
                         ),
@@ -145,14 +151,15 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
               filterEditorCallbacks: FilterEditorCallbacks(
                 onFilterChanged: (value) {
                   print(controller.layerData.value);
-                  final Map<String, dynamic> jsonData = jsonDecode(controller.layerData.value);
-                 controller.applyFiltersToReferences(jsonData, value.filters);
-                 // final jsonString = jsonEncode(yourModifiedLayerMap);
+                  final Map<String, dynamic> jsonData = jsonDecode(
+                    controller.layerData.value,
+                  );
+                  controller.applyFiltersToReferences(jsonData, value.filters);
+                  // final jsonString = jsonEncode(yourModifiedLayerMap);
 
-                 // final stateHistory = ImportStateHistory.fromJson(jsonDecode(jsonString));
+                  // final stateHistory = ImportStateHistory.fromJson(jsonDecode(jsonString));
 
-
-               //  layerData= jsonEncode(jsonData['references']);
+                  //  layerData= jsonEncode(jsonData['references']);
 
                   print(jsonData);
                   print(jsonData['references']);

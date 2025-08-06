@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:layerbase/utils/shared_prefs_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../utils/constants/app_constants.dart';
@@ -23,18 +25,19 @@ class LoginViewModel extends GetxController {
   TextEditingController passwordController = TextEditingController();
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
   final formKey = GlobalKey<FormState>();
-  SharedPreferences? sharedPreferences;
+  SharedPrefsService? sharedPreferences;
   ScrollController scrollController = ScrollController();
 
   @override
-  Future<void> onInit() async {
+  onInit() {
     super.onInit();
-    sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences = SharedPrefsService.instance;
   }
 
   Future<UserCredential?> signInWithGoogle() async {
     sharedPreferences!.clear();
     isLoading.value = true;
+
     try {
       final GoogleSignInAccount googleUser = await _googleSignIn.authenticate();
       final GoogleSignInAuthentication googleAuth = googleUser.authentication;
@@ -222,6 +225,41 @@ class LoginViewModel extends GetxController {
     return jsonDecode(response.body);
   }
 
+
+  Future<void> signInWithEmailRest(String email, String password) async {
+    sharedPreferences!.clear();
+    isLoading.value = true;
+    isLoading.refresh();
+    final url = Uri.parse(
+      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${dotenv.env['web_apiKey'] ?? ""}',
+    );
+
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        "email": email,
+        "password": password,
+        "returnSecureToken": true,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      sharedPreferences!.setString(
+        AppKeys.idToken,
+        data['refreshToken'].toString(),
+      );
+      isLoading.value = false;
+      Navigator.pushReplacementNamed(Get.context!, Routes.imageGallery);
+    } else {
+      isLoading.value = false;
+      BaseSnackBar.show(
+        title: AppStrings.validate,
+        message: AppStrings.noUserFound,
+      );
+    }
+  }
 
   @override
   void dispose() {
