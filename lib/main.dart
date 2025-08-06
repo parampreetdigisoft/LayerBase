@@ -1,9 +1,12 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:layerbase/authentication/forgotPassword/forgot_password.dart';
 import 'package:layerbase/authentication/forgotPassword/forgot_password_view_model.dart';
 import 'package:layerbase/authentication/login/login_screen.dart';
 import 'package:layerbase/authentication/signUp/sign_up_screen.dart';
 import 'package:layerbase/authentication/signUp/sign_up_view_model.dart';
+import 'package:layerbase/components/firebase_options.dart';
 import 'package:layerbase/imageEditor/components/gallery/gallery_screen_view_model.dart';
 import 'package:layerbase/imageEditor/image_editor_screen.dart';
 import 'package:layerbase/imageEditor/image_editor_view_model.dart';
@@ -22,7 +25,11 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load(fileName: "secret.env");
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  if (defaultTargetPlatform == TargetPlatform.macOS) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
   await SharedPrefsService().init();
   final dir = await getApplicationDocumentsDirectory();
   Hive.init(dir.path);
@@ -68,7 +75,7 @@ class MyApp extends StatelessWidget {
       ),
       GetPage(
         name: Routes.imageEditor,
-        page: () =>  ImageEditorScreen(),
+        page: () => ImageEditorScreen(),
         binding: BindingsBuilder(
           () => Get.lazyPut(() => ImageEditorViewModel()),
         ),
