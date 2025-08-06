@@ -1,0 +1,10 @@
+class AppAssets{
+  static const splashImage='assets/images/splash_background.png';
+  static const appLogo='assets/images/logo.png';
+  static const appLogoWhite='assets/images/logo.png';
+  static const facebookIcon='assets/images/facebook.png';
+  static const googleIcon='assets/images/google.png';
+  static const uploadFileIcon='assets/images/upload_file.png';
+  static const aiIcon='assets/images/ai.png';
+  static const authBackgroundImage='assets/images/auth_screen.png';
+}

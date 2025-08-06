@@ -1,0 +1,9 @@
+Package: layerbase
+Version: 1.0.0
+Section: graphics
+Priority: optional
+Architecture: arm64
+Depends: libc6 (>= 2.29)
+Maintainer: Bishavjeet Singh <bishavjeet.digisoft@gmail.com>
+Description: Layer-based image editor built with Flutter
+ A high-resolution, layer-based image editor with export, stickers, and drawing support.
