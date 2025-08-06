@@ -307,7 +307,8 @@ class LoginScreen extends GetWidget<LoginViewModel> {
       child: BaseButton(
         onPressed: () {
           if (controller.formKey.currentState!.validate()) {
-            if (defaultTargetPlatform == TargetPlatform.linux) {
+            if (defaultTargetPlatform == TargetPlatform.linux ||
+                defaultTargetPlatform == TargetPlatform.windows) {
               controller.signInWithEmailRest(
                 controller.emailController.text,
                 controller.passwordController.text,

@@ -43,13 +43,14 @@ class SplashScreen extends StatelessWidget {
         .getString(AppKeys.idToken)!
         .isNotEmpty;
     Future.delayed(const Duration(milliseconds: 1000)).then((value) {
-      User? user = defaultTargetPlatform == TargetPlatform.linux
+      User? user =
+          defaultTargetPlatform == TargetPlatform.linux ||
+              defaultTargetPlatform == TargetPlatform.windows
           ? null
           : FirebaseAuth.instance.currentUser;
       navigateToLogin(
         Get.context!,
         user,
-        token!,
         isGuestLoggedIn: isGuestLoggedIn ?? false,
         isLoggedIn: isUserLoggedIn,
       );

@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:layerbase/utils/constants/app_keys.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
@@ -13,7 +11,6 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:layerbase/utils/shared_prefs_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../utils/constants/app_constants.dart';
 import 'package:http/http.dart' as http;
@@ -75,9 +72,9 @@ class LoginViewModel extends GetxController {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
+            email: emailController.text,
+            password: passwordController.text,
+          );
       sharedPreferences!.setString(
         AppKeys.idToken,
         userCredential.user!.refreshToken.toString(),
@@ -113,33 +110,6 @@ class LoginViewModel extends GetxController {
     }
   }
 
-  Future<UserCredential?> logInWithFacebook() async {
-    try {
-      final LoginResult result = await FacebookAuth.instance.login();
-
-      if (result.status == LoginStatus.success) {
-        final OAuthCredential credential = FacebookAuthProvider.credential(
-          result.accessToken!.tokenString,
-        );
-
-        final data = await FirebaseAuth.instance.signInWithCredential(
-          credential,
-        );
-        sharedPreferences!.setString(
-          AppKeys.idToken,
-          result.accessToken!.tokenString.toString(),
-        );
-
-        return data;
-      } else {
-        debugPrint(result.message);
-        return null;
-      }
-    } catch (e) {
-      debugPrint("Unexpected error: $e");
-      return null;
-    }
-  }
 
   forgotPassword(BuildContext context) {
     Navigator.pushNamed(context, Routes.forgotPassword);
@@ -147,10 +117,9 @@ class LoginViewModel extends GetxController {
 
   Future<UserCredential> signInWithGoogleWindow() async {
     final clientId =
-    dotenv.env['windows_clientId']; // Replace with your Client ID
+        dotenv.env['windows_clientId']; // Replace with your Client ID
     final clientSecret =
-    dotenv.env['windows_secretId']; // Replace with your Client Secret
-
+        dotenv.env['windows_secretId']; // Replace with your Client Secret
 
     final redirectUri = 'http://localhost:8080/';
     final scopes = ['openid', 'email', 'profile'];
@@ -202,10 +171,12 @@ class LoginViewModel extends GetxController {
     return data;
   }
 
-  Future<Map<String, dynamic>> exchangeCodeForToken(String code,
-      String redirectUri,
-      String clientId,
-      String clientSecret,) async {
+  Future<Map<String, dynamic>> exchangeCodeForToken(
+    String code,
+    String redirectUri,
+    String clientId,
+    String clientSecret,
+  ) async {
     final tokenUrl = Uri.parse('https://oauth2.googleapis.com/token');
 
     final response = await http.post(
@@ -224,7 +195,6 @@ class LoginViewModel extends GetxController {
 
     return jsonDecode(response.body);
   }
-
 
   Future<void> signInWithEmailRest(String email, String password) async {
     sharedPreferences!.clear();

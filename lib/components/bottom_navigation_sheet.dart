@@ -14,9 +14,11 @@ class BottomNavigationSheet extends StatelessWidget {
   BottomNavigationSheet({super.key});
 
   SharedPrefsService? sharedPreferences = SharedPrefsService.instance;
+
   @override
   Widget build(BuildContext context) {
-    return (defaultTargetPlatform == TargetPlatform.linux
+    return (defaultTargetPlatform == TargetPlatform.linux ||
+                defaultTargetPlatform == TargetPlatform.windows
             ? sharedPreferences!.getString(AppKeys.idToken)!.isNotEmpty
             : FirebaseAuth.instance.currentUser != null)
         ? TextButton.icon(
@@ -50,7 +52,8 @@ class BottomNavigationSheet extends StatelessWidget {
   }
 
   void logout() {
-    if (defaultTargetPlatform == TargetPlatform.linux) {
+    if (defaultTargetPlatform == TargetPlatform.linux ||
+        defaultTargetPlatform == TargetPlatform.windows) {
       sharedPreferences!.clear();
     } else {
       FirebaseAuth.instance.signOut();
