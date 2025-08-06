@@ -7,24 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>GIDClientID</key>
-    <string>206309069393-pj0h844n7c3g81gf0kfi37fms5sgulc3.apps.googleusercontent.com</string>
-	<key>CFBundleURLTypes</key>
-        	<array>
-        		<dict>
-        			<key>CFBundleTypeRole</key>
-        			<string>Editor</string>
-        			<key>CFBundleURLSchemes</key>
-        			<array>
-        				<string>com.googleusercontent.apps.206309069393-pj0h844n7c3g81gf0kfi37fms5sgulc3</string>
-        				<string>fb1049246573988064</string>
-        			</array>
-        		</dict>
-        	</array>
-    <key>FacebookAppID</key>
-    <string>1049246573988064</string>
-    <key>FacebookClientToken</key>
-    <string>59990a4e391b000656d30056cab8d66d</string>
-    <key>FacebookDisplayName</key>
+
     <string>Layerbase</string>
     <key>LSApplicationQueriesSchemes</key>
     <array>
