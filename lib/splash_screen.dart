@@ -40,12 +40,13 @@ class SplashScreen extends StatelessWidget {
   _checkLoginStatus(BuildContext context) async {
     SharedPreferences sharedPreference = await SharedPreferences.getInstance();
     bool? isGuestLoggedIn = sharedPreference.getBool(AppKeys.isGuestLoggedIn);
-
+    var token = sharedPreference.getString(AppKeys.idToken) ?? "";
     Future.delayed(const Duration(milliseconds: 1000)).then((value) {
       User? user = FirebaseAuth.instance.currentUser;
       navigateToLogin(
         Get.context!,
         user,
+        token!,
         isGuestLoggedIn: isGuestLoggedIn ?? false,
       );
     });
@@ -53,12 +54,13 @@ class SplashScreen extends StatelessWidget {
 
   navigateToLogin(
     BuildContext context,
-    User? user, {
+    User? user,
+    String token, {
     bool isGuestLoggedIn = false,
   }) {
-    if (user?.refreshToken != null||isGuestLoggedIn) {
+    if (user?.refreshToken != null || isGuestLoggedIn || token.isNotEmpty) {
       Navigator.pushReplacementNamed(context, Routes.imageGallery);
-    }  else {
+    } else {
       Navigator.pushReplacementNamed(context, Routes.logIn);
     }
   }
