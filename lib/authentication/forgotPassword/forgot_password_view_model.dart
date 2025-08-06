@@ -82,7 +82,7 @@ class ForgotPasswordViewModel extends GetxController {
       resetPasswordDialog();
     } else {
       final error = jsonDecode(response.body);
-      print('❌ Error: ${error['error']['message']}');
+      debugPrint('❌ Error: ${error['error']['message']}');
     }
   }
 }

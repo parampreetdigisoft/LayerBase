@@ -205,7 +205,8 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
         child: BaseButton(
           onPressed: () {
             if (controller.formKey.currentState!.validate()) {
-              defaultTargetPlatform == TargetPlatform.linux
+              defaultTargetPlatform == TargetPlatform.linux ||
+                      defaultTargetPlatform == TargetPlatform.windows
                   ? controller.sendPasswordResetEmailWithRest()
                   : controller.sendResetPasswordEmail();
             }

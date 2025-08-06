@@ -336,6 +336,5 @@ class LoginScreen extends GetWidget<LoginViewModel> {
     } else {
       Navigator.pushReplacementNamed(Get.context!, Routes.logIn);
     }
-    ;
   }
 }

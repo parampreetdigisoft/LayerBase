@@ -41,7 +41,9 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
                   child: TabBar(
                     onTap: (index) {
                       if (index == 1 &&
-                          (defaultTargetPlatform == TargetPlatform.linux
+                          (defaultTargetPlatform == TargetPlatform.linux ||
+                                  defaultTargetPlatform ==
+                                      TargetPlatform.windows
                               ? controller.sharedPrefsService
                                     .getString(AppKeys.idToken)!
                                     .isEmpty
@@ -96,7 +98,6 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
                 context,
                 Routes.imageEditor,
                 arguments: {
-                  AppKeys.imageData: controller.hiveBox!.getAt(imageIndex),
                   AppKeys.imageData: controller.hiveBox!.getAt(imageIndex),
                   AppKeys.imageIndex: imageIndex,
                 },

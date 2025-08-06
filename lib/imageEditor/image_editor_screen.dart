@@ -5,13 +5,6 @@ import 'package:layerbase/utils/constants/app_assets.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:layerbase/utils/constants/app_constants.dart';
 import 'package:layerbase/utils/constants/app_keys.dart';
-import 'dart:convert';
-import 'package:layerbase/components/bottom_navigation_sheet.dart';
-import 'package:layerbase/imageEditor/image_editor_view_model.dart';
-import 'package:layerbase/utils/constants/app_assets.dart';
-import 'package:layerbase/utils/constants/app_color.dart';
-import 'package:layerbase/utils/constants/app_constants.dart';
-import 'package:layerbase/utils/constants/app_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -150,19 +143,10 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
               onImageEditingComplete: (Uint8List bytes) async {},
               filterEditorCallbacks: FilterEditorCallbacks(
                 onFilterChanged: (value) {
-                  print(controller.layerData.value);
                   final Map<String, dynamic> jsonData = jsonDecode(
                     controller.layerData.value,
                   );
                   controller.applyFiltersToReferences(jsonData, value.filters);
-                  // final jsonString = jsonEncode(yourModifiedLayerMap);
-
-                  // final stateHistory = ImportStateHistory.fromJson(jsonDecode(jsonString));
-
-                  //  layerData= jsonEncode(jsonData['references']);
-
-                  print(jsonData);
-                  print(jsonData['references']);
                 },
               ),
               onCompleteWithParameters: (parameters) async {
