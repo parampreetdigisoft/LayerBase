@@ -1,13 +1,14 @@
 import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:layerbase/components/bottom_navigation_sheet.dart';
 import 'package:layerbase/imageEditor/image_editor_view_model.dart';
 import 'package:layerbase/utils/constants/app_assets.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:layerbase/utils/constants/app_constants.dart';
 import 'package:layerbase/utils/constants/app_keys.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 
 class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
@@ -37,6 +38,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
                 enablePreloadWebFont: false,
               ),
               textEditor: TextEditorConfigs(widgets: TextEditorWidgets()),
+              stickerEditor: StickerEditorConfigs(enabled: true),
               i18n: I18n(done: 'Save', undo: 'Undo', redo: 'Redo'),
               heroTag: 'hero-tag',
               theme: ThemeData(
@@ -91,8 +93,6 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
                 enabled: true,
                 enableModeArrow: true,
                 enableDoubleTapZoom: true,
-                enableFreeStyleHighPerformanceMoving: true,
-                enableFreeStyleHighPerformanceHero: true,
                 showToggleFillButton: true,
                 isInitiallyFilled: true,
                 enableEdit: true,
@@ -103,9 +103,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
                 showOpacityAdjustmentButton: true,
                 showLineWidthAdjustmentButton: true,
                 enableModePolygon: false,
-                enableFreeStyleHighPerformanceScaling: true,
               ),
-
               tuneEditor: TuneEditorConfigs(enabled: true, showLayers: true),
               layerInteraction: LayerInteractionConfigs(
                 selectable: LayerInteractionSelectable.auto,

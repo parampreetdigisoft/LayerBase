@@ -1,13 +1,14 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:layerbase/utils/constants/app_keys.dart';
-import 'package:layerbase/utils/routes.dart';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
+import 'package:layerbase/utils/constants/app_keys.dart';
+import 'package:layerbase/utils/routes.dart';
 import 'package:layerbase/utils/shared_prefs_service.dart';
 
 class GalleryScreenViewModel extends GetxController
@@ -21,6 +22,29 @@ class GalleryScreenViewModel extends GetxController
 
   RxList<dynamic>? imageList = <Uint8List>[].obs;
   late SharedPrefsService sharedPrefsService;
+  var extensions = [
+    'png',
+    'jpg',
+    'jpeg',
+    'gif',
+    'cr2',
+    'tiff',
+    'psd',
+    'dng',
+    'NEF',
+    'nrw',
+    'cr3',
+    'arw',
+    'srf',
+    'sr2',
+    'orf',
+    'raw',
+    'rw2',
+    'raf',
+    'dcr',
+    'k25',
+    'kdc',
+  ];
 
   @override
   void onInit() {
@@ -42,7 +66,7 @@ class GalleryScreenViewModel extends GetxController
   Future<void> pickImage() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['png', 'jpg', 'jpeg', 'gif', 'cr2', 'tiff', 'psd'],
+      allowedExtensions: extensions,
       allowMultiple: false,
       withData: true,
       compressionQuality: -100,

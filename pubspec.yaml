@@ -36,7 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   image_picker: ^1.0.6
   get: ^4.7.2
-  pro_image_editor: ^10.5.3
+  pro_image_editor: ^11.4.1
   shared_preferences: ^2.5.3
   file_picker: ^10.2.0
   firebase_core: ^3.15.2
@@ -65,7 +65,7 @@ dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
+  # package. See that file for information about deact  ivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
   rename_app: ^1.6.5

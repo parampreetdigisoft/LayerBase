@@ -1,19 +1,19 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:layerbase/authentication/login/login_view_model.dart';
 import 'package:layerbase/base/widgets/base_button.dart';
 import 'package:layerbase/base/widgets/base_form.dart';
 import 'package:layerbase/base/widgets/base_text.dart';
 import 'package:layerbase/base/widgets/base_text_button.dart';
 import 'package:layerbase/base/widgets/base_text_field.dart';
-import 'package:layerbase/utils/constants/app_keys.dart';
-import 'package:layerbase/utils/routes.dart';
 import 'package:layerbase/utils/constants/app_assets.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:layerbase/utils/constants/app_constants.dart';
+import 'package:layerbase/utils/constants/app_keys.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:layerbase/utils/routes.dart';
 
 class LoginScreen extends GetWidget<LoginViewModel> {
   const LoginScreen({super.key});
@@ -332,7 +332,11 @@ class LoginScreen extends GetWidget<LoginViewModel> {
 
   navigateToGallery(var value) {
     if (value != null) {
-      Navigator.pushReplacementNamed(Get.context!, Routes.imageGallery);
+      Navigator.pushNamedAndRemoveUntil(
+        Get.context!,
+        Routes.imageGallery,
+        (Route<dynamic> route) => false,
+      );
     } else {
       Navigator.pushReplacementNamed(Get.context!, Routes.logIn);
     }
