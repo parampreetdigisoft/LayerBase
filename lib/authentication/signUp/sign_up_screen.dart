@@ -1,4 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:layerbase/authentication/signUp/question_response_model.dart';
 import 'package:layerbase/authentication/signUp/sign_up_view_model.dart';
 import 'package:layerbase/base/widgets/base_button.dart';
@@ -10,9 +13,6 @@ import 'package:layerbase/utils/constants/app_assets.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:layerbase/utils/constants/app_constants.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class SignUpScreen extends GetWidget<SignUpViewModel> {
   const SignUpScreen({super.key});
@@ -52,12 +52,8 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(
-                      isMobile(context) ? spacerSize0 : spacerSize50,
-                    ),
-                    bottomLeft: Radius.circular(
-                      isMobile(context) ? spacerSize0 : spacerSize50,
-                    ),
+                    topLeft: Radius.circular(isMobile(context) ? spacerSize0 : spacerSize50),
+                    bottomLeft: Radius.circular(isMobile(context) ? spacerSize0 : spacerSize50),
                   ),
                 ),
                 elevation: 5,
@@ -119,12 +115,8 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
                                 Text.rich(
                                   TextSpan(
                                     children: [
-                                      TextSpan(
-                                        text: AppStrings.alreadyHaveAccount,
-                                      ),
-                                      WidgetSpan(
-                                        child: SizedBox(width: spacerSize5),
-                                      ),
+                                      TextSpan(text: AppStrings.alreadyHaveAccount),
+                                      WidgetSpan(child: SizedBox(width: spacerSize5)),
                                       TextSpan(
                                         text: AppStrings.login,
                                         recognizer: TapGestureRecognizer()
@@ -142,8 +134,7 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
                               ],
                             ).marginSymmetric(
                               vertical: spacerSize20,
-                              horizontal:
-                                  MediaQuery.of(context).size.width * .03,
+                              horizontal: MediaQuery.of(context).size.width * .03,
                             ),
                       ),
                     ),
@@ -156,9 +147,7 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
             left: MediaQuery.of(context).size.width * .1,
             child: Obx(() {
               if (controller.isLoading.value) {
-                return const Center(
-                  child: CircularProgressIndicator(color: AppColors.darkBlue),
-                );
+                return const Center(child: CircularProgressIndicator(color: AppColors.darkBlue));
               }
               return const SizedBox.shrink();
             }),
@@ -215,8 +204,7 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
         isTextObscure: controller.isPasswordObscure.value,
         suffixIcon: IconButton(
           onPressed: () {
-            controller.isPasswordObscure.value =
-                !controller.isPasswordObscure.value;
+            controller.isPasswordObscure.value = !controller.isPasswordObscure.value;
           },
           icon: controller.isPasswordObscure.value
               ? Icon(Icons.visibility)
@@ -249,9 +237,7 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
   questionDropDown() {
     return BaseDropdown(
       labelText: AppStrings.chooseMySecurityQuestions,
-      items: controller.securityQuestionList.map((
-        QuestionResponseModel questionDetail,
-      ) {
+      items: controller.securityQuestionList.map((QuestionResponseModel questionDetail) {
         return DropdownMenuItem<QuestionResponseModel>(
           value: questionDetail,
           child: BaseText(text: questionDetail.question.toString()),

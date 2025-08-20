@@ -42,43 +42,39 @@ class AppStrings {
   static const sent = "Sent";
   static const ok = "ok";
   static const cloudStorageAccess = "Cloud Storage Access";
-  static const toAccessCloudStorageFiles =
-      "To access the cloud storage files, you first need to ";
+  static const toAccessCloudStorageFiles = "To access the cloud storage files, you first need to ";
   static const withYourEmailAccount = "\twith your email account.";
   static const localFiles = "Local Files";
   static const cloudFiles = "Cloud Files";
   static const browseImage = "Browse Image";
   static const delete = "Delete";
   static const invalidDataEntered = "Invalid Data Entered";
+  static const save = "Save";
+  static const undo = "Undo";
+  static const redo = "Redo";
+  static const savingPleaseWait = "Saving please wait ...";
+  static const loadingPleaseWait = "Loading please wait ...";
+  static const loading = "Loading ...";
 
   //Message Strings.
   static const passwordNotStrong = 'The password isn\'t strong enough';
   static const emailAlreadyUsed = 'That email is already used for an account';
-  static const yourAccountHasBeenCreated =
-      'Your account has been created successfully.';
-  static const passwordResetLink =
-      'We\'ve sent a password reset link to your email address.';
+  static const yourAccountHasBeenCreated = 'Your account has been created successfully.';
+  static const passwordResetLink = 'We\'ve sent a password reset link to your email address.';
 
   //Security Questions
-  static const whatWasYourChildhoodNickname =
-      'What was your childhood nickname?';
+  static const whatWasYourChildhoodNickname = 'What was your childhood nickname?';
   static const whatIsYourFavoriteFood = 'What is your favorite food?';
-  static const whereDidYouGoOnYourFirstVacation =
-      'Where did you go on your first vacation?';
-  static const whatIsYourMothersMaidenName =
-      'What is your mother’s maiden name?';
+  static const whereDidYouGoOnYourFirstVacation = 'Where did you go on your first vacation?';
+  static const whatIsYourMothersMaidenName = 'What is your mother’s maiden name?';
   static const whatIsTheNameOfTheStreetYouGrewUpOn =
       'What is the name of the street you grew up on?';
-  static const whatWasTheNameOfTheFirstPet =
-      'What was the name of your first pet?';
-  static const whatIsYourFavoriteTeachersName =
-      'What is your favorite teacher\'s name?';
-  static const whatWasTheNameOfTheElementarySchool =
-      'What was the name of your elementary school?';
+  static const whatWasTheNameOfTheFirstPet = 'What was the name of your first pet?';
+  static const whatIsYourFavoriteTeachersName = 'What is your favorite teacher\'s name?';
+  static const whatWasTheNameOfTheElementarySchool = 'What was the name of your elementary school?';
   static const whatIsYourFavoriteMovie = 'What is your favorite movie?';
   static const whatWasTheMakeAndModelOfTheFirstCar =
       'What was the make and model of your first car?';
-  static const whoIsYourFavoriteSportsTeam =
-      'Who is your favorite sports team?';
+  static const whoIsYourFavoriteSportsTeam = 'Who is your favorite sports team?';
   static const inWhatCityWereYouBorn = 'In what city were you born?';
 }

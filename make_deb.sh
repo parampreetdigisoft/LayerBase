@@ -2,7 +2,7 @@
 
 set -e  # Exit on any error
 
-APP_NAME="layerbase"
+APP_NAME="Layerbase"
 VERSION="1.0.0"
 ARCH="arm64"
 DEB_DIR="${APP_NAME}_deb"

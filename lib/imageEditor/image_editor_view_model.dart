@@ -1,14 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
+
 import '../utils/constants/app_keys.dart';
 
 class ImageEditorViewModel extends GetxController {
   Box<dynamic>? hiveBox;
   final editorKey = GlobalKey<ProImageEditorState>();
-  var layerData="".obs;
+  var layerData = "".obs;
 
   @override
   void onInit() {
@@ -36,6 +39,7 @@ class ImageEditorViewModel extends GetxController {
       });
     }
   }
+
   void applyFiltersToReferences(Map<String, dynamic> data, List<List<double>> filters) {
     final references = data['references'] as Map<String, dynamic>;
     int index = 0;
@@ -50,4 +54,28 @@ class ImageEditorViewModel extends GetxController {
     }
   }
 
+  onImageEditingFinished({
+    CompleteParameters? parameters,
+    Uint8List? imageFile,
+    int? imageIndex,
+  }) async {
+    final export = await editorKey.currentState?.exportStateHistory(
+      configs: ExportEditorConfigs(
+        exportBlur: true,
+        enableMinify: false,
+        exportCropRotate: true,
+        exportEmoji: true,
+        exportFilter: true,
+        exportPaint: true,
+        exportText: true,
+        exportTuneAdjustments: true,
+        exportWidgets: true,
+        historySpan: ExportHistorySpan.all,
+      ),
+    );
+    Map<String, dynamic>? jsonMap = await export?.toMap();
+    final layerJson = jsonEncode(jsonMap);
+    saveImageToHive(parameters!.image, imageFile!, imageIndex, layerJson);
+    return Future.value(true);
+  }
 }

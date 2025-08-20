@@ -9,6 +9,7 @@ import 'package:layerbase/utils/constants/app_assets.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:layerbase/utils/constants/app_constants.dart';
 import 'package:layerbase/utils/constants/app_keys.dart';
+import 'package:layerbase/utils/constants/app_strings.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 
 class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
@@ -17,7 +18,6 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
   @override
   Widget build(BuildContext context) {
     dynamic imageData;
-
     Uint8List? imageFile;
     int? imageIndex;
     imageData = Get.arguments[AppKeys.imageData];
@@ -38,8 +38,19 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
                 enablePreloadWebFont: false,
               ),
               textEditor: TextEditorConfigs(widgets: TextEditorWidgets()),
-              stickerEditor: StickerEditorConfigs(enabled: true),
-              i18n: I18n(done: 'Save', undo: 'Undo', redo: 'Redo'),
+              dialogConfigs: DialogConfigs(
+                style: DialogStyle(
+                  loadingDialog: LoadingDialogStyle(textColor: AppColors.chineseBlack),
+                ),
+              ),
+              i18n: I18n(
+                done: AppStrings.save,
+                undo: AppStrings.undo,
+                redo: AppStrings.redo,
+                doneLoadingMsg: AppStrings.savingPleaseWait,
+                importStateHistoryMsg: AppStrings.loadingPleaseWait,
+                various: I18nVarious(loadingDialogMsg: AppStrings.loading),
+              ),
               heroTag: 'hero-tag',
               theme: ThemeData(
                 cardColor: AppColors.gunMetal,
@@ -69,18 +80,13 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
                 canZoomWhenLayerSelected: true,
                 enableZoom: true,
                 enableCloseButton: true,
-                icons: MainEditorIcons(
-                  doneIcon: Icons.save,
-                  applyChanges: Icons.check,
-                ),
+                icons: MainEditorIcons(doneIcon: Icons.save, applyChanges: Icons.check),
               ),
               imageGeneration: ImageGenerationConfigs(
                 cropToDrawingBounds: false,
                 maxOutputSize: Size.infinite,
                 enableUseOriginalBytes: false,
-                processorConfigs: ProcessorConfigs(
-                  processorMode: ProcessorMode.auto,
-                ),
+                processorConfigs: ProcessorConfigs(processorMode: ProcessorMode.maximum),
                 allowEmptyEditingCompletion: true,
                 enableBackgroundGeneration: false,
                 cropToImageBounds: true,
@@ -117,6 +123,8 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
                         controller.layerData.value,
                         configs: ImportEditorConfigs(
                           enableInitialEmptyState: true,
+                          recalculateSizeAndPosition: true,
+                          mergeMode: ImportEditorMergeMode.merge,
                         ),
                       )
                     : null,
@@ -134,53 +142,38 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
                 Get.back();
               },
               onImageEditingStarted: () {},
-              emojiEditorCallbacks: EmojiEditorCallbacks(
-                onAfterViewInit: () {},
-                onInit: () {},
-              ),
+              emojiEditorCallbacks: EmojiEditorCallbacks(onAfterViewInit: () {}, onInit: () {}),
               onImageEditingComplete: (Uint8List bytes) async {},
               filterEditorCallbacks: FilterEditorCallbacks(
                 onFilterChanged: (value) {
-                  final Map<String, dynamic> jsonData = jsonDecode(
-                    controller.layerData.value,
-                  );
+                  final Map<String, dynamic> jsonData = jsonDecode(controller.layerData.value);
                   controller.applyFiltersToReferences(jsonData, value.filters);
                 },
               ),
               onCompleteWithParameters: (parameters) async {
-                final export = await controller.editorKey.currentState
-                    ?.exportStateHistory(
-                      configs: ExportEditorConfigs(
-                        exportBlur: true,
-                        enableMinify: false,
-                        exportCropRotate: true,
-                        exportEmoji: true,
-                        exportFilter: true,
-                        exportPaint: true,
-                        exportText: true,
-                        exportTuneAdjustments: true,
-                        exportWidgets: true,
-                        historySpan: ExportHistorySpan.all,
-                      ),
-                    );
+                final export = await controller.editorKey.currentState?.exportStateHistory(
+                  configs: ExportEditorConfigs(
+                    exportBlur: true,
+                    enableMinify: false,
+                    exportCropRotate: true,
+                    exportEmoji: true,
+                    exportFilter: true,
+                    exportPaint: true,
+                    exportText: true,
+                    exportTuneAdjustments: true,
+                    exportWidgets: true,
+                    historySpan: ExportHistorySpan.all,
+                  ),
+                );
                 Map<String, dynamic>? jsonMap = await export?.toMap();
                 final layerJson = jsonEncode(jsonMap);
-                controller.saveImageToHive(
-                  parameters.image,
-                  imageFile!,
-                  imageIndex,
-                  layerJson,
-                );
+                controller.saveImageToHive(parameters.image, imageFile!, imageIndex, layerJson);
                 return Future.value(true);
               },
               mainEditorCallbacks: MainEditorCallbacks(),
             ),
           ),
-          Positioned(
-            bottom: spacerSize10,
-            left: spacerSize0,
-            child: BottomNavigationSheet(),
-          ),
+          Positioned(bottom: spacerSize10, left: spacerSize0, child: BottomNavigationSheet()),
           Positioned(
             top: kToolbarHeight + spacerSize10,
             right: spacerSize20,

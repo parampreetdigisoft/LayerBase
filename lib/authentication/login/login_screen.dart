@@ -52,12 +52,8 @@ class LoginScreen extends GetWidget<LoginViewModel> {
                 color: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(
-                      isMobile(context) ? spacerSize0 : spacerSize50,
-                    ),
-                    bottomLeft: Radius.circular(
-                      isMobile(context) ? spacerSize0 : spacerSize50,
-                    ),
+                    topLeft: Radius.circular(isMobile(context) ? spacerSize0 : spacerSize50),
+                    bottomLeft: Radius.circular(isMobile(context) ? spacerSize0 : spacerSize50),
                   ),
                 ),
                 elevation: 5,
@@ -125,17 +121,12 @@ class LoginScreen extends GetWidget<LoginViewModel> {
                                 TextSpan(
                                   children: [
                                     TextSpan(text: AppStrings.dontHaveAccount),
-                                    WidgetSpan(
-                                      child: SizedBox(width: spacerSize5),
-                                    ),
+                                    WidgetSpan(child: SizedBox(width: spacerSize5)),
                                     TextSpan(
                                       text: AppStrings.register,
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
-                                          Navigator.pushNamed(
-                                            context,
-                                            Routes.signUp,
-                                          );
+                                          Navigator.pushNamed(context, Routes.signUp);
                                         },
                                       style: TextStyle(
                                         fontWeight: FontWeight.w600,
@@ -151,9 +142,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
                                 children: <Widget>[
                                   Expanded(child: Divider()),
                                   Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 8.0,
-                                    ),
+                                    padding: EdgeInsets.symmetric(horizontal: 8.0),
                                     child: Text(AppStrings.or),
                                   ),
                                   Expanded(child: Divider()),
@@ -172,16 +161,11 @@ class LoginScreen extends GetWidget<LoginViewModel> {
                                     ),
                                     onPressed: () {
                                       controller.sharedPreferences!.clear();
-                                      defaultTargetPlatform ==
-                                              TargetPlatform.windows
-                                          ? controller
-                                                .signInWithGoogleWindow()
-                                                .then((value) {
-                                                  navigateToGallery(value);
-                                                })
-                                          : controller.signInWithGoogle().then((
-                                              value,
-                                            ) {
+                                      defaultTargetPlatform == TargetPlatform.windows
+                                          ? controller.signInWithGoogleWindow().then((value) {
+                                              navigateToGallery(value);
+                                            })
+                                          : controller.signInWithGoogle().then((value) {
                                               navigateToGallery(value);
                                             });
                                     },
@@ -226,10 +210,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
                                     AppKeys.isGuestLoggedIn,
                                     true,
                                   );
-                                  Navigator.pushNamed(
-                                    context,
-                                    Routes.imageGallery,
-                                  );
+                                  Navigator.pushNamed(context, Routes.imageGallery);
                                 },
                                 textLabel: AppStrings.continueWithoutLogin,
                                 fontSize: fontSize14,
@@ -250,9 +231,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
             left: MediaQuery.of(context).size.width * .1,
             child: Obx(() {
               if (controller.isLoading.value) {
-                return const Center(
-                  child: CircularProgressIndicator(color: AppColors.darkBlue),
-                );
+                return const Center(child: CircularProgressIndicator(color: AppColors.darkBlue));
               }
               return const SizedBox.shrink();
             }),
@@ -290,8 +269,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
         isTextObscure: controller.isPasswordObscure.value,
         suffixIcon: IconButton(
           onPressed: () {
-            controller.isPasswordObscure.value =
-                !controller.isPasswordObscure.value;
+            controller.isPasswordObscure.value = !controller.isPasswordObscure.value;
           },
           icon: controller.isPasswordObscure.value
               ? Icon(Icons.visibility)
