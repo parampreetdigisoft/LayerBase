@@ -1,0 +1,97 @@
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../../authentication/login/login_screen.dart';
+import '../../utils/base/widgets/base_text.dart';
+import '../../utils/constants/app_color.dart';
+import '../../utils/constants/app_constants.dart';
+import '../../utils/constants/app_keys.dart';
+import '../../utils/constants/app_strings.dart';
+import '../home_controller.dart';
+
+class CloudFiles extends StatelessWidget {
+  final HomeController controller;
+  const CloudFiles({super.key,required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Center(
+        child: Visibility(
+          visible: (controller.sharedPrefsService.getString(AppKeys.displayName) ?? "").isEmpty,
+          replacement: BaseText(
+            text: AppStrings.noEditedImageAvailable,
+            fontSize: fontSize16,
+            textColor: Colors.white,
+          ),
+          child: Container(
+            padding: EdgeInsets.all(spacerSize10),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: AppColors.chineseBlack,
+              border: Border.all(color: AppColors.lightGrey),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(spacerSize15),
+                topRight: Radius.circular(spacerSize15),
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.info,
+                      color: AppColors.antiqueWhite,
+                      size: spacerSize15,
+                    ),
+                    const SizedBox(width: spacerSize5),
+                    Expanded(
+                      child: BaseText(
+                        textAlign: TextAlign.center,
+                        text: AppStrings.cloudStorageAccess,
+                        fontWeight: FontWeight.bold,
+                        textColor: AppColors.antiqueWhite,
+                      ),
+                    ),
+                  ],
+                ),
+                Spacer(),
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    style: const TextStyle(color: AppColors.antiqueWhite),
+                    children: [
+                      const TextSpan(text: AppStrings.toAccessCloudStorageFiles),
+                      TextSpan(
+                        text: AppStrings.login,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                          color: AppColors.dodgerBlue,
+                          decorationColor: AppColors.dodgerBlue,
+                        ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                          Get.to(() => const LoginScreen());
+                          },
+                      ),
+                      const TextSpan(text: AppStrings.withYourEmailAccount),
+                    ],
+                  ),
+                ),
+                Expanded(child: SizedBox.shrink()),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
