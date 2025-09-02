@@ -212,11 +212,14 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
       child:Obx (() =>  BaseButton(
         onPressed: () {
           if (controller.formKey.currentState!.validate()) {
-            defaultTargetPlatform == TargetPlatform.linux ||
-                    defaultTargetPlatform == TargetPlatform.windows
-                ? controller.registerUserUsingRestApi()
-                : controller.registerUser(context);
+            if(defaultTargetPlatform == TargetPlatform.linux ||
+                defaultTargetPlatform == TargetPlatform.windows){
+              controller.registerUserUsingRestApi();
+            }else{
+              controller.registerUser(context);
+            }
           }
+
         },
         backgroundColor: AppColors.darkBlue,
         buttonLabel: AppStrings.signUp,

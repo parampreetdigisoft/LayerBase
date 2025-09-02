@@ -17,15 +17,16 @@ import '../../utils/base/widgets/base_text_field.dart';
 
 class LoginScreen extends GetWidget<LoginViewModel> {
   const LoginScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    
     return Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(AppAssets.authBackgroundImage),
-            fit: BoxFit.cover,
-          )),
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(AppAssets.authBackgroundImage),
+          fit: BoxFit.cover,
+        ),
+      ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
@@ -84,7 +85,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
                                       ? MediaQuery.of(context).size.height * .05
                                       : MediaQuery.of(context).size.height * .1,
                                 ),
-      
+
                                 if (isMobile(context))
                                   appLogo(
                                     context,
@@ -110,7 +111,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
                                     ],
                                   ),
                                 ),
-      
+
                                 const SizedBox(height: spacerSize10),
                                 Align(
                                   alignment: Alignment.bottomRight,
@@ -122,15 +123,17 @@ class LoginScreen extends GetWidget<LoginViewModel> {
                                     },
                                   ),
                                 ),
-      
+
                                 const SizedBox(height: spacerSize45),
                                 loginBtn(context),
-      
+
                                 const SizedBox(height: spacerSize25),
                                 Text.rich(
                                   TextSpan(
                                     children: [
-                                      TextSpan(text: AppStrings.dontHaveAccount),
+                                      TextSpan(
+                                        text: AppStrings.dontHaveAccount,
+                                      ),
                                       WidgetSpan(
                                         child: SizedBox(width: spacerSize5),
                                       ),
@@ -151,7 +154,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
                                     ],
                                   ),
                                 ),
-      
+
                                 const SizedBox(height: spacerSize25),
                                 const Row(
                                   children: <Widget>[
@@ -166,7 +169,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
                                   ],
                                 ),
                                 const SizedBox(height: spacerSize25),
-      
+
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -178,28 +181,28 @@ class LoginScreen extends GetWidget<LoginViewModel> {
                                       ),
                                       onPressed: () {
                                         controller.sharedPreferences!.clear();
-                                        defaultTargetPlatform ==
-                                                TargetPlatform.windows
-                                            ? controller
-                                                  .signInWithGoogleWindow()
-                                                  .then((value) {
+                                        defaultTargetPlatform == TargetPlatform.windows
+                                            ? controller.signInWithGoogleWindow().then((value) {
                                                     navigateToGallery(value);
                                                   })
-                                            : controller.signInWithGoogle().then((
-                                                value,
-                                              ) {
-                                                navigateToGallery(value);
-                                              });
+                                            : controller
+                                                  .signInWithGoogle()
+                                                  .then((value) {
+                                                    navigateToGallery(value);
+                                                  });
                                       },
                                       tooltip: AppStrings.signInWithGoogle,
                                     ),
                                   ],
                                 ),
                                 const SizedBox(height: spacerSize16),
-      
+
                                 BaseTextButton(
                                   onPressed: () {
-                                    controller.sharedPreferences!.setBool(AppKeys.isGuestLoggedIn,true);
+                                    controller.sharedPreferences!.setBool(
+                                      AppKeys.isGuestLoggedIn,
+                                      true,
+                                    );
                                     Navigator.pushNamed(
                                       context,
                                       Routes.homeScreen,
@@ -208,12 +211,12 @@ class LoginScreen extends GetWidget<LoginViewModel> {
                                   textLabel: AppStrings.continueWithoutLogin,
                                   fontSize: fontSize14,
                                   textColor: AppColors.darkBlue,
-
                                 ),
                               ],
                             ).marginSymmetric(
                               vertical: spacerSize20,
-                              horizontal: MediaQuery.of(context).size.width * .03,
+                              horizontal:
+                                  MediaQuery.of(context).size.width * .03,
                             ),
                       ),
                     ),
