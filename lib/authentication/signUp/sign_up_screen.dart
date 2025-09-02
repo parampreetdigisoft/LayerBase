@@ -4,15 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:layerbase/authentication/signUp/question_response_model.dart';
 import 'package:layerbase/authentication/signUp/sign_up_view_model.dart';
-import 'package:layerbase/base/widgets/base_button.dart';
-import 'package:layerbase/base/widgets/base_dropdown.dart';
-import 'package:layerbase/base/widgets/base_form.dart';
-import 'package:layerbase/base/widgets/base_text.dart';
-import 'package:layerbase/base/widgets/base_text_field.dart';
 import 'package:layerbase/utils/constants/app_assets.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:layerbase/utils/constants/app_constants.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
+
+import '../../utils/base/widgets/base_button.dart';
+import '../../utils/base/widgets/base_dropdown.dart';
+import '../../utils/base/widgets/base_form.dart';
+import '../../utils/base/widgets/base_text.dart';
+import '../../utils/base/widgets/base_text_field.dart';
 
 class SignUpScreen extends GetWidget<SignUpViewModel> {
   const SignUpScreen({super.key});
@@ -109,7 +110,7 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
                                 answerField(),
 
                                 const SizedBox(height: spacerSize55),
-                                signUp(context),
+                                signUpBtn(context),
                                 const SizedBox(height: spacerSize25),
 
                                 Text.rich(
@@ -142,15 +143,6 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
                 ),
               ),
             ),
-          ),
-          Positioned.fill(
-            left: MediaQuery.of(context).size.width * .1,
-            child: Obx(() {
-              if (controller.isLoading.value) {
-                return const Center(child: CircularProgressIndicator(color: AppColors.darkBlue));
-              }
-              return const SizedBox.shrink();
-            }),
           ),
         ],
       ),
@@ -214,10 +206,10 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
     );
   }
 
-  signUp(BuildContext context) {
+  signUpBtn(BuildContext context) {
     return SizedBox(
       width: spacerSize250,
-      child: BaseButton(
+      child:Obx (() =>  BaseButton(
         onPressed: () {
           if (controller.formKey.currentState!.validate()) {
             defaultTargetPlatform == TargetPlatform.linux ||
@@ -230,7 +222,8 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
         buttonLabel: AppStrings.signUp,
         fontSize: fontSize18,
         textColor: Colors.white,
-      ),
+        showLoader: controller.isLoading.value,
+      )),
     );
   }
 
@@ -253,3 +246,5 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
     return MediaQuery.of(context).size.width < 600;
   }
 }
+
+

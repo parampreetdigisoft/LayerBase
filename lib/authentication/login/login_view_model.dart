@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:layerbase/utils/shared_prefs_service.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../utils/constants/app_constants.dart';
+import '../../utils/base/dialogs/base_dialog.dart';
 import 'package:http/http.dart' as http;
 
 class LoginViewModel extends GetxController {
@@ -31,6 +31,7 @@ class LoginViewModel extends GetxController {
   }
 
   Future<UserCredential?> signInWithGoogle() async {
+    debugPrint("inside sign with email:::::");
     sharedPreferences!.clear();
     isLoading.value = true;
 
@@ -47,18 +48,15 @@ class LoginViewModel extends GetxController {
       return data;
     } on FirebaseAuthException catch (e) {
       debugPrint(e.message);
-
-      BaseSnackBar.show(
-        title: AppStrings.error,
-        message: e.message ?? AppStrings.googleSignInFailed,
-      );
+      AppToast.show(
+          title: AppStrings.error,
+           e.message ?? AppStrings.googleSignInFailed,backgroundColor: Colors.red);
       return null;
     } catch (e) {
       debugPrint(e.toString());
-      BaseSnackBar.show(
-        title: AppStrings.error,
-        message: "${AppStrings.googleSignInFailed}: $e",
-      );
+      AppToast.show(
+          title: AppStrings.error,
+           "${AppStrings.googleSignInFailed}: $e",backgroundColor: Colors.red);
       return null;
     } finally {
       isLoading.value = false;
@@ -66,6 +64,7 @@ class LoginViewModel extends GetxController {
   }
 
   Future<void> signInWithEmailAndPassword() async {
+    debugPrint("inside signInWithEmailAndPassword:::::");
     sharedPreferences!.clear();
     isLoading.value = true;
     try {
@@ -79,28 +78,20 @@ class LoginViewModel extends GetxController {
         userCredential.user!.refreshToken.toString(),
       );
 
-      Navigator.pushReplacementNamed(Get.context!, Routes.imageGallery);
+      Navigator.pushReplacementNamed(Get.context!, Routes.homeScreen);
     } on FirebaseAuthException catch (exception) {
       if (exception.code == AppKeys.userNotFound) {
-        BaseSnackBar.show(
-          title: AppStrings.validate,
-          message: AppStrings.noUserFound,
-        );
+        AppToast.show(
+            title: AppStrings.validate,
+             AppStrings.noUserFound,backgroundColor: Colors.red);
       } else if (exception.code == AppKeys.wrongPassword) {
-        BaseSnackBar.show(
-          title: AppStrings.validate,
-          message: AppStrings.wrongPasswordEntered,
-        );
+        AppToast.show(
+            title: AppStrings.validate,
+             AppStrings.wrongPasswordEntered,backgroundColor: Colors.red);
       } else {
-        BaseSnackBar.show(
-          title: AppStrings.error,
-          message: '${exception.message}',
-        );
-
-        BaseSnackBar.show(
-          title: AppStrings.validate,
-          message: '${exception.message}',
-        );
+        AppToast.show(
+            title: AppStrings.error,
+            '${exception.message}',backgroundColor: Colors.red);
       }
     } catch (e) {
       debugPrint("Unexpected error: $e");
@@ -109,42 +100,35 @@ class LoginViewModel extends GetxController {
     }
   }
 
-
   forgotPassword(BuildContext context) {
     Navigator.pushNamed(context, Routes.forgotPassword);
   }
 
   Future<UserCredential> signInWithGoogleWindow() async {
-    final clientId =
-        dotenv.env['windows_clientId']; // Replace with your Client ID
-    final clientSecret =
-        dotenv.env['windows_secretId']; // Replace with your Client Secret
+    final clientId = dotenv.env['windows_clientId'];
+    final clientSecret = dotenv.env['windows_secretId'];
 
     final redirectUri = 'http://localhost:8080/';
     final scopes = ['openid', 'email', 'profile'];
     final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 8080);
 
-    // 2. Build the authorization URL
     final authUrl = Uri.https('accounts.google.com', '/o/oauth2/v2/auth', {
       'response_type': 'code',
       'client_id': clientId,
       'redirect_uri': redirectUri,
       'scope': scopes.join(' '),
-      'access_type': 'offline', // to get refresh token
-      'prompt': 'consent', // force consent to get refresh token
+      'access_type': 'offline',
+      'prompt': 'consent',
     });
 
-    // 3. Launch the URL in the browser
     if (!await launchUrl(authUrl, mode: LaunchMode.inAppWebView)) {
       throw Exception('Could not launch browser for OAuth');
     }
 
-    // 4. Wait for the redirect with the code
     final request = await server.first;
     final query = request.uri.queryParameters;
     final code = query['code'];
 
-    // Respond to the browser so user knows they can close it
     request.response
       ..statusCode = 200
       ..headers.set('Content-Type', 'text/html')
@@ -196,22 +180,24 @@ class LoginViewModel extends GetxController {
   }
 
   Future<void> signInWithEmailRest(String email, String password) async {
+    debugPrint("inside signInWithEmailRest:::::");
     sharedPreferences!.clear();
     isLoading.value = true;
-    isLoading.refresh();
-    final url = Uri.parse(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${dotenv.env['web_apiKey'] ?? ""}',
-    );
+    final url = Uri.parse('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${dotenv.env['web_apiKey'] ?? ""}',);
+
+    final Map<String, dynamic> map = {
+      AppKeys.email: emailController.text,
+      AppKeys.password: passwordController.text,
+      "returnSecureToken": true,
+    };
 
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        "email": email,
-        "password": password,
-        "returnSecureToken": true,
-      }),
+      body: jsonEncode(map),
     );
+
+    debugPrint("map::::$map");
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -219,14 +205,26 @@ class LoginViewModel extends GetxController {
         AppKeys.idToken,
         data['refreshToken'].toString(),
       );
-      isLoading.value = false;
-      Navigator.pushReplacementNamed(Get.context!, Routes.imageGallery);
+      debugPrint("data::::::$data");
+      sharedPreferences!.setString(AppKeys.email, data['email']??"");
+      sharedPreferences!.setString(AppKeys.displayName, data['displayName']??"");
+    //  isLoading.value = false;
+
+     /* Navigator.pushNamedAndRemoveUntil(
+        Get.context!,
+        Routes.homeScreen,
+            (route) => false,
+      );*/
+
+      Navigator.pushReplacementNamed(Get.context!, Routes.homeScreen);
+
+
     } else {
       isLoading.value = false;
-      BaseSnackBar.show(
-        title: AppStrings.validate,
-        message: AppStrings.noUserFound,
-      );
+      AppToast.show(
+          title: AppStrings.validate,
+          AppStrings.noUserFound,backgroundColor: Colors.red);
+
     }
   }
 

@@ -7,7 +7,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
 # followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
+# Both the versifon and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # In Android, build-name is used as versionName while build-number used as versionCode.
 # Read more about Android versioning at https://developer.android.com/studio/publish/versioning
@@ -48,6 +48,8 @@ dependencies:
   pro_image_editor: ^11.4.1
   shared_preferences: ^2.5.3
   url_launcher: ^6.3.2
+  shimmer_animation: ^2.2.2
+  window_manager: ^0.5.1
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +77,8 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/stickers/
+    - assets/stickers.json
     - assets/icon.png
     - secret.env
 

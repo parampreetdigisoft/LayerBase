@@ -40,20 +40,20 @@ class BaseTextField extends StatelessWidget {
         prefixIconColor: AppColors.grey,
         suffixIcon: suffixIcon ?? SizedBox(),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.borderGrey),
+          borderSide: BorderSide(color: AppColors.antiqueWhite),
         ),
         errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.borderGrey),
+          borderSide: BorderSide(color: AppColors.antiqueWhite),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.borderGrey),
+          borderSide: BorderSide(color: AppColors.antiqueWhite),
         ),
         focusColor: Colors.white,
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: AppColors.antiqueWhite, width: 1.0),
         ),
         filled: true,
-        fillColor: Colors.white,
+        fillColor:Colors.white,
       ),
       autovalidateMode: AutovalidateMode.disabled,
       validator: (value) {

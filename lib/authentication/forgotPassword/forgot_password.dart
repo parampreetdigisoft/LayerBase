@@ -1,15 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:layerbase/authentication/forgotPassword/forgot_password_view_model.dart';
-import 'package:layerbase/base/widgets/base_button.dart';
-import 'package:layerbase/base/widgets/base_form.dart';
-import 'package:layerbase/base/widgets/base_text.dart';
-import 'package:layerbase/base/widgets/base_text_field.dart';
 import 'package:layerbase/utils/constants/app_assets.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:layerbase/utils/constants/app_constants.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../utils/base/widgets/base_button.dart';
+import '../../utils/base/widgets/base_form.dart';
+import '../../utils/base/widgets/base_text.dart';
+import '../../utils/base/widgets/base_text_field.dart';
 
 class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
   const ForgotPassword({super.key});
@@ -102,14 +102,6 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
                             const SizedBox(height: spacerSize45),
                             submit(context),
 
-                            Obx(() {
-                              if (controller.isLoading.value) {
-                                return const Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              }
-                              return const SizedBox.shrink();
-                            }),
                           ],
                         ),
                       ),
@@ -199,10 +191,10 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
   }
 
   submit(BuildContext context) {
-    return Obx(
-      () => SizedBox(
+    return SizedBox(
         width: spacerSize250,
-        child: BaseButton(
+        child: Obx(
+              () =>BaseButton(
           onPressed: () {
             if (controller.formKey.currentState!.validate()) {
               defaultTargetPlatform == TargetPlatform.linux ||
@@ -217,8 +209,9 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
               : AppStrings.submit,
           fontSize: fontSize18,
           textColor: Colors.white,
-        ),
-      ),
+          showLoader: controller.isLoading.value,
+        )),
+
     );
   }
 

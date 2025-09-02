@@ -7,4 +7,6 @@ class AppAssets{
   static const uploadFileIcon='assets/images/upload_file.png';
   static const aiIcon='assets/images/ai.png';
   static const authBackgroundImage='assets/images/auth_screen.png';
+  static const uploadIcon= "assets/images/upload_icon.png";
+  static const stickersJson= "assets/stickers.json";
 }

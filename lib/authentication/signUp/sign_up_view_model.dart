@@ -1,8 +1,6 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:layerbase/authentication/signUp/question_response_model.dart';
 import 'package:layerbase/authentication/signUp/sign_up_repository.dart';
-import 'package:layerbase/base/dialogs/base_dialog.dart';
-import 'package:layerbase/utils/constants/app_constants.dart';
 import 'package:layerbase/utils/constants/app_keys.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
 import 'package:layerbase/utils/routes.dart';
@@ -13,6 +11,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../../utils/base/dialogs/base_dialog.dart';
+
 class SignUpViewModel extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isPasswordObscure = true.obs;
@@ -21,8 +21,7 @@ class SignUpViewModel extends GetxController {
   TextEditingController passwordController = TextEditingController();
   TextEditingController answerController = TextEditingController();
   SignUpRepository signUpRepository = SignUpRepository();
-  RxList<QuestionResponseModel> securityQuestionList =
-      <QuestionResponseModel>[].obs;
+  RxList<QuestionResponseModel> securityQuestionList = <QuestionResponseModel>[].obs;
 
   ScrollController scrollController = ScrollController();
 
@@ -48,9 +47,7 @@ class SignUpViewModel extends GetxController {
             email: emailController.text,
             password: passwordController.text,
           );
-
       User? user = userCredential.user;
-
       if (user != null) {
         await FirebaseFirestore.instance.collection(AppKeys.users).add({
           AppKeys.uid: user.uid,
@@ -64,20 +61,16 @@ class SignUpViewModel extends GetxController {
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == AppKeys.weakPassword) {
-        BaseSnackBar.show(
-          title: AppStrings.validate,
-          message: AppStrings.passwordNotStrong,
-        );
+        AppToast.show(
+            title: AppStrings.validate,
+            AppStrings.passwordNotStrong,backgroundColor: Colors.red);
       } else if (e.code == AppKeys.emailAlreadyInUse) {
-        BaseSnackBar.show(
-          title: AppStrings.validate,
-          message: AppStrings.emailAlreadyUsed,
-        );
+        AppToast.show(
+            title: AppStrings.validate,
+             AppStrings.emailAlreadyUsed,backgroundColor: Colors.red);
       } else {
-        BaseSnackBar.show(
-          title: AppStrings.validate,
-          message: e.message.toString(),
-        );
+        AppToast.show(
+            title: AppStrings.validate, e.message.toString(),backgroundColor: Colors.red);
       }
     } catch (e) {
       debugPrint('${AppStrings.error}: $e');
@@ -93,26 +86,31 @@ class SignUpViewModel extends GetxController {
       'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${dotenv.env['web_apiKey'] ?? ""}',
     );
 
+    final Map<String, dynamic> map = {
+      AppKeys.email: emailController.text,
+      AppKeys.password: passwordController.text,
+      AppKeys.displayName: fullNameController.text,
+      AppKeys.securityQuestion: selectedQuestion.value,
+      AppKeys.securityAnswer: answerController.text,
+      "returnSecureToken": true,
+    };
+
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        AppKeys.email: emailController.text,
-        AppKeys.password: passwordController.text,
-        AppKeys.name: fullNameController.text,
-        AppKeys.securityQuestion: selectedQuestion.value,
-        AppKeys.securityAnswer: answerController.text,
-        'returnSecureToken': true,
-      }),
+      body: jsonEncode(map),
     );
 
+    debugPrint("body:::$map:");
+
     if (response.statusCode == 200) {
+      isLoading.value = false;
       registerSuccessDialog();
     } else {
-      BaseSnackBar.show(
-        title: AppStrings.validate,
-        message: AppStrings.invalidDataEntered,
-      );
+      isLoading.value = false;
+      AppToast.show(
+          title:AppStrings.validate,
+          AppStrings.invalidDataEntered,backgroundColor: Colors.red);
     }
   }
 

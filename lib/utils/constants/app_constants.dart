@@ -1,6 +1,3 @@
-/*FontSize*/
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 const double fontSize14 = 14;
 const double fontSize16 = 16;
@@ -21,6 +18,7 @@ const double spacerSize10 = 10;
 const double spacerSize12 = 12;
 const double spacerSize15 = 15;
 const double spacerSize16 = 16;
+const double spacerSize18 = 18;
 const double spacerSize20 = 20;
 const double spacerSize24 = 24;
 const double spacerSize25 = 25;
@@ -30,6 +28,7 @@ const double spacerSize40 = 40;
 const double spacerSize45 = 45;
 const double spacerSize48 = 48;
 const double spacerSize50 = 50;
+const double spacerSize53 = 53;
 const double spacerSize55 = 55;
 const double spacerSize60 = 60;
 const double spacerSize65 = 65;
@@ -60,9 +59,3 @@ const double spacerSize350 = 350;
 const double spacerSize400 = 400;
 const double spacerSize500 = 500;
 const double spacerSize600 = 600;
-
-class BaseSnackBar {
-  static show({String title = '', String message = ''}) {
-    Get.snackbar(title, message, colorText: Colors.white);
-  }
-}

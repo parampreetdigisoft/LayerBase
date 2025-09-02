@@ -1,7 +1,8 @@
 import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:flutter/material.dart';
 
-import '../../utils/constants/app_strings.dart' show AppStrings;
+import '../../constants/app_strings.dart';
+
 
 class BaseDropdown extends StatelessWidget {
   const BaseDropdown({super.key, this.labelText, this.items, this.onChanged});

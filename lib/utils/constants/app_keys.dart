@@ -8,6 +8,7 @@ class AppKeys {
   static const email = 'email';
   static const password = 'password';
   static const name = 'name';
+  static const displayName = 'displayName';
   static const createdAt = 'created_at';
   static const securityQuestion = 'security_question';
   static const securityAnswer = 'security_answer';
@@ -19,4 +20,9 @@ class AppKeys {
   static const layerJson = 'layer_json';
   static const imageIndex = 'image_index';
   static const imageThumbnail = 'image_thumbnail';
+  static const references = 'references';
+  static const item = 'item';
+  static const offsets = 'offsets';
+  static const color = 'color';
+  static const strokeWidth = 'strokeWidth';
 }

@@ -1,11 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:layerbase/utils/constants/app_keys.dart';
-import 'package:layerbase/utils/routes.dart';
 import 'package:layerbase/utils/constants/app_assets.dart';
 import 'package:layerbase/utils/constants/app_constants.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:layerbase/utils/constants/app_keys.dart';
+import 'package:layerbase/utils/routes.dart';
 import 'package:layerbase/utils/shared_prefs_service.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -64,7 +64,7 @@ class SplashScreen extends StatelessWidget {
     bool isLoggedIn = false,
   }) {
     if (user != null || isGuestLoggedIn || isLoggedIn) {
-      Navigator.pushReplacementNamed(context, Routes.imageGallery);
+      Navigator.pushReplacementNamed(context, Routes.homeScreen);
     } else {
       Navigator.pushReplacementNamed(context, Routes.logIn);
     }

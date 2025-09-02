@@ -48,6 +48,7 @@ class AppStrings {
   static const cloudFiles = "Cloud Files";
   static const browseImage = "Browse Image";
   static const delete = "Delete";
+  static const download = "Download";
   static const invalidDataEntered = "Invalid Data Entered";
   static const save = "Save";
   static const undo = "Undo";
@@ -77,4 +78,23 @@ class AppStrings {
       'What was the make and model of your first car?';
   static const whoIsYourFavoriteSportsTeam = 'Who is your favorite sports team?';
   static const inWhatCityWereYouBorn = 'In what city were you born?';
+
+
+  /// aditya
+
+static const deleteLayer= "Delete layer";
+static const deleteImage= "Delete Image";
+static const deleteThisLayer= " delete this Layer?";
+static const deleteThisImage= " delete this Image?";
+static const profile= "Profile";
+static const fileUpload= "File Upload";
+static const layerHistory= "Layers History";
+static const noLayers= "No Layers";
+static const clickHereToBrowseAnImage= "Click here to browse an image";
+static const selectImageDesc= "Click here to add an image \nand start editing. Customize, enhance, \nand make it your own with our editor.";
+static const hide= "Hide";
+static const move= "Move";
+static const noEditedImageAvailable= "No edited images available.";
+static const areYouSureWantTo= "Are you sure you want to";
+static const logout= "Logout";
 }
