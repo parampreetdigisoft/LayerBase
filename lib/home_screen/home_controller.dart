@@ -22,8 +22,8 @@ class HomeController extends GetxController
   final picker = ImagePicker();
   Rx<Uint8List>? imageBytes;
   Box<dynamic>? hiveBox;
-  String userDisPlayName = "";
-  RxList<dynamic>? imageList = <Uint8List>[].obs;
+  RxString userDisplayName = "".obs;
+  RxList<dynamic> imageList = <Uint8List>[].obs;
   late SharedPrefsService sharedPrefsService;
   late TabController tabController;
   var selectedIndex = 0.obs;
@@ -58,7 +58,7 @@ class HomeController extends GetxController
   void onInit() {
     super.onInit();
     sharedPrefsService = SharedPrefsService.instance;
-     userDisPlayName = sharedPrefsService.getString(AppKeys.displayName)??"";
+     userDisplayName.value = sharedPrefsService.getString(AppKeys.displayName)??"";
     tabController = TabController(length: 2, vsync: this);
     tabController.addListener(() {
       selectedIndex.value = tabController.index;
@@ -115,7 +115,7 @@ class HomeController extends GetxController
   }
 
   fetchImagesFromDb() async {
-    imageList!.clear();
+    imageList.clear();
     isLoading.value = true;
     hiveBox = Hive.box<dynamic>(AppKeys.imageLayerBox);
 
@@ -130,7 +130,7 @@ class HomeController extends GetxController
         tempImageList.add(bytes[AppKeys.imageThumbnail]);
       }
     }
-    imageList!.value = tempImageList;
+    imageList.value = tempImageList;
     isLoading.value = false;
   }
 
@@ -148,22 +148,7 @@ class HomeController extends GetxController
     }
   }
 
-  Future<void> downloadImage1(bytes) async {
-    try {
-      String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
-      if (selectedDirectory == null) {
-        debugPrint("No folder selected.::::");
-        return;
-      }
-      final timestamp = "${DateTime.now().year}${DateTime.now().month.toString().padLeft(2, '0')}${DateTime.now().day.toString().padLeft(2, '0')}_${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}";
-      final filePath = "$selectedDirectory/layer_base_img_$timestamp.png";
-      final file = File(filePath);
-      await file.writeAsBytes(bytes);
-      debugPrint("Image saved successfully::::");
-    } catch (e) {
-      debugPrint(" Error saving image:::::$e");
-    }
-  }
+
   Future<void> downloadImage(bytes) async {
     bool isSuccess = false;
     try {
@@ -184,14 +169,13 @@ class HomeController extends GetxController
     } finally {
       if (isSuccess) {
         AppToast.show(
-            title: "Download successfully",
-          "File downloaded successfully",backgroundColor: Colors.green);
+            title: AppStrings.downloadSuccessfully,
+          "${AppStrings.file}\t ${AppStrings.downloadSuccessfully}",backgroundColor: Colors.green);
       }
     }
   }
 
-
-  logoutDialog() {
+  Future<void> showLogoutDialog() {
     return showCommonDialog(
       context: Get.context!,
       title: AppStrings.logout,

@@ -71,28 +71,6 @@ class BaseDialog {
     );
   }
 
-  static void showLogoutDialog(BuildContext context, VoidCallback logout) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(), // Cancel
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              logout();
-            },
-            child: const Text('Logout'),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 /// Aditya
@@ -110,6 +88,7 @@ Future<void> showCommonDialog({
     builder: (ctx) {
       return AlertDialog(
         backgroundColor: AppColors.gunMetal,
+
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(spacerSize12),
         ),
@@ -155,8 +134,9 @@ Future<void> showCommonDialog({
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
+                enabledMouseCursor: MouseCursor.uncontrolled,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(spacerSize15)
+                  borderRadius: BorderRadius.circular(spacerSize15),
                 ),
               ),
               onPressed: () {
@@ -177,11 +157,11 @@ Future<void> showCommonDialog({
 
 class AppToast {
   static void show(
-      String message, {
-        String title = "",
-        Color backgroundColor = Colors.black,
-        Color textColor = Colors.white,
-      }) {
+    String message, {
+    String title = "",
+    Color backgroundColor = Colors.black,
+    Color textColor = Colors.white,
+  }) {
     Get.snackbar(
       title,
       message,
@@ -189,9 +169,8 @@ class AppToast {
       colorText: textColor,
       snackPosition: SnackPosition.TOP,
       margin: const EdgeInsets.all(spacerSize12),
-      borderRadius:spacerSize5,
+      borderRadius: spacerSize5,
       duration: const Duration(seconds: 2),
     );
   }
 }
-

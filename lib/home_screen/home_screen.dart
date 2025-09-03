@@ -4,6 +4,7 @@ import 'package:layerbase/utils/constants/app_assets.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:layerbase/utils/constants/app_constants.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
+
 import '../utils/base/widgets/base_text.dart';
 import '../utils/routes.dart';
 import 'components/cloud_files.dart';
@@ -117,7 +118,6 @@ class HomeScreen extends GetWidget<HomeController> {
                           physics: NeverScrollableScrollPhysics(),
                           children: [
                             LocalFiles(controller: controller),
-
                             CloudFiles(controller: controller),
                           ],
                         ),
@@ -172,45 +172,46 @@ class HomeScreen extends GetWidget<HomeController> {
       backgroundColor: AppColors.darkJungleGreen,
       elevation: 0,
       scrolledUnderElevation: 0,
+      centerTitle: false,
       title: Image.asset(AppAssets.appLogo, height: spacerSize25),
       actions: [
-        IconButton(
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.only(right: spacerSize5),
-            minimumSize: Size(0, 0),
-          ),
-          tooltip:
-          controller.userDisPlayName.isEmpty
-              ? AppStrings.login
-              : AppStrings.logout,
-          onPressed: () {
-            if (controller.userDisPlayName.isEmpty) {
-              Navigator.pushNamed(context, Routes.logIn);
-            } else {
-              controller.logoutDialog();
-            }
-          },
+        Obx(
+          () => IconButton(
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.only(right: spacerSize5),
+              minimumSize: Size(0, 0),
+            ),
+            tooltip: controller.userDisplayName.value.isEmpty
+                ? AppStrings.login
+                : AppStrings.logout,
+            onPressed: () {
+              if (controller.userDisplayName.value.isEmpty) {
+                Navigator.pushNamed(context, Routes.logIn);
+              } else {
+                controller.showLogoutDialog();
+              }
+            },
 
-          icon: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Icon(
-                controller.userDisPlayName.isEmpty
-                    ? Icons.person
-                    : Icons.logout,
-                size: spacerSize15,
-                color: AppColors.antiqueWhite,
-              ),
-              BaseText(
-                text:
-                controller.userDisPlayName.isEmpty
-                    ? AppStrings.login
-                    : AppStrings.logout,
-                textColor: AppColors.antiqueWhite,
-                fontWeight: FontWeight.w500,
-                fontSize: fontSize14,
-              ),
-            ],
+            icon: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Icon(
+                  controller.userDisplayName.value.isEmpty
+                      ? Icons.person
+                      : Icons.logout,
+                  size: spacerSize15,
+                  color: AppColors.antiqueWhite,
+                ),
+                BaseText(
+                  text: controller.userDisplayName.value.isEmpty
+                      ? AppStrings.login
+                      : AppStrings.logout,
+                  textColor: AppColors.antiqueWhite,
+                  fontWeight: FontWeight.w500,
+                  fontSize: fontSize14,
+                ),
+              ],
+            ),
           ),
         ),
       ],

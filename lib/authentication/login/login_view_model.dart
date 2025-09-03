@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -13,7 +12,6 @@ import 'package:layerbase/utils/constants/app_strings.dart';
 import 'package:layerbase/utils/routes.dart' show Routes;
 import 'package:layerbase/utils/shared_prefs_service.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../utils/base/dialogs/base_dialog.dart';
 
 class LoginViewModel extends GetxController {
@@ -60,7 +58,7 @@ class LoginViewModel extends GetxController {
       debugPrint(e.toString());
       AppToast.show(
         title: AppStrings.error,
-        "${AppStrings.googleSignInFailed}: $e",
+        "${AppStrings.googleSignInFailed}:$e",
         backgroundColor: Colors.red,
       );
       return null;
@@ -70,7 +68,7 @@ class LoginViewModel extends GetxController {
   }
 
   Future<void> signInWithEmailAndPassword() async {
-    debugPrint("inside signInWithEmailAndPassword:::::");
+    debugPrint(":::::inside sign In With Email And Password:::::");
     sharedPreferences!.clear();
     isLoading.value = true;
     try {

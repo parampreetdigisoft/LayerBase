@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:layerbase/home_screen/home_controller.dart';
@@ -13,6 +14,7 @@ import '../../utils/routes.dart';
 
 class LocalFiles extends StatelessWidget {
   final HomeController controller;
+
   const LocalFiles({super.key, required this.controller});
 
   @override
@@ -33,10 +35,10 @@ class LocalFiles extends StatelessWidget {
           ),
 
           child: Visibility(
-            visible: controller.imageList!.isNotEmpty,
+            visible: controller.imageList.isNotEmpty,
             replacement: Center(
               child: BaseText(
-                text: AppStrings.noEditedImageAvailable,
+                text: AppStrings.noImageFound,
                 fontSize: fontSize16,
                 textColor: Colors.white,
               ),
@@ -48,129 +50,10 @@ class LocalFiles extends StatelessWidget {
     );
   }
 
-  Widget layerItemWidget1() {
-    return GridView.builder(
-      itemCount: controller.imageList!.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        crossAxisSpacing: 8,
-        mainAxisSpacing: 8,
-      ),
-      itemBuilder: (context, index) {
-        return Stack(
-          children: [
-            InkWell(
-              splashColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  Routes.imageEditor,
-                  arguments: {
-                    //AppKeys.imageData: controller.hiveBox!.getAt(index),
-                    AppKeys.imageIndex: index,
-                  },
-                ).then((value) {
-                  controller.fetchImagesFromDb();
-                });
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppColors.chineseBlack,
-                  border: Border.all(color: AppColors.lightGrey),
-                  borderRadius: BorderRadius.circular(spacerSize10),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(spacerSize10),
-                  child: Image.memory(
-                    controller.imageList![index] ?? Uint8List(0),
-                    filterQuality: FilterQuality.medium,
-                    fit: BoxFit.cover,
-                    height: double.infinity,
-                    width: double.infinity,
-                  ),
-                ),
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.black38,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(spacerSize10),
-                  topRight: Radius.circular(spacerSize10),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    tooltip: AppStrings.download,
-                    onPressed: () {
-                      controller.downloadImage(controller.imageList![index]);
-                    },
-                    icon: ShaderMask(
-                      shaderCallback: (bounds) => LinearGradient(
-                        colors: [
-                          AppColors.violet,
-                          AppColors.brightCyan,
-                          AppColors.antiqueWhite,
-                        ],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ).createShader(bounds),
-                      child: const Icon(
-                        Icons.arrow_circle_down_sharp,
-                        color: Colors.white,
-                        size: spacerSize20,
-                      ),
-                    ),
-                  ),
-
-                  IconButton(
-                    tooltip: AppStrings.delete,
-                    onPressed: () {
-                      showCommonDialog(
-                        context: context,
-                        onNo: () => Get.back(),
-                        onYes: () {
-                          controller.imageList!.removeAt(index);
-                          controller.hiveBox!.deleteAt(index);
-                          controller.imageList!.refresh();
-                          Get.back();
-                        },
-                        title: AppStrings.deleteImage,
-                        subtitle: AppStrings.areYouSureWantTo+AppStrings.deleteThisImage,
-                      );
-                    },
-                    icon: ShaderMask(
-                      shaderCallback: (bounds) => LinearGradient(
-                        colors: [
-                          AppColors.violet,
-                          AppColors.brightCyan,
-                          AppColors.antiqueWhite,
-                        ],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ).createShader(bounds),
-                      child: const Icon(
-                        Icons.delete_forever,
-                        color: Colors.white,
-                        size: spacerSize20,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   Widget layerItemWidget() {
     return GridView.builder(
-      itemCount: controller.imageList!.length,
+      itemCount: controller.imageList.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
         crossAxisSpacing: 8,
@@ -186,9 +69,7 @@ class LocalFiles extends StatelessWidget {
                 Navigator.pushNamed(
                   context,
                   Routes.imageEditor,
-                  arguments: {
-                    AppKeys.imageIndex: index,
-                  },
+                  arguments: {AppKeys.imageIndex: index},
                 ).then((value) {
                   controller.fetchImagesFromDb();
                 });
@@ -202,9 +83,12 @@ class LocalFiles extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(spacerSize12),
                   child: FutureBuilder(
-                    future: Future.delayed(const Duration(milliseconds: 300), () {
-                      return controller.imageList![index];
-                    }),
+                    future: Future.delayed(
+                      const Duration(milliseconds: 300),
+                      () {
+                        return controller.imageList[index];
+                      },
+                    ),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return shimmerPlaceHolder();
@@ -242,7 +126,7 @@ class LocalFiles extends StatelessWidget {
                   IconButton(
                     tooltip: AppStrings.download,
                     onPressed: () {
-                      controller.downloadImage(controller.imageList![index]);
+                      controller.downloadImage(controller.imageList[index]);
                     },
                     icon: ShaderMask(
                       shaderCallback: (bounds) => LinearGradient(
@@ -268,13 +152,15 @@ class LocalFiles extends StatelessWidget {
                         context: context,
                         onNo: () => Get.back(),
                         onYes: () {
-                          controller.imageList!.removeAt(index);
+                          controller.imageList.removeAt(index);
                           controller.hiveBox!.deleteAt(index);
-                          controller.imageList!.refresh();
+                          controller.imageList.refresh();
                           Get.back();
                         },
                         title: AppStrings.deleteImage,
-                        subtitle: AppStrings.areYouSureWantTo+AppStrings.deleteThisImage,
+                        subtitle:
+                            AppStrings.areYouSureWantTo +
+                            AppStrings.deleteThisImage,
                       );
                     },
                     icon: ShaderMask(
@@ -303,8 +189,8 @@ class LocalFiles extends StatelessWidget {
     );
   }
 
-  Widget shimmerPlaceHolder(){
-    return  Shimmer(
+  Widget shimmerPlaceHolder() {
+    return Shimmer(
       color: AppColors.lightGrey,
       colorOpacity: 0.16,
       child: Container(
@@ -314,5 +200,4 @@ class LocalFiles extends StatelessWidget {
       ),
     );
   }
-
 }

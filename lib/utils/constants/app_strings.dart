@@ -93,8 +93,14 @@ static const noLayers= "No Layers";
 static const clickHereToBrowseAnImage= "Click here to browse an image";
 static const selectImageDesc= "Click here to add an image \nand start editing. Customize, enhance, \nand make it your own with our editor.";
 static const hide= "Hide";
-static const move= "Move";
-static const noEditedImageAvailable= "No edited images available.";
+static const show= "Show";
+static const holdToDrag= "Hold to drag";
+static const noImageFound= "No images found.";
 static const areYouSureWantTo= "Are you sure you want to";
 static const logout= "Logout";
+static const downloadSuccessfully= "Download successfully";
+static const file= "File";
+static const image= "Image";
+static const savedSuccessfully= "Saved Successfully";
+
 }

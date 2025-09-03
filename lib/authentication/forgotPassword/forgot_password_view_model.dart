@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -7,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:layerbase/utils/constants/app_keys.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
-
 import '../../utils/base/dialogs/base_dialog.dart';
 
 class ForgotPasswordViewModel extends GetxController {
@@ -19,11 +17,11 @@ class ForgotPasswordViewModel extends GetxController {
   RxBool isEmailValidated = false.obs;
   final formKey = GlobalKey<FormState>();
 
-  validateEmail() {
+  void validateEmail() {
     isEmailValidated.value = !isEmailValidated.value;
   }
 
-  sendResetPasswordEmail() async {
+  void sendResetPasswordEmail() async {
     isLoading.value = true;
     try {
       await FirebaseAuth.instance.sendPasswordResetEmail(
@@ -57,7 +55,7 @@ class ForgotPasswordViewModel extends GetxController {
     }
   }
 
-  resetPasswordDialog() {
+  void resetPasswordDialog() {
     return BaseDialog.show(
       Get.context!,
       dialogTitle: AppStrings.sent,

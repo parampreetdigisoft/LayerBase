@@ -22,7 +22,7 @@ class CloudFiles extends StatelessWidget {
         child: Visibility(
           visible: (controller.sharedPrefsService.getString(AppKeys.displayName) ?? "").isEmpty,
           replacement: BaseText(
-            text: AppStrings.noEditedImageAvailable,
+            text: AppStrings.noImageFound,
             fontSize: fontSize16,
             textColor: Colors.white,
           ),

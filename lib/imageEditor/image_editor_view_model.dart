@@ -19,8 +19,7 @@ class ImageEditorViewModel extends GetxController {
   final editorKey = GlobalKey<ProImageEditorState>();
   final Map<int, Layer> removedLayers = {};
   late SharedPrefsService sharedPrefsService;
-  String userDisPlayName = "";
-
+  String userDisplayName = "";
   var layerData = "".obs,
       stickersList = <String>[].obs,
       imageData = Rx<dynamic>(null),
@@ -33,8 +32,7 @@ class ImageEditorViewModel extends GetxController {
   void onInit() {
     super.onInit();
     sharedPrefsService = SharedPrefsService.instance;
-    userDisPlayName = sharedPrefsService.getString(AppKeys.displayName)??"";
-
+    userDisplayName = sharedPrefsService.getString(AppKeys.displayName) ?? "";
     loadStickers();
     initHiveData();
     Future.delayed(Duration(seconds: 2), () {
@@ -72,6 +70,7 @@ class ImageEditorViewModel extends GetxController {
   }
 
   void initHiveData() {
+    debugPrint("active layer List:::::${activeLayersList!.length}");
     if (Get.arguments[AppKeys.imageIndex] != null) {
       hiveBox = Hive.box<dynamic>(AppKeys.imageLayerBox);
       imageIndex.value = Get.arguments[AppKeys.imageIndex];
@@ -81,6 +80,7 @@ class ImageEditorViewModel extends GetxController {
         imageFile.value = img;
       }
       layerData.value = data[AppKeys.layerJson] ?? "";
+      debugPrint("active layer `11111111`:::::${layerData.value.length}");
     } else {
       hiveBox = Hive.box<dynamic>(AppKeys.imageLayerBox);
       debugPrint("inside else::::");
@@ -100,6 +100,19 @@ class ImageEditorViewModel extends GetxController {
     isLoading.value = false;
   }
 
+
+  void deleteLayer(int index){
+    if (index >= 0 && index < activeLayersList!.length) {
+      activeLayersList!.removeAt(index);
+    }
+    if (index >= 0 && index <editorKey.currentState!.activeLayers.length) {
+    editorKey.currentState!.activeLayers.removeAt(index);
+    }
+    activeLayersList!.refresh();
+    editorKey.currentState!.setState(() {});
+    Get.back();
+  }
+
   Future<void> saveImageToHive(
     Uint8List thumbNailBytes,
     Uint8List imageBytes,
@@ -109,11 +122,42 @@ class ImageEditorViewModel extends GetxController {
     try {
       final box = Hive.box<dynamic>(AppKeys.imageLayerBox);
       if (imageIndex != null && imageIndex >= 0 && imageIndex < box.length) {
+        if (removedLayers.isNotEmpty) {
+          removedLayers.forEach((index, layer) {
+            if (index >= 0 && index <= editorKey.currentState!.stateHistory.last.layers.length) {
+              editorKey.currentState!.stateHistory.last.layers.insert(index,layer);
+            }
+           // editorKey.currentState!.stateHistory.last.layers.insert(index,layer);
+          });
+        }
+        final export = await editorKey.currentState
+            ?.exportStateHistory(
+          configs: ExportEditorConfigs(
+            exportBlur: true,
+            enableMinify: false,
+            exportCropRotate: true,
+            exportEmoji: true,
+            exportFilter: true,
+            exportPaint: true,
+            exportText: true,
+            exportTuneAdjustments: true,
+            exportWidgets: true,
+            historySpan: ExportHistorySpan.all,
+          ),
+        );
+        Map<String, dynamic>? jsonMap = await export?.toMap();
+        final layerJson = jsonEncode(jsonMap);
         await box.putAt(imageIndex, {
+          AppKeys.imageThumbnail: thumbNailBytes,
+          AppKeys.image: imageBytes,
+          AppKeys.layerJson: layerJson,
+        });
+
+    /* await box.putAt(imageIndex, {
           AppKeys.image: imageBytes,
           AppKeys.layerJson: layerJson,
           AppKeys.imageThumbnail: thumbNailBytes,
-        });
+        });*/
         debugPrint("Updated item at index::::: $imageIndex");
       } else {
         await box.add({
@@ -121,10 +165,12 @@ class ImageEditorViewModel extends GetxController {
           AppKeys.image: imageBytes,
           AppKeys.layerJson: layerJson,
         });
-        debugPrint("Added new item:::");
+        debugPrint("Added new item::: ${activeLayersList!.length}");
+
       }
     } catch (e, stack) {
       debugPrint("saveImageToHive crashed::::: $e");
+      debugPrint("stack:::: $stack");
       if (e.toString().contains("Unexpected EOF")) {
         debugPrint("Hive box corrupted. Resetting::::::");
         await Hive.deleteBoxFromDisk(AppKeys.imageLayerBox);
@@ -140,9 +186,14 @@ class ImageEditorViewModel extends GetxController {
         debugPrint("Recovered: Box reset and data saved");
       }
       debugPrint("Stack trace:\n$stack");
+    } finally {
+      AppToast.show(
+        title: AppStrings.savedSuccessfully,
+        "${AppStrings.image}\t${AppStrings.savedSuccessfully}",
+        backgroundColor: Colors.green,
+      );
     }
   }
-
 
   void applyFiltersToReferences(
     Map<String, dynamic> data,
@@ -183,20 +234,22 @@ class ImageEditorViewModel extends GetxController {
     return Future.value();
   }
 
-  void restoreLayer(int index) {
+  Future<void> restoreLayer(int index) async {
     debugPrint("index:::::: $index");
     var layers = editorKey.currentState!.stateHistory.last.layers;
     if (index < 0) return;
     if (index >= selectedItems.length) return;
     selectedItems[index] = !selectedItems[index];
     bool isChecked = selectedItems[index];
+    //Hide the layer
     if (!isChecked) {
       if (index < layers.length) {
         removedLayers[index] = layers[index];
         layers.removeAt(index);
-        debugPrint("Removed layer at index:::$index",);
+        debugPrint("Removed layer at index:::$index");
       }
     } else {
+      //Visible the layer
       if (removedLayers.containsKey(index)) {
         Layer toRestore = removedLayers[index]!;
         bool alreadyPresent = layers.any((l) => l.id == toRestore.id);
@@ -204,6 +257,8 @@ class ImageEditorViewModel extends GetxController {
           int insertIndex = index.clamp(0, layers.length);
           layers.insert(insertIndex, toRestore);
           debugPrint("Restored layer at index:::$insertIndex");
+          debugPrint("save:::::save");
+          debugPrint("removeList:::$removedLayers");
         }
         removedLayers.remove(index);
       }
@@ -212,17 +267,51 @@ class ImageEditorViewModel extends GetxController {
     //editorKey.currentState!.addHistory(layers:List<Layer>.from(editorKey.currentState!.stateHistory.last.layers));
     editorKey.currentState!.setState(() {});
     debugPrint(
-      "Now layers:::${layers.length},"
-      "selectedItems:::${selectedItems.length},"
-      "activeLayersList:::${activeLayersList!.length}",
+      "layers length::::${removedLayers.length},"
+      "selectedItems length::::${selectedItems.length},"
+      "activeLayersList length::::${activeLayersList!.length}",
     );
   }
 
+  Future<void> restoreLayer1(int index) async {
+    debugPrint("index:::::: $index");
+    var layers = editorKey.currentState!.stateHistory.last.layers;
 
+    /*
+    if (index < 0) return;
+    if (index >= selectedItems.length) return;
+*/
 
+    selectedItems[index] = !selectedItems[index];
+    bool isChecked = selectedItems[index];
 
+    debugPrint("Layer at index $index visibility = $isChecked");
 
+    final box = await Hive.openBox<dynamic>(
+      AppKeys.imageLayerBox,
+      compactionStrategy: (entries, deletedEntries) => false,
+    );
 
+    if (index < box.length) {
+      final existing = box.getAt(index);
+      await box.putAt(index, {...existing, "isVisible": isChecked});
+    }
+    for (int i = 0; i < box.length; i++) {
+      final data = box.getAt(i);
+      bool isVisible = data["isVisible"] ?? true;
+      selectedItems.add(isVisible);
+
+      // activeLayersList?.add(layers);
+    }
+    activeLayersList?.refresh();
+    editorKey.currentState!.setState(() {});
+
+    debugPrint(
+      "layers length::::${layers.length}, "
+      "selectedItems length::::${selectedItems.length}, "
+      "activeLayersList length::::${activeLayersList!.length}",
+    );
+  }
 
   Future<void> loadStickers() async {
     final String response = await rootBundle.loadString(AppAssets.stickersJson);
@@ -286,7 +375,7 @@ class ImageEditorViewModel extends GetxController {
         Navigator.pushNamedAndRemoveUntil(
           Get.context!,
           Routes.logIn,
-              (route) => false,
+          (route) => false,
         );
       },
       onNo: () {
@@ -294,5 +383,4 @@ class ImageEditorViewModel extends GetxController {
       },
     );
   }
-
 }
