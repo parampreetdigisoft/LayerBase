@@ -1,14 +1,16 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:layerbase/imageEditor/components/all_layer.dart';
+import 'package:layerbase/imageEditor/components/layer_history_layout.dart';
 import 'package:layerbase/imageEditor/image_editor_view_model.dart';
 import 'package:layerbase/utils/constants/app_assets.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:layerbase/utils/constants/app_constants.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
+
 import '../utils/base/widgets/base_text.dart';
 import '../utils/routes.dart';
 
@@ -22,9 +24,11 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
       body: Row(
         children: [
           SizedBox(width: spacerSize10),
+
           /// All layer
-          Expanded(child: AllLayer(controller: controller,)),
+          Expanded(child: LayerHistoryLayout(controller: controller)),
           SizedBox(width: spacerSize10),
+
           /// image Editor
           editorWidget(),
         ],
@@ -43,13 +47,10 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
       actions: [
         IconButton(
           style: TextButton.styleFrom(
-            padding: EdgeInsets.only(right: spacerSize5,left:0 ),
+            padding: EdgeInsets.only(right: spacerSize5, left: 0),
             minimumSize: Size(0, 0),
           ),
-          tooltip:
-          controller.userDisplayName.isEmpty
-              ? AppStrings.login
-              : AppStrings.logout,
+          tooltip: controller.userDisplayName.isEmpty ? AppStrings.login : AppStrings.logout,
           onPressed: () {
             if (controller.userDisplayName.isEmpty) {
               Navigator.pushNamed(context, Routes.logIn);
@@ -62,17 +63,12 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Icon(
-                controller.userDisplayName.isEmpty
-                    ? Icons.person
-                    : Icons.logout,
+                controller.userDisplayName.isEmpty ? Icons.person : Icons.logout,
                 size: spacerSize15,
                 color: AppColors.antiqueWhite,
               ),
               BaseText(
-                text:
-                controller.userDisplayName.isEmpty
-                    ? AppStrings.login
-                    : AppStrings.logout,
+                text: controller.userDisplayName.isEmpty ? AppStrings.login : AppStrings.logout,
                 textColor: AppColors.antiqueWhite,
                 fontWeight: FontWeight.w500,
                 fontSize: fontSize14,
@@ -88,13 +84,8 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
     return Expanded(
       flex: 7,
       child: Container(
-        margin: EdgeInsets.only(
-          right: spacerSize10,
-        ),
-        padding: EdgeInsets.symmetric(
-          horizontal: spacerSize10,
-          vertical: spacerSize10,
-        ),
+        margin: EdgeInsets.only(right: spacerSize10),
+        padding: EdgeInsets.symmetric(horizontal: spacerSize10, vertical: spacerSize10),
         decoration: BoxDecoration(
           color: AppColors.chineseBlack,
           border: Border.all(color: AppColors.lightGrey),
@@ -112,13 +103,10 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
                 enablePreloadWebFont: false,
               ),
 
-              textEditor: TextEditorConfigs(
-                  widgets: TextEditorWidgets()),
+              textEditor: TextEditorConfigs(widgets: TextEditorWidgets()),
               dialogConfigs: DialogConfigs(
                 style: DialogStyle(
-                  loadingDialog: LoadingDialogStyle(
-                    textColor: AppColors.chineseBlack,
-                  ),
+                  loadingDialog: LoadingDialogStyle(textColor: AppColors.chineseBlack),
                 ),
               ),
               i18n: I18n(
@@ -138,8 +126,8 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
               helperLines: helperLineConfigs(),
               progressIndicatorConfigs: progressIndicatorConfigs(),
               designMode: ImageEditorDesignMode.material,
-              mainEditor:mainEditorConfigs(),
-              imageGeneration:imageGenerationConfigs(),
+              mainEditor: mainEditorConfigs(),
+              imageGeneration: imageGenerationConfigs(),
               paintEditor: paintEditorConfigs(),
               tuneEditor: TuneEditorConfigs(enabled: true, showLayers: true),
               layerInteraction: layerInteractionConfigs(),
@@ -162,9 +150,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
               onImageEditingComplete: (Uint8List bytes) async {},
               filterEditorCallbacks: FilterEditorCallbacks(
                 onFilterChanged: (value) {
-                  final Map<String, dynamic> jsonData = jsonDecode(
-                    controller.layerData.value,
-                  );
+                  final Map<String, dynamic> jsonData = jsonDecode(controller.layerData.value);
                   controller.applyFiltersToReferences(jsonData, value.filters);
                 },
                 onUpdateUI: () {
@@ -190,21 +176,20 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
                 },
               ),
               onCompleteWithParameters: (parameters) async {
-                final export = await controller.editorKey.currentState
-                    ?.exportStateHistory(
-                      configs: ExportEditorConfigs(
-                        exportBlur: true,
-                        enableMinify: false,
-                        exportCropRotate: true,
-                        exportEmoji: true,
-                        exportFilter: true,
-                        exportPaint: true,
-                        exportText: true,
-                        exportTuneAdjustments: true,
-                        exportWidgets: true,
-                        historySpan: ExportHistorySpan.all,
-                      ),
-                    );
+                final export = await controller.editorKey.currentState?.exportStateHistory(
+                  configs: ExportEditorConfigs(
+                    exportBlur: true,
+                    enableMinify: false,
+                    exportCropRotate: true,
+                    exportEmoji: true,
+                    exportFilter: true,
+                    exportPaint: true,
+                    exportText: true,
+                    exportTuneAdjustments: true,
+                    exportWidgets: true,
+                    historySpan: ExportHistorySpan.all,
+                  ),
+                );
                 Map<String, dynamic>? jsonMap = await export?.toMap();
                 final layerJson = jsonEncode(jsonMap);
                 debugPrint("save:::::save");
@@ -219,9 +204,10 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
               mainEditorCallbacks: MainEditorCallbacks(
                 onAddLayer: (layer) {
                   debugPrint("layer is added:::::");
-                 //controller.activeLayersList!.insert(0, layer);
+                  //controller.activeLayersList!.insert(0, layer);
                   controller.activeLayersList!.add(layer);
-                  controller.selectedItems.value = List<bool>.from(controller.selectedItems,)..add(true);
+                  controller.selectedItems.value = List<bool>.from(controller.selectedItems)
+                    ..add(true);
                 },
                 onRemoveLayer: (layer) {
                   debugPrint("layer is remove:::::");
@@ -255,9 +241,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
 
   ProgressIndicatorConfigs progressIndicatorConfigs() {
     return ProgressIndicatorConfigs(
-      widgets: ProgressIndicatorWidgets(
-        circularProgressIndicator: CircularProgressIndicator(),
-      ),
+      widgets: ProgressIndicatorWidgets(circularProgressIndicator: CircularProgressIndicator()),
     );
   }
 
@@ -274,10 +258,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
         appBarBackground: AppColors.darkGunMetal,
       ),
 
-      icons: MainEditorIcons(
-        doneIcon: Icons.check_outlined,
-        applyChanges: Icons.check,
-      ),
+      icons: MainEditorIcons(doneIcon: Icons.check_outlined, applyChanges: Icons.check),
     );
   }
 
@@ -286,9 +267,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
       cropToDrawingBounds: false,
       maxOutputSize: Size.infinite,
       enableUseOriginalBytes: false,
-      processorConfigs: ProcessorConfigs(
-        processorMode: ProcessorMode.maximum,
-      ),
+      processorConfigs: ProcessorConfigs(processorMode: ProcessorMode.maximum),
       allowEmptyEditingCompletion: true,
       enableBackgroundGeneration: false,
       cropToImageBounds: true,
@@ -299,7 +278,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
   }
 
   PaintEditorConfigs paintEditorConfigs() {
-    return  PaintEditorConfigs(
+    return PaintEditorConfigs(
       showLayers: true,
       enabled: true,
       enableModeArrow: true,
@@ -318,7 +297,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
   }
 
   LayerInteractionConfigs layerInteractionConfigs() {
-    return   LayerInteractionConfigs(
+    return LayerInteractionConfigs(
       selectable: LayerInteractionSelectable.auto,
       keepSelectionOnInteraction: true,
       initialSelected: true,
@@ -326,17 +305,17 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
   }
 
   StateHistoryConfigs stateHistoryConfigs() {
-    return   StateHistoryConfigs(
+    return StateHistoryConfigs(
       stateHistoryLimit: 1000,
       initStateHistory: controller.layerData.value.isNotEmpty
           ? ImportStateHistory.fromJson(
-        controller.layerData.value,
-        configs: ImportEditorConfigs(
-          enableInitialEmptyState: true,
-          recalculateSizeAndPosition: true,
-          mergeMode: ImportEditorMergeMode.merge,
-        ),
-      )
+              controller.layerData.value,
+              configs: ImportEditorConfigs(
+                enableInitialEmptyState: true,
+                recalculateSizeAndPosition: true,
+                mergeMode: ImportEditorMergeMode.merge,
+              ),
+            )
           : null,
     );
   }
@@ -360,8 +339,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
       ),
       builder: (context, addSticker) {
         return GridView.builder(
-          gridDelegate:
-          const SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 7,
             mainAxisSpacing: 12,
             crossAxisSpacing: 12,
@@ -375,9 +353,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
                 debugPrint("Adding sticker: $path");
                 controller.editorKey.currentState!.addLayer(
                   WidgetLayer(
-                    exportConfigs: WidgetLayerExportConfigs(
-                      assetPath: path,
-                    ),
+                    exportConfigs: WidgetLayerExportConfigs(assetPath: path),
                     widget: Image.asset(
                       path,
                       fit: BoxFit.contain,
@@ -393,7 +369,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
                 Navigator.of(context).pop();
               },
               child: Padding(
-                padding:EdgeInsets.all(spacerSize5),
+                padding: EdgeInsets.all(spacerSize5),
                 child: Image.asset(path, fit: BoxFit.contain),
               ),
             );
@@ -402,5 +378,4 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
       },
     );
   }
-
 }

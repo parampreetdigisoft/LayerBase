@@ -40,186 +40,129 @@ class SidLayerList extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Expanded(
-            child: ReorderableListView.builder(
-              itemCount: controller.activeLayersList!.length,
-              padding: EdgeInsets.symmetric(
-                horizontal: spacerSize10,
-                vertical: spacerSize5,
-              ),
-              onReorder: (oldIndex, newIndex) {
-                controller.updateDragLayer(newIndex, oldIndex);
-              },
-              buildDefaultDragHandles: false,
-              proxyDecorator:
-                  (Widget child, int index, Animation<double> animation) {
-                    return Material(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.circular(spacerSize8),
-                      elevation: 0,
-                      child: child,
-                    );
-                  },
-              itemBuilder: (context, index) {
-                if (index >= controller.activeLayersList!.length) {
-                  return const SizedBox();
-                }
-                final layer = controller.activeLayersList![index];
-                return ReorderableDelayedDragStartListener(
-                  key: ValueKey(layer ?? index),
-                  index: index,
-                  child: Container(
-                    margin: EdgeInsets.symmetric(vertical: spacerSize5),
-                    decoration: BoxDecoration(
-                      color: AppColors.darkJungleGreen,
-                      borderRadius: BorderRadius.circular(spacerSize8),
-                      border: Border.all(color: AppColors.lightGrey),
-                    ),
-                    child: Container(
-                      color: AppColors.darkJungleGreen,
-                      padding: EdgeInsets.all(spacerSize4),
-                      child: Row(
-                        children: [
-                          Column(
-                            spacing: spacerSize5,
-                            children: [
-                              dragButton(index),
-                              hideAndShowBtn(index),
-                              deleteButton(context, index),
-                              SizedBox(height: spacerSize5),
-                            ],
-                          ),
-                          SizedBox(width: spacerSize10),
-                          showImageWithLayer(layer),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
+
+          Expanded(child: reorderableList()),
+        ],
+      ),
+    );
+  }
+
+  reorderableList() {
+    return ReorderableListView.builder(
+      itemCount: controller.activeLayersList!.length,
+      padding: EdgeInsets.symmetric(horizontal: spacerSize10, vertical: spacerSize5),
+      onReorder: (oldIndex, newIndex) {
+        controller.updateDragLayer(newIndex, oldIndex);
+      },
+      buildDefaultDragHandles: false,
+      proxyDecorator: (Widget child, int index, Animation<double> animation) {
+        return Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(spacerSize8),
+          elevation: 0,
+          child: child,
+        );
+      },
+      itemBuilder: (context, index) {
+        return index >= controller.activeLayersList!.length
+            ? const SizedBox()
+            : ReorderableDelayedDragStartListener(
+                key: ValueKey(index),
+                index: index,
+                child: layerItems(index, context),
+              );
+      },
+    );
+  }
+
+  layerItems(int index, BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: spacerSize5),
+      padding: EdgeInsets.all(spacerSize4),
+      decoration: BoxDecoration(
+        color: AppColors.darkJungleGreen,
+        borderRadius: BorderRadius.circular(spacerSize8),
+        border: Border.all(color: AppColors.lightGrey),
+      ),
+      child: Row(
+        children: [
+          Column(
+            spacing: spacerSize5,
+            children: [
+              dragButton(index),
+              hideAndShowBtn(index),
+              deleteButton(context, index),
+              SizedBox(height: spacerSize5),
+            ],
           ),
+          SizedBox(width: spacerSize10),
+          showImageWithLayer(index),
         ],
       ),
     );
   }
 
   dragButton(int index) {
-    return IconButton(
-      //tooltip: AppStrings.holdToDrag,
-      style: IconButton.styleFrom(
-        padding: EdgeInsets.zero,
-        minimumSize: Size(0, 0),
-      ),
-      onPressed: () {
-        controller.restoreLayer(index);
-      },
-      icon: ShaderMask(
-        shaderCallback: (bounds) => LinearGradient(
-          colors: [
-            AppColors.violet,
-            AppColors.brightCyan,
-            AppColors.antiqueWhite,
-          ],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ).createShader(bounds),
-        child: ReorderableDragStartListener(
-          index: index,
-          child: Icon(
-            Icons.drag_handle_sharp,
-            color: AppColors.antiqueWhite,
-            size: spacerSize20,
-          ),
-        ),
-      ),
+    return iconLayout(
+      index,
+      tooltipText: AppStrings.holdToDrag,
+      icon: Icons.drag_handle_sharp,
+      onPressed: () {},
     );
   }
 
   hideAndShowBtn(int index) {
+    return iconLayout(
+      index,
+      tooltipText: controller.selectedItems[index] ? AppStrings.show : AppStrings.hide,
+      icon: (index < controller.selectedItems.length && controller.selectedItems[index])
+          ? Icons.visibility_outlined
+          : Icons.visibility_off_outlined,
+      onPressed: () {
+        controller.restoreLayer(index);
+      },
+    );
+  }
+
+  deleteButton(BuildContext context, int index) {
+    return iconLayout(
+      index,
+      tooltipText: AppStrings.delete,
+      icon: Icons.delete_forever,
+      onPressed: () {
+        showCommonDialog(
+          context: context,
+          onNo: () => Get.back(),
+          onYes: () {
+            controller.deleteLayer(index);
+          },
+          title: AppStrings.deleteLayer,
+          subtitle: AppStrings.areYouSureWantTo + AppStrings.deleteThisLayer,
+        );
+        controller.deleteLayer(index);
+      },
+    );
+  }
+
+  iconLayout(int index, {String? tooltipText, IconData? icon, VoidCallback? onPressed}) {
     return IconButton(
-      /*  tooltip: controller.selectedItems[index]?
-                                    AppStrings.hide:
-                                    AppStrings.show,*/
-      style: IconButton.styleFrom(
-        padding: EdgeInsets.zero,
-        minimumSize: Size(0, 0),
-      ),
+      tooltip: tooltipText,
+      style: IconButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size(0, 0)),
       onPressed: () {
         controller.restoreLayer(index);
       },
       icon: ShaderMask(
         shaderCallback: (bounds) => LinearGradient(
-          colors: [
-            AppColors.violet,
-            AppColors.brightCyan,
-            AppColors.antiqueWhite,
-          ],
+          colors: [AppColors.violet, AppColors.brightCyan, AppColors.antiqueWhite],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ).createShader(bounds),
-        child: Icon(
-          (index < controller.selectedItems.length &&
-                  controller.selectedItems[index])
-              ? Icons.visibility_outlined
-              : Icons.visibility_off_outlined,
-          color: Colors.white,
-          size: spacerSize18,
-        ),
+        child: Icon(icon, color: Colors.white, size: spacerSize18),
       ),
     );
   }
 
-  deleteButton(BuildContext context, int index) {
-    return IconButton(
-      // tooltip: AppStrings.delete,
-      style: IconButton.styleFrom(
-        padding: EdgeInsets.zero,
-        minimumSize: Size(0, 0),
-      ),
-      onPressed: () {
-        if (index < controller.activeLayersList!.length) {
-          showCommonDialog(
-            context: context,
-            onNo: () => Get.back(),
-            onYes: () {
-              if (index >= 0 && index < controller.activeLayersList!.length) {
-                controller.activeLayersList!.removeAt(index);
-              }
-              if (index >= 0 &&
-                  index <
-                      controller.editorKey.currentState!.activeLayers.length) {
-                controller.editorKey.currentState!.activeLayers.removeAt(index);
-              }
-              controller.activeLayersList!.refresh();
-              controller.editorKey.currentState!.setState(() {});
-              Get.back();
-            },
-            title: AppStrings.deleteLayer,
-            subtitle: AppStrings.areYouSureWantTo + AppStrings.deleteThisLayer,
-          );
-        }
-      },
-      icon: ShaderMask(
-        shaderCallback: (bounds) => LinearGradient(
-          colors: [
-            AppColors.violet,
-            AppColors.brightCyan,
-            AppColors.antiqueWhite,
-          ],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ).createShader(bounds),
-        child: Icon(
-          Icons.delete_forever,
-          color: Colors.white,
-          size: spacerSize20,
-        ),
-      ),
-    );
-  }
-
-  showImageWithLayer(Layer layer) {
+  showImageWithLayer(int index) {
     return Expanded(
       child: SizedBox(
         height: spacerSize75,
@@ -228,62 +171,47 @@ class SidLayerList extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Image.memory(
-                controller.imageFile.value ?? Uint8List(0),
-                fit: BoxFit.cover,
-              ),
-              Center(
-                child: () {
-                  if (layer is WidgetLayer) {
-                    return SizedBox(child: layer.widget);
-                  } else if (layer is TextLayer) {
-                    return Text(
-                      layer.text,
-                      style: TextStyle(
-                        color: layer.color,
-                        backgroundColor: layer.background,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    );
-                  } else if (layer is EmojiLayer) {
-                    return Text(
-                      layer.emoji,
-                      style: const TextStyle(fontSize: spacerSize20),
-                    );
-                  } else if (layer is PaintLayer) {
-                    final paintData = layer.toMap();
-                    final offsets =
-                        (paintData[AppKeys.item][AppKeys.offsets] as List)
-                            .map(
-                              (p) => Offset(
-                                (p['x'] as num).toDouble(),
-                                (p['y'] as num).toDouble(),
-                              ),
-                            )
-                            .toList();
-
-                    final color = Color(paintData[AppKeys.item][AppKeys.color]);
-                    final strokeWidth =
-                        (paintData[AppKeys.item][AppKeys.strokeWidth] as num)
-                            .toDouble();
-
-                    return CustomPaint(
-                      size: Size(spacerSize20, spacerSize20),
-                      painter: PaintLayerPreview(
-                        points: offsets,
-                        color: color,
-                        strokeWidth: strokeWidth,
-                      ),
-                    );
-                  } else {
-                    return const Icon(Icons.image, color: Colors.grey);
-                  }
-                }(),
-              ),
+              Image.memory(controller.imageFile.value ?? Uint8List(0), fit: BoxFit.cover),
+              Center(child: getLayers(index)),
             ],
           ),
         ),
       ),
     );
+  }
+
+  getLayers(int index) {
+    Layer layer = controller.activeLayersList![index];
+    switch (layer) {
+      case (WidgetLayer _):
+        return SizedBox(child: layer.widget);
+
+      case (TextLayer _):
+        return Text(
+          layer.text,
+          style: TextStyle(color: layer.color, backgroundColor: layer.background),
+          overflow: TextOverflow.ellipsis,
+        );
+
+      case (EmojiLayer _):
+        return Text(layer.emoji, style: const TextStyle(fontSize: spacerSize20));
+
+      case (PaintLayer _):
+        final paintData = layer.toMap();
+        final offsets = (paintData[AppKeys.item][AppKeys.offsets] as List)
+            .map((p) => Offset((p['x'] as num).toDouble(), (p['y'] as num).toDouble()))
+            .toList();
+
+        final color = Color(paintData[AppKeys.item][AppKeys.color]);
+        final strokeWidth = (paintData[AppKeys.item][AppKeys.strokeWidth] as num).toDouble();
+
+        return CustomPaint(
+          size: Size(spacerSize20, spacerSize20),
+          painter: PaintLayerPreview(points: offsets, color: color, strokeWidth: strokeWidth),
+        );
+
+      default:
+        return const Icon(Icons.image, color: Colors.grey);
+    }
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:layerbase/home_screen/home_controller.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
+
 import '../../utils/base/dialogs/base_dialog.dart';
 import '../../utils/base/widgets/base_text.dart';
 import '../../utils/constants/app_color.dart';
@@ -50,7 +51,6 @@ class LocalFiles extends StatelessWidget {
     );
   }
 
-
   Widget layerItemWidget() {
     return GridView.builder(
       itemCount: controller.imageList.length,
@@ -83,12 +83,9 @@ class LocalFiles extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(spacerSize12),
                   child: FutureBuilder(
-                    future: Future.delayed(
-                      const Duration(milliseconds: 300),
-                      () {
-                        return controller.imageList[index];
-                      },
-                    ),
+                    future: Future.delayed(const Duration(milliseconds: 300), () {
+                      return controller.imageList[index];
+                    }),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return shimmerPlaceHolder();
@@ -101,9 +98,7 @@ class LocalFiles extends StatelessWidget {
                           width: double.infinity,
                         );
                       } else {
-                        return const Center(
-                          child: Icon(Icons.broken_image, color: Colors.white),
-                        );
+                        return const Center(child: Icon(Icons.broken_image, color: Colors.white));
                       }
                     },
                   ),
@@ -130,11 +125,7 @@ class LocalFiles extends StatelessWidget {
                     },
                     icon: ShaderMask(
                       shaderCallback: (bounds) => LinearGradient(
-                        colors: [
-                          AppColors.violet,
-                          AppColors.brightCyan,
-                          AppColors.antiqueWhite,
-                        ],
+                        colors: [AppColors.violet, AppColors.brightCyan, AppColors.antiqueWhite],
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                       ).createShader(bounds),
@@ -158,18 +149,12 @@ class LocalFiles extends StatelessWidget {
                           Get.back();
                         },
                         title: AppStrings.deleteImage,
-                        subtitle:
-                            AppStrings.areYouSureWantTo +
-                            AppStrings.deleteThisImage,
+                        subtitle: AppStrings.areYouSureWantTo + AppStrings.deleteThisImage,
                       );
                     },
                     icon: ShaderMask(
                       shaderCallback: (bounds) => LinearGradient(
-                        colors: [
-                          AppColors.violet,
-                          AppColors.brightCyan,
-                          AppColors.antiqueWhite,
-                        ],
+                        colors: [AppColors.violet, AppColors.brightCyan, AppColors.antiqueWhite],
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                       ).createShader(bounds),
@@ -193,6 +178,8 @@ class LocalFiles extends StatelessWidget {
     return Shimmer(
       color: AppColors.lightGrey,
       colorOpacity: 0.16,
+      interval: Duration(milliseconds: 20),
+      duration: Duration(milliseconds: 2700),
       child: Container(
         height: double.infinity,
         width: double.infinity,
