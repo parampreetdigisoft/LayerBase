@@ -21,10 +21,23 @@ class CloudFiles extends StatelessWidget {
       body: Center(
         child: Visibility(
           visible: (controller.sharedPrefsService.getString(AppKeys.displayName) ?? "").isEmpty,
-          replacement: BaseText(
-            text: AppStrings.noImageFound,
-            fontSize: fontSize16,
-            textColor: Colors.white,
+          replacement: Container(
+            padding: EdgeInsets.all(spacerSize10),
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              color: AppColors.chineseBlack,
+              border: Border.all(color: AppColors.lightGrey),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(spacerSize15),
+                topRight: Radius.circular(spacerSize15),
+              ),
+            ),
+            child: BaseText(
+              text: AppStrings.noImageFound,
+              fontSize: fontSize16,
+              textColor: Colors.white,
+            ),
           ),
           child: Container(
             padding: EdgeInsets.all(spacerSize10),

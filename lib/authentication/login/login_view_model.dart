@@ -30,8 +30,15 @@ class LoginViewModel extends GetxController {
     sharedPreferences = SharedPrefsService.instance;
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    scrollController.dispose();
+  }
+
   Future<UserCredential?> signInWithGoogle() async {
-    debugPrint("inside sign with email:::::");
     sharedPreferences!.clear();
     isLoading.value = true;
 
@@ -68,7 +75,6 @@ class LoginViewModel extends GetxController {
   }
 
   Future<void> signInWithEmailAndPassword() async {
-    debugPrint(":::::inside sign In With Email And Password:::::");
     sharedPreferences!.clear();
     isLoading.value = true;
     try {
@@ -77,8 +83,6 @@ class LoginViewModel extends GetxController {
             email: emailController.text,
             password: passwordController.text,
           );
-      debugPrint("email:::::${userCredential.user!.email}");
-      debugPrint("name:::::${userCredential.user!.displayName}");
       sharedPreferences!.setString(AppKeys.email,userCredential.user!.email?? "");
       sharedPreferences!.setString(
         AppKeys.displayName,
@@ -198,7 +202,6 @@ class LoginViewModel extends GetxController {
   }
 
   Future<void> signInWithEmailRest(String email, String password) async {
-    debugPrint("inside signInWithEmailRest:::::");
     sharedPreferences!.clear();
     isLoading.value = true;
     final url = Uri.parse(
@@ -231,15 +234,8 @@ class LoginViewModel extends GetxController {
         AppKeys.displayName,
         data['displayName'] ?? "",
       );
-      //  isLoading.value = false;
-
-      /* Navigator.pushNamedAndRemoveUntil(
-        Get.context!,
-        Routes.homeScreen,
-            (route) => false,
-      );*/
-
-      Navigator.pushReplacementNamed(Get.context!, Routes.homeScreen);
+      Navigator.pushReplacementNamed(Get.context!, Routes.homeScreen)
+      ;
     } else {
       isLoading.value = false;
       AppToast.show(
@@ -250,11 +246,4 @@ class LoginViewModel extends GetxController {
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    scrollController.dispose();
-  }
 }

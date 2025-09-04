@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -6,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:layerbase/utils/constants/app_keys.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
+
 import '../../utils/base/dialogs/base_dialog.dart';
 
 class ForgotPasswordViewModel extends GetxController {
@@ -95,7 +97,7 @@ class ForgotPasswordViewModel extends GetxController {
         error['error']['message'].toString().replaceAll("_", " "),
         backgroundColor: Colors.red,
       );
-      debugPrint('❌ Error: ${error['error']['message']}');
+      debugPrint('Error: ${error['error']['message']}');
     }
   }
 }

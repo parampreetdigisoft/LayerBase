@@ -58,7 +58,8 @@ class HomeController extends GetxController
   void onInit() {
     super.onInit();
     sharedPrefsService = SharedPrefsService.instance;
-     userDisplayName.value = sharedPrefsService.getString(AppKeys.displayName)??"";
+    userDisplayName.value =
+        sharedPrefsService.getString(AppKeys.displayName) ?? "";
     tabController = TabController(length: 2, vsync: this);
     tabController.addListener(() {
       selectedIndex.value = tabController.index;
@@ -109,6 +110,8 @@ class HomeController extends GetxController
     isPickImageOpen.value = true;
     try {
       await pickImage();
+    } catch (e) {
+      debugPrint("Error picking image: $e");
     } finally {
       isPickImageOpen.value = false;
     }
@@ -148,13 +151,11 @@ class HomeController extends GetxController
     }
   }
 
-
   Future<void> downloadImage(bytes) async {
     bool isSuccess = false;
     try {
       String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
       if (selectedDirectory == null) {
-        debugPrint("No folder selected.::::");
         return;
       }
       final timestamp =
@@ -162,15 +163,15 @@ class HomeController extends GetxController
       final filePath = "$selectedDirectory/layer_base_img_$timestamp.png";
       final file = File(filePath);
       await file.writeAsBytes(bytes);
-      debugPrint("Image saved successfully::::");
       isSuccess = true;
     } catch (e) {
-      debugPrint("Error saving image:::::$e");
     } finally {
       if (isSuccess) {
         AppToast.show(
-            title: AppStrings.downloadSuccessfully,
-          "${AppStrings.file}\t ${AppStrings.downloadSuccessfully}",backgroundColor: Colors.green);
+          title: AppStrings.downloadSuccessfully,
+          "${AppStrings.file}\t ${AppStrings.downloadSuccessfully}",
+          backgroundColor: Colors.green,
+        );
       }
     }
   }
@@ -181,11 +182,11 @@ class HomeController extends GetxController
       title: AppStrings.logout,
       subtitle: "${AppStrings.areYouSureWantTo}\t${AppStrings.logout}?",
       onYes: () {
-      sharedPrefsService.clear();
+        sharedPrefsService.clear();
         Navigator.pushNamedAndRemoveUntil(
           Get.context!,
           Routes.logIn,
-              (route) => false,
+          (route) => false,
         );
       },
       onNo: () {
