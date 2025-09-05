@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:layerbase/imageEditor/components/image_fetch.dart';
 import 'package:layerbase/utils/constants/app_assets.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 
@@ -39,7 +38,6 @@ class ImageEditorViewModel extends GetxController {
     userDisplayName = sharedPrefsService.getString(AppKeys.displayName) ?? "";
     loadStickers();
     initHiveData();
-    loadGalleryImages();
     Future.delayed(Duration(seconds: 2), () {
       initializeLayer();
     });
@@ -109,15 +107,6 @@ class ImageEditorViewModel extends GetxController {
     activeLayersList!.refresh();
     editorKey.currentState!.setState(() {});
     Get.back();
-  }
-
-  void loadGalleryImages() async {
-    await ImageFetcher.getAllImages();
-    debugPrint("Found ${ImageFetcher.imagePaths.length} images");
-    galleryImageList.addAll(ImageFetcher.imagePaths);
-    /*for (var file in ImageFetcher.imageFiles) {
-
-    }*/
   }
 
   Future<void> saveImageToHive(
