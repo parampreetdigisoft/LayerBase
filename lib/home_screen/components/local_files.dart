@@ -9,9 +9,7 @@ import '../../utils/base/dialogs/base_dialog.dart';
 import '../../utils/base/widgets/base_text.dart';
 import '../../utils/constants/app_color.dart';
 import '../../utils/constants/app_constants.dart';
-import '../../utils/constants/app_keys.dart';
 import '../../utils/constants/app_strings.dart';
-import '../../utils/routes.dart';
 
 class LocalFiles extends StatelessWidget {
   final HomeController controller;
@@ -66,13 +64,7 @@ class LocalFiles extends StatelessWidget {
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  Routes.imageEditor,
-                  arguments: {AppKeys.imageIndex: index},
-                ).then((value) {
-                  controller.fetchImagesFromDb();
-                });
+                controller.goToEditor(index);
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -83,12 +75,9 @@ class LocalFiles extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(spacerSize12),
                   child: FutureBuilder(
-                    future: Future.delayed(
-                      const Duration(milliseconds: 300),
-                      () {
-                        return controller.imageList[index];
-                      },
-                    ),
+                    future: Future.delayed(const Duration(milliseconds: 300), () {
+                      return controller.imageList[index];
+                    }),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return shimmerPlaceHolder();
@@ -101,9 +90,7 @@ class LocalFiles extends StatelessWidget {
                           width: double.infinity,
                         );
                       } else {
-                        return const Center(
-                          child: Icon(Icons.broken_image, color: Colors.white),
-                        );
+                        return const Center(child: Icon(Icons.broken_image, color: Colors.white));
                       }
                     },
                   ),
@@ -130,11 +117,7 @@ class LocalFiles extends StatelessWidget {
                     },
                     icon: ShaderMask(
                       shaderCallback: (bounds) => LinearGradient(
-                        colors: [
-                          AppColors.violet,
-                          AppColors.brightCyan,
-                          AppColors.antiqueWhite,
-                        ],
+                        colors: [AppColors.violet, AppColors.brightCyan, AppColors.antiqueWhite],
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                       ).createShader(bounds),
@@ -158,18 +141,12 @@ class LocalFiles extends StatelessWidget {
                           Get.back();
                         },
                         title: AppStrings.deleteImage,
-                        subtitle:
-                            AppStrings.areYouSureWantTo +
-                            AppStrings.deleteThisImage,
+                        subtitle: AppStrings.areYouSureWantTo + AppStrings.deleteThisImage,
                       );
                     },
                     icon: ShaderMask(
                       shaderCallback: (bounds) => LinearGradient(
-                        colors: [
-                          AppColors.violet,
-                          AppColors.brightCyan,
-                          AppColors.antiqueWhite,
-                        ],
+                        colors: [AppColors.violet, AppColors.brightCyan, AppColors.antiqueWhite],
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                       ).createShader(bounds),

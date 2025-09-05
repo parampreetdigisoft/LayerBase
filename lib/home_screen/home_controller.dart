@@ -14,8 +14,7 @@ import 'package:layerbase/utils/shared_prefs_service.dart';
 import '../utils/base/dialogs/base_dialog.dart';
 import '../utils/constants/app_strings.dart';
 
-class HomeController extends GetxController
-    with GetSingleTickerProviderStateMixin {
+class HomeController extends GetxController with GetSingleTickerProviderStateMixin {
   final RxBool isLoading = true.obs;
   final RxBool isImagePicking = true.obs;
   Rx<File>? imageFile;
@@ -55,16 +54,15 @@ class HomeController extends GetxController
   ];
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
     sharedPrefsService = SharedPrefsService.instance;
-    userDisplayName.value =
-        sharedPrefsService.getString(AppKeys.displayName) ?? "";
+    userDisplayName.value = sharedPrefsService.getString(AppKeys.displayName) ?? "";
     tabController = TabController(length: 2, vsync: this);
     tabController.addListener(() {
       selectedIndex.value = tabController.index;
     });
-    fetchImagesFromDb();
+    await fetchImagesFromDb();
   }
 
   @override
@@ -98,7 +96,7 @@ class HomeController extends GetxController
           AppKeys.imageData: {AppKeys.image: imageBytes!.value},
         },
       ).then((value) {
-        fetchImagesFromDb();
+        Future.delayed(Duration(milliseconds: 500), () => refreshImages(imageList.length));
       });
 
       imageFile = file.obs;
@@ -117,16 +115,14 @@ class HomeController extends GetxController
     }
   }
 
-  fetchImagesFromDb() async {
+  Future fetchImagesFromDb() async {
     imageList.clear();
     isLoading.value = true;
     hiveBox = Hive.box<dynamic>(AppKeys.imageLayerBox);
 
     List<Uint8List> tempImageList = [];
     for (var bytes in hiveBox!.values) {
-      dynamic loadedImage = await loadTiffAsImage(
-        bytes[AppKeys.imageThumbnail],
-      );
+      dynamic loadedImage = await loadTiffAsImage(bytes[AppKeys.imageThumbnail]);
       if (loadedImage != null) {
         tempImageList.add(loadedImage);
       } else {
@@ -135,6 +131,18 @@ class HomeController extends GetxController
     }
     imageList.value = tempImageList;
     isLoading.value = false;
+    return true;
+  }
+
+  Future<void> refreshImages(var index, {bool isImageEdited = false}) async {
+    hiveBox ??= Hive.box<dynamic>(AppKeys.imageLayerBox);
+    final thumbnail = hiveBox!.values.elementAt(index)[AppKeys.imageThumbnail];
+    dynamic loadedImage = await loadTiffAsImage(thumbnail);
+    if (isImageEdited) {
+      imageList.removeAt(index);
+    }
+    imageList.insert(index, loadedImage ?? thumbnail);
+    imageList.refresh();
   }
 
   Future<void> saveImageToHive(Uint8List imageBytes) async {
@@ -184,15 +192,24 @@ class HomeController extends GetxController
       subtitle: "${AppStrings.areYouSureWantTo}\t${AppStrings.logout}?",
       onYes: () {
         sharedPrefsService.clear();
-        Navigator.pushNamedAndRemoveUntil(
-          Get.context!,
-          Routes.logIn,
-          (route) => false,
-        );
+        Navigator.pushNamedAndRemoveUntil(Get.context!, Routes.logIn, (route) => false);
       },
       onNo: () {
         Get.back();
       },
     );
+  }
+
+  void goToEditor(int imageIndex) {
+    Navigator.pushNamed(
+      Get.context!,
+      Routes.imageEditor,
+      arguments: {AppKeys.imageIndex: imageIndex},
+    ).then((value) {
+      Future.delayed(
+        Duration(milliseconds: 500),
+        () => refreshImages(imageIndex, isImageEdited: true),
+      );
+    });
   }
 }

@@ -91,11 +91,7 @@ class ImageEditorViewModel extends GetxController {
   }
 
   void initSelection() {
-    selectedItems.value = List.filled(
-      activeLayersList!.length,
-      true,
-      growable: true,
-    );
+    selectedItems.value = List.filled(activeLayersList!.length, true, growable: true);
     isLoading.value = false;
   }
 
@@ -111,25 +107,19 @@ class ImageEditorViewModel extends GetxController {
     Get.back();
   }
 
-
   Future<void> saveImageToHive(
-      Uint8List thumbNailBytes,
-      Uint8List imageBytes,
-      int? imageIndex,
-      dynamic layerJson,
-      ) async {
+    Uint8List thumbNailBytes,
+    Uint8List imageBytes,
+    int? imageIndex,
+    dynamic layerJson,
+  ) async {
     try {
       final box = Hive.box<dynamic>(AppKeys.imageLayerBox);
       if (imageIndex != null && imageIndex >= 0 && imageIndex < box.length) {
         if (removedLayers.isNotEmpty) {
           removedLayers.forEach((index, layer) {
-            if (index >= 0 &&
-                index <=
-                    editorKey.currentState!.stateHistory.last.layers.length) {
-              editorKey.currentState!.stateHistory.last.layers.insert(
-                index,
-                layer,
-              );
+            if (index >= 0 && index <= editorKey.currentState!.stateHistory.last.layers.length) {
+              editorKey.currentState!.stateHistory.last.layers.insert(index, layer);
             }
             // editorKey.currentState!.stateHistory.last.layers.insert(index,layer);
           });
@@ -188,14 +178,10 @@ class ImageEditorViewModel extends GetxController {
         "${AppStrings.image}\t${AppStrings.savedSuccessfully}",
         backgroundColor: Colors.green,
       );
-
     }
   }
 
-  void applyFiltersToReferences(
-      Map<String, dynamic> data,
-      List<List<double>> filters,
-      ) {
+  void applyFiltersToReferences(Map<String, dynamic> data, List<List<double>> filters) {
     final references = data[AppKeys.references] as Map<String, dynamic>;
     int index = 0;
     for (final entry in references.entries) {
@@ -263,11 +249,9 @@ class ImageEditorViewModel extends GetxController {
     final String response = await rootBundle.loadString(AppAssets.stickersJson);
     final List<dynamic> data = json.decode(response);
     stickersList.value = List<String>.from(data);
-    if (editorKey.currentState != null &&
-        editorKey.currentState!.stateHistory.isNotEmpty) {
+    if (editorKey.currentState != null && editorKey.currentState!.stateHistory.isNotEmpty) {
       List<Layer> newLayers = [];
-      for (Layer originalLayer
-      in editorKey.currentState!.stateHistory.last.layers) {
+      for (Layer originalLayer in editorKey.currentState!.stateHistory.last.layers) {
         Layer newLayer = Layer(
           flipY: originalLayer.flipY,
           flipX: originalLayer.flipX,
@@ -300,11 +284,10 @@ class ImageEditorViewModel extends GetxController {
     activeLayersList!.insert(newIndex, movedLayer);
     if (editorKey.currentState != null &&
         editorKey.currentState!.activeLayers.isNotEmpty &&
-        editorKey.currentState!.activeLayers.length ==
-            activeLayersList!.length) {
+        editorKey.currentState!.activeLayers.length == activeLayersList!.length) {
       final movedCanvasLayer = editorKey.currentState!.activeLayers.removeAt(oldIndex);
-        editorKey.currentState!.activeLayers.insert(newIndex, movedCanvasLayer);
-        //editorKey.currentState!.stateHistory.last.layers.insert(newIndex, movedCanvasLayer);
+      editorKey.currentState!.activeLayers.insert(newIndex, movedCanvasLayer);
+      //editorKey.currentState!.stateHistory.last.layers.insert(newIndex, movedCanvasLayer);
       editorKey.currentState!.setState(() {});
       activeLayersList?.refresh();
     }
@@ -317,11 +300,7 @@ class ImageEditorViewModel extends GetxController {
       subtitle: "${AppStrings.areYouSureWantTo}\t${AppStrings.logout}?",
       onYes: () {
         sharedPrefsService.clear();
-        Navigator.pushNamedAndRemoveUntil(
-          Get.context!,
-          Routes.logIn,
-              (route) => false,
-        );
+        Navigator.pushNamedAndRemoveUntil(Get.context!, Routes.logIn, (route) => false);
       },
       onNo: () {
         Get.back();
