@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:layerbase/imageEditor/components/image_fetch.dart';
 import 'package:layerbase/utils/constants/app_assets.dart';
 import 'package:pro_image_editor/pro_image_editor.dart';
 
@@ -20,6 +21,8 @@ class ImageEditorViewModel extends GetxController {
   final editorKey = GlobalKey<ProImageEditorState>();
   final Map<int, Layer> removedLayers = {};
   late SharedPrefsService sharedPrefsService;
+  List<String> galleryImageList = [];
+
   String userDisplayName = "";
   var layerData = "".obs,
       stickersList = <String>[].obs,
@@ -36,6 +39,7 @@ class ImageEditorViewModel extends GetxController {
     userDisplayName = sharedPrefsService.getString(AppKeys.displayName) ?? "";
     loadStickers();
     initHiveData();
+    loadGalleryImages();
     Future.delayed(Duration(seconds: 2), () {
       initializeLayer();
     });
@@ -105,6 +109,15 @@ class ImageEditorViewModel extends GetxController {
     activeLayersList!.refresh();
     editorKey.currentState!.setState(() {});
     Get.back();
+  }
+
+  void loadGalleryImages() async {
+    await ImageFetcher.getAllImages();
+    debugPrint("Found ${ImageFetcher.imagePaths.length} images");
+    galleryImageList.addAll(ImageFetcher.imagePaths);
+    /*for (var file in ImageFetcher.imageFiles) {
+
+    }*/
   }
 
   Future<void> saveImageToHive(
@@ -190,31 +203,6 @@ class ImageEditorViewModel extends GetxController {
       ref['f'] = filters[index];
       index++;
     }
-  }
-
-  void onImageEditingFinished({
-    CompleteParameters? parameters,
-    Uint8List? imageFile,
-    int? imageIndex,
-  }) async {
-    final export = await editorKey.currentState?.exportStateHistory(
-      configs: ExportEditorConfigs(
-        exportBlur: true,
-        enableMinify: false,
-        exportCropRotate: true,
-        exportEmoji: true,
-        exportFilter: true,
-        exportPaint: true,
-        exportText: true,
-        exportTuneAdjustments: true,
-        exportWidgets: true,
-        historySpan: ExportHistorySpan.all,
-      ),
-    );
-    Map<String, dynamic>? jsonMap = await export?.toMap();
-    final layerJson = jsonEncode(jsonMap);
-    saveImageToHive(parameters!.image, imageFile!, imageIndex, layerJson);
-    return Future.value();
   }
 
   Future<void> restoreLayer(int index) async {

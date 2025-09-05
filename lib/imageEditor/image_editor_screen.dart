@@ -97,7 +97,6 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
           child: ProImageEditor.memory(
             controller.imageFile.value ?? Uint8List(0),
             key: controller.editorKey,
-
             configs: ProImageEditorConfigs(
               emojiEditor: EmojiEditorConfigs(
                 checkPlatformCompatibility: true,
@@ -204,7 +203,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
               },
               mainEditorCallbacks: MainEditorCallbacks(
                 onAddLayer: (layer) {
-                  debugPrint("layer is added:::::");
+                  debugPrint("layer is added:::::${layer.toMap()}");
                   controller.activeLayersList!.add(layer);
                   controller.selectedItems.value = List<bool>.from(controller.selectedItems)
                     ..add(true);
@@ -252,7 +251,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
       canZoomWhenLayerSelected: true,
       enableZoom: true,
       enableCloseButton: false,
-
+      enableEscapeButton: false,
       style: MainEditorStyle(
         background: AppColors.darkGunMetal,
         bottomBarBackground: AppColors.darkGunMetal,
@@ -335,45 +334,126 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
     return StickerEditorConfigs(
       enabled: true,
       style: StickerEditorStyle(
+        bottomSheetBackgroundColor: AppColors.chineseBlack,
+        showDragHandle: false,
+      ),
+      builder: (context, addSticker) {
+        return allSticker();
+      },
+    );
+  }
+
+  /* StickerEditorConfigs stickerEditorConfigs() {
+    return StickerEditorConfigs(
+      enabled: true,
+      style: StickerEditorStyle(
         bottomSheetBackgroundColor: AppColors.darkGunMetal,
         showDragHandle: false,
       ),
       builder: (context, addSticker) {
-        return GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 7,
-            mainAxisSpacing: 12,
-            crossAxisSpacing: 12,
-          ),
-          itemCount: controller.stickersList.length,
-          itemBuilder: (context, index) {
-            final path = controller.stickersList[index];
-            return GestureDetector(
-              onTap: () {
-                final path = controller.stickersList[index];
-                controller.editorKey.currentState!.addLayer(
-                  WidgetLayer(
-                    exportConfigs: WidgetLayerExportConfigs(assetPath: path),
-                    widget: Image.asset(
-                      path,
-                      fit: BoxFit.contain,
-                      width: spacerSize30,
-                      height: spacerSize30,
-                    ),
-                  ),
-                );
-                controller.selectedItems.add(true);
+        return DefaultTabController(
+          length: 2,
+          child: Column(
+            children: [
+              TabBar(
+                indicatorColor: Colors.white,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.grey,
+                tabs: const [
+                  Tab(text: "Sticker"),
+                  Tab(text: "Image"),
+                ],
+              ),
 
-                Navigator.of(context).pop();
-              },
-              child: Padding(
-                padding: EdgeInsets.all(spacerSize5),
-                child: Image.asset(path, fit: BoxFit.contain),
+              Expanded(child: TabBarView(children: [allSticker(), allImage()])),
+            ],
+          ),
+        );
+      },
+    );
+  }*/
+
+  Widget allSticker() {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 7,
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
+      ),
+      itemCount: controller.stickersList.length,
+      itemBuilder: (context, index) {
+        final path = controller.stickersList[index];
+        return GestureDetector(
+          onTap: () {
+            final path = controller.stickersList[index];
+            controller.editorKey.currentState!.addLayer(
+              WidgetLayer(
+                exportConfigs: WidgetLayerExportConfigs(assetPath: path),
+                widget: Image.asset(
+                  path,
+                  fit: BoxFit.contain,
+                  width: spacerSize30,
+                  height: spacerSize30,
+                ),
               ),
             );
+            controller.selectedItems.add(true);
+
+            Navigator.of(context).pop();
           },
+          child: Padding(
+            padding: EdgeInsets.all(spacerSize5),
+            child: Image.asset(path, fit: BoxFit.contain),
+          ),
         );
       },
     );
   }
+
+  /*  Widget allImage() {
+    return GridView.builder(
+      padding: EdgeInsets.all(spacerSize10),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 6,
+        mainAxisSpacing: 8,
+        crossAxisSpacing: 8,
+      ),
+      itemCount: controller.galleryImageList.length,
+      itemBuilder: (context, index) {
+        final path = controller.galleryImageList[index];
+        return GestureDetector(
+          onTap: () {
+            final path = controller.galleryImageList[index];
+            controller.editorKey.currentState!.addLayer(
+              WidgetLayer(
+                exportConfigs: WidgetLayerExportConfigs(assetPath: path),
+                widget: Image.file(
+                  File(path),
+                  fit: BoxFit.contain,
+                  width: spacerSize30,
+                  height: spacerSize30,
+                ),
+              ),
+            );
+            controller.selectedItems.add(true);
+            Navigator.of(context).pop();
+
+  controller.editorKey.currentState!.addHistory(
+              newLayer: Layer(
+                meta: {
+                  "type":"file"
+                }
+
+              )
+            );
+
+          },
+          child: Image.file(
+            File(path),
+            fit: BoxFit.cover,
+          ),
+        );
+      },
+    );
+  }*/
 }
