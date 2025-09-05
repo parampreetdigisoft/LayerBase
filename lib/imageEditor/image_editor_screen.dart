@@ -15,7 +15,7 @@ import '../utils/base/widgets/base_text.dart';
 import '../utils/routes.dart';
 
 class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
-const ImageEditorScreen({super.key});
+  const ImageEditorScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +51,7 @@ const ImageEditorScreen({super.key});
             padding: EdgeInsets.only(right: spacerSize5, left: 0),
             minimumSize: Size(0, 0),
           ),
-          tooltip: controller.userDisplayName.isEmpty
-              ? AppStrings.login
-              : AppStrings.logout,
+          tooltip: controller.userDisplayName.isEmpty ? AppStrings.login : AppStrings.logout,
           onPressed: () {
             if (controller.userDisplayName.isEmpty) {
               Navigator.pushNamed(context, Routes.logIn);
@@ -66,16 +64,12 @@ const ImageEditorScreen({super.key});
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Icon(
-                controller.userDisplayName.isEmpty
-                    ? Icons.person
-                    : Icons.logout,
+                controller.userDisplayName.isEmpty ? Icons.person : Icons.logout,
                 size: spacerSize15,
                 color: AppColors.antiqueWhite,
               ),
               BaseText(
-                text: controller.userDisplayName.isEmpty
-                    ? AppStrings.login
-                    : AppStrings.logout,
+                text: controller.userDisplayName.isEmpty ? AppStrings.login : AppStrings.logout,
                 textColor: AppColors.antiqueWhite,
                 fontWeight: FontWeight.w500,
                 fontSize: fontSize14,
@@ -92,10 +86,7 @@ const ImageEditorScreen({super.key});
       flex: 7,
       child: Container(
         margin: EdgeInsets.only(right: spacerSize10),
-        padding: EdgeInsets.symmetric(
-          horizontal: spacerSize10,
-          vertical: spacerSize10,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: spacerSize10, vertical: spacerSize10),
         decoration: BoxDecoration(
           color: AppColors.chineseBlack,
           border: Border.all(color: AppColors.lightGrey),
@@ -106,7 +97,6 @@ const ImageEditorScreen({super.key});
           child: ProImageEditor.memory(
             controller.imageFile.value ?? Uint8List(0),
             key: controller.editorKey,
-
             configs: ProImageEditorConfigs(
               emojiEditor: EmojiEditorConfigs(
                 checkPlatformCompatibility: true,
@@ -116,9 +106,7 @@ const ImageEditorScreen({super.key});
               textEditor: TextEditorConfigs(widgets: TextEditorWidgets()),
               dialogConfigs: DialogConfigs(
                 style: DialogStyle(
-                  loadingDialog: LoadingDialogStyle(
-                    textColor: AppColors.chineseBlack,
-                  ),
+                  loadingDialog: LoadingDialogStyle(textColor: AppColors.chineseBlack),
                 ),
               ),
               i18n: I18n(
@@ -162,9 +150,7 @@ const ImageEditorScreen({super.key});
               onImageEditingComplete: (Uint8List bytes) async {},
               filterEditorCallbacks: FilterEditorCallbacks(
                 onFilterChanged: (value) {
-                  final Map<String, dynamic> jsonData = jsonDecode(
-                    controller.layerData.value,
-                  );
+                  final Map<String, dynamic> jsonData = jsonDecode(controller.layerData.value);
                   controller.applyFiltersToReferences(jsonData, value.filters);
                 },
                 onUpdateUI: () {
@@ -190,21 +176,20 @@ const ImageEditorScreen({super.key});
                 },
               ),
               onCompleteWithParameters: (parameters) async {
-                final export = await controller.editorKey.currentState
-                    ?.exportStateHistory(
-                      configs: ExportEditorConfigs(
-                        exportBlur: true,
-                        enableMinify: false,
-                        exportCropRotate: true,
-                        exportEmoji: true,
-                        exportFilter: true,
-                        exportPaint: true,
-                        exportText: true,
-                        exportTuneAdjustments: true,
-                        exportWidgets: true,
-                        historySpan: ExportHistorySpan.all,
-                      ),
-                    );
+                final export = await controller.editorKey.currentState?.exportStateHistory(
+                  configs: ExportEditorConfigs(
+                    exportBlur: true,
+                    enableMinify: false,
+                    exportCropRotate: true,
+                    exportEmoji: true,
+                    exportFilter: true,
+                    exportPaint: true,
+                    exportText: true,
+                    exportTuneAdjustments: true,
+                    exportWidgets: true,
+                    historySpan: ExportHistorySpan.all,
+                  ),
+                );
                 Map<String, dynamic>? jsonMap = await export?.toMap();
                 final layerJson = jsonEncode(jsonMap);
                 debugPrint("save:::::save");
@@ -218,11 +203,10 @@ const ImageEditorScreen({super.key});
               },
               mainEditorCallbacks: MainEditorCallbacks(
                 onAddLayer: (layer) {
-                  debugPrint("layer is added:::::");
+                  debugPrint("layer is added:::::${layer.toMap()}");
                   controller.activeLayersList!.add(layer);
-                  controller.selectedItems.value = List<bool>.from(
-                    controller.selectedItems,
-                  )..add(true);
+                  controller.selectedItems.value = List<bool>.from(controller.selectedItems)
+                    ..add(true);
                   controller.activeLayersList!.refresh();
                 },
                 onRemoveLayer: (layer) {
@@ -257,9 +241,7 @@ const ImageEditorScreen({super.key});
 
   ProgressIndicatorConfigs progressIndicatorConfigs() {
     return ProgressIndicatorConfigs(
-      widgets: ProgressIndicatorWidgets(
-        circularProgressIndicator: CircularProgressIndicator(),
-      ),
+      widgets: ProgressIndicatorWidgets(circularProgressIndicator: CircularProgressIndicator()),
     );
   }
 
@@ -269,17 +251,14 @@ const ImageEditorScreen({super.key});
       canZoomWhenLayerSelected: true,
       enableZoom: true,
       enableCloseButton: false,
-
+      enableEscapeButton: false,
       style: MainEditorStyle(
         background: AppColors.darkGunMetal,
         bottomBarBackground: AppColors.darkGunMetal,
         appBarBackground: AppColors.darkGunMetal,
       ),
 
-      icons: MainEditorIcons(
-        doneIcon: Icons.check_outlined,
-        applyChanges: Icons.check,
-      ),
+      icons: MainEditorIcons(doneIcon: Icons.check_outlined, applyChanges: Icons.check),
     );
   }
 
@@ -355,45 +334,126 @@ const ImageEditorScreen({super.key});
     return StickerEditorConfigs(
       enabled: true,
       style: StickerEditorStyle(
+        bottomSheetBackgroundColor: AppColors.chineseBlack,
+        showDragHandle: false,
+      ),
+      builder: (context, addSticker) {
+        return allSticker();
+      },
+    );
+  }
+
+  /* StickerEditorConfigs stickerEditorConfigs() {
+    return StickerEditorConfigs(
+      enabled: true,
+      style: StickerEditorStyle(
         bottomSheetBackgroundColor: AppColors.darkGunMetal,
         showDragHandle: false,
       ),
       builder: (context, addSticker) {
-        return GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 7,
-            mainAxisSpacing: 12,
-            crossAxisSpacing: 12,
-          ),
-          itemCount: controller.stickersList.length,
-          itemBuilder: (context, index) {
-            final path = controller.stickersList[index];
-            return GestureDetector(
-              onTap: () {
-                final path = controller.stickersList[index];
-                controller.editorKey.currentState!.addLayer(
-                  WidgetLayer(
-                    exportConfigs: WidgetLayerExportConfigs(assetPath: path),
-                    widget: Image.asset(
-                      path,
-                      fit: BoxFit.contain,
-                      width: spacerSize30,
-                      height: spacerSize30,
-                    ),
-                  ),
-                );
-                controller.selectedItems.add(true);
+        return DefaultTabController(
+          length: 2,
+          child: Column(
+            children: [
+              TabBar(
+                indicatorColor: Colors.white,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.grey,
+                tabs: const [
+                  Tab(text: "Sticker"),
+                  Tab(text: "Image"),
+                ],
+              ),
 
-                Navigator.of(context).pop();
-              },
-              child: Padding(
-                padding: EdgeInsets.all(spacerSize5),
-                child: Image.asset(path, fit: BoxFit.contain),
+              Expanded(child: TabBarView(children: [allSticker(), allImage()])),
+            ],
+          ),
+        );
+      },
+    );
+  }*/
+
+  Widget allSticker() {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 7,
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
+      ),
+      itemCount: controller.stickersList.length,
+      itemBuilder: (context, index) {
+        final path = controller.stickersList[index];
+        return GestureDetector(
+          onTap: () {
+            final path = controller.stickersList[index];
+            controller.editorKey.currentState!.addLayer(
+              WidgetLayer(
+                exportConfigs: WidgetLayerExportConfigs(assetPath: path),
+                widget: Image.asset(
+                  path,
+                  fit: BoxFit.contain,
+                  width: spacerSize30,
+                  height: spacerSize30,
+                ),
               ),
             );
+            controller.selectedItems.add(true);
+
+            Navigator.of(context).pop();
           },
+          child: Padding(
+            padding: EdgeInsets.all(spacerSize5),
+            child: Image.asset(path, fit: BoxFit.contain),
+          ),
         );
       },
     );
   }
+
+  /*  Widget allImage() {
+    return GridView.builder(
+      padding: EdgeInsets.all(spacerSize10),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 6,
+        mainAxisSpacing: 8,
+        crossAxisSpacing: 8,
+      ),
+      itemCount: controller.galleryImageList.length,
+      itemBuilder: (context, index) {
+        final path = controller.galleryImageList[index];
+        return GestureDetector(
+          onTap: () {
+            final path = controller.galleryImageList[index];
+            controller.editorKey.currentState!.addLayer(
+              WidgetLayer(
+                exportConfigs: WidgetLayerExportConfigs(assetPath: path),
+                widget: Image.file(
+                  File(path),
+                  fit: BoxFit.contain,
+                  width: spacerSize30,
+                  height: spacerSize30,
+                ),
+              ),
+            );
+            controller.selectedItems.add(true);
+            Navigator.of(context).pop();
+
+  controller.editorKey.currentState!.addHistory(
+              newLayer: Layer(
+                meta: {
+                  "type":"file"
+                }
+
+              )
+            );
+
+          },
+          child: Image.file(
+            File(path),
+            fit: BoxFit.cover,
+          ),
+        );
+      },
+    );
+  }*/
 }
