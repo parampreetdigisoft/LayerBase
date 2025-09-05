@@ -52,17 +52,22 @@ class ImageEditorViewModel extends GetxController {
     super.onClose();
   }
 
+  @override
+  void dispose() {
+    editorKey.currentState?.dispose();
+    super.dispose();
+  }
+
   void initializeLayer() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (editorKey.currentState != null &&
-          editorKey.currentState!.stateHistory.isNotEmpty) {
-        activeLayersList!.assignAll(
-          editorKey.currentState!.stateHistory.last.layers,
-        );
-        activeLayersList!.refresh();
+      if (editorKey.currentState != null && editorKey.currentState!.stateHistory.isNotEmpty) {
+        activeLayersList!.assignAll(editorKey.currentState!.stateHistory.last.layers);
       } else {
         activeLayersList!.value = [];
       }
+
+      activeLayersList!.refresh();
+
       initSelection();
     });
   }
@@ -106,116 +111,13 @@ class ImageEditorViewModel extends GetxController {
     Get.back();
   }
 
-  Future<void> saveImageToHive1(
-    Uint8List thumbNailBytes,
-    Uint8List imageBytes,
-    int? imageIndex,
-    dynamic layerJson,
-  ) async {
-    try {
-      await compute(_saveImageToHiveIsolate, {
-        AppKeys.imageThumbnail: thumbNailBytes,
-        AppKeys.image: imageBytes,
-        AppKeys.layerJson: layerJson,
-        AppKeys.imageIndex: imageIndex,
-      });
-    } catch (e, stack) {
-      debugPrint("saveImageToHive crashed::::: $e");
-      debugPrint("stack:::: $stack");
-    } finally {
-      AppToast.show(
-        title: AppStrings.savedSuccessfully,
-        "${AppStrings.image}\t${AppStrings.savedSuccessfully}",
-        backgroundColor: Colors.green,
-      );
-    }
-  }
-
-  /// This function runs in a background isolate=== not call
-  Future<void> _saveImageToHiveIsolate(Map<String, dynamic> params) async {
-    try {
-      final Uint8List thumbNailBytes = params[AppKeys.imageThumbnail];
-      final Uint8List imageBytes = params[AppKeys.image];
-      final int? imageIndex = params[AppKeys.imageIndex];
-      final dynamic layerJson = params[AppKeys.layerJson];
-
-      final box = Hive.box<dynamic>(AppKeys.imageLayerBox);
-
-      if (imageIndex != null && imageIndex >= 0 && imageIndex < box.length) {
-        if (removedLayers.isNotEmpty) {
-          removedLayers.forEach((index, layer) {
-            if (index >= 0 &&
-                index <=
-                    editorKey.currentState!.stateHistory.last.layers.length) {
-              editorKey.currentState!.stateHistory.last.layers.insert(
-                index,
-                layer,
-              );
-            }
-          });
-        }
-
-        final export = await editorKey.currentState?.exportStateHistory(
-          configs: ExportEditorConfigs(
-            exportBlur: true,
-            enableMinify: false,
-            exportCropRotate: true,
-            exportEmoji: true,
-            exportFilter: true,
-            exportPaint: true,
-            exportText: true,
-            exportTuneAdjustments: true,
-            exportWidgets: true,
-            historySpan: ExportHistorySpan.all,
-          ),
-        );
-
-        Map<String, dynamic>? jsonMap = await export?.toMap();
-        final jsonEncoded = jsonEncode(jsonMap);
-
-        await box.putAt(imageIndex, {
-          AppKeys.imageThumbnail: thumbNailBytes,
-          AppKeys.image: imageBytes,
-          AppKeys.layerJson: jsonEncoded,
-        });
-
-        debugPrint("Updated item at index::::: $imageIndex");
-      } else {
-        await box.add({
-          AppKeys.imageThumbnail: thumbNailBytes,
-          AppKeys.image: imageBytes,
-          AppKeys.layerJson: layerJson,
-        });
-        debugPrint("Added new item::: ${activeLayersList!.length}");
-      }
-    } catch (e, stack) {
-      debugPrint("saveImageToHive (isolate) crashed::::: $e");
-      debugPrint("stack:::: $stack");
-
-      if (e.toString().contains("Unexpected EOF")) {
-        debugPrint("Hive box corrupted. Resetting::::::");
-        await Hive.deleteBoxFromDisk(AppKeys.imageLayerBox);
-        final box = await Hive.openBox<dynamic>(
-          AppKeys.imageLayerBox,
-          compactionStrategy: (entries, deletedEntries) => false,
-        );
-        await box.add({
-          AppKeys.imageThumbnail: params[AppKeys.imageThumbnail],
-          AppKeys.image: params[AppKeys.image],
-          AppKeys.layerJson: params[AppKeys.layerJson],
-        });
-        debugPrint("Recovered: Box reset and data saved");
-      }
-      debugPrint("Stack trace:\n$stack");
-    }
-  }
 
   Future<void> saveImageToHive(
-    Uint8List thumbNailBytes,
-    Uint8List imageBytes,
-    int? imageIndex,
-    dynamic layerJson,
-  ) async {
+      Uint8List thumbNailBytes,
+      Uint8List imageBytes,
+      int? imageIndex,
+      dynamic layerJson,
+      ) async {
     try {
       final box = Hive.box<dynamic>(AppKeys.imageLayerBox);
       if (imageIndex != null && imageIndex >= 0 && imageIndex < box.length) {
@@ -253,12 +155,6 @@ class ImageEditorViewModel extends GetxController {
           AppKeys.image: imageBytes,
           AppKeys.layerJson: layerJson,
         });
-
-        /* await box.putAt(imageIndex, {
-          AppKeys.image: imageBytes,
-          AppKeys.layerJson: layerJson,
-          AppKeys.imageThumbnail: thumbNailBytes,
-        });*/
         debugPrint("Updated item at index::::: $imageIndex");
       } else {
         await box.add({
@@ -271,7 +167,7 @@ class ImageEditorViewModel extends GetxController {
     } catch (e, stack) {
       debugPrint("saveImageToHive crashed::::: $e");
       debugPrint("stack:::: $stack");
-      if (e.toString().contains("Unexpected EOF")) {
+      if (e.toString().contains("Unexpected error")) {
         debugPrint("Hive box corrupted. Resetting::::::");
         await Hive.deleteBoxFromDisk(AppKeys.imageLayerBox);
         final box = await Hive.openBox<dynamic>(
@@ -283,7 +179,7 @@ class ImageEditorViewModel extends GetxController {
           AppKeys.image: imageBytes,
           AppKeys.layerJson: layerJson,
         });
-        debugPrint("Recovered: Box reset and data saved");
+        debugPrint("Recovered::::: Box reset and data saved");
       }
       debugPrint("Stack trace:\n$stack");
     } finally {
@@ -292,13 +188,14 @@ class ImageEditorViewModel extends GetxController {
         "${AppStrings.image}\t${AppStrings.savedSuccessfully}",
         backgroundColor: Colors.green,
       );
+
     }
   }
 
   void applyFiltersToReferences(
-    Map<String, dynamic> data,
-    List<List<double>> filters,
-  ) {
+      Map<String, dynamic> data,
+      List<List<double>> filters,
+      ) {
     final references = data[AppKeys.references] as Map<String, dynamic>;
     int index = 0;
     for (final entry in references.entries) {
@@ -370,7 +267,7 @@ class ImageEditorViewModel extends GetxController {
         editorKey.currentState!.stateHistory.isNotEmpty) {
       List<Layer> newLayers = [];
       for (Layer originalLayer
-          in editorKey.currentState!.stateHistory.last.layers) {
+      in editorKey.currentState!.stateHistory.last.layers) {
         Layer newLayer = Layer(
           flipY: originalLayer.flipY,
           flipX: originalLayer.flipX,
@@ -405,19 +302,13 @@ class ImageEditorViewModel extends GetxController {
         editorKey.currentState!.activeLayers.isNotEmpty &&
         editorKey.currentState!.activeLayers.length ==
             activeLayersList!.length) {
-      final movedCanvasLayer = editorKey.currentState!.activeLayers.removeAt(
-        oldIndex,
-      );
-     // editorKey.currentState!.activeLayers.insert(newIndex, movedCanvasLayer);
-      editorKey.currentState!.setState(() {
-        editorKey.currentState!.stateHistory.last.layers.insert(newIndex, movedCanvasLayer);
-      });
-
+      final movedCanvasLayer = editorKey.currentState!.activeLayers.removeAt(oldIndex);
+        editorKey.currentState!.activeLayers.insert(newIndex, movedCanvasLayer);
+        //editorKey.currentState!.stateHistory.last.layers.insert(newIndex, movedCanvasLayer);
+      editorKey.currentState!.setState(() {});
       activeLayersList?.refresh();
-
     }
   }
-
 
   logoutDialog() {
     return showCommonDialog(
@@ -429,7 +320,7 @@ class ImageEditorViewModel extends GetxController {
         Navigator.pushNamedAndRemoveUntil(
           Get.context!,
           Routes.logIn,
-          (route) => false,
+              (route) => false,
         );
       },
       onNo: () {

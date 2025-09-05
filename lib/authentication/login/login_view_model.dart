@@ -229,10 +229,10 @@ class LoginViewModel extends GetxController {
         data['refreshToken'].toString(),
       );
       debugPrint("data::::::$data");
-      sharedPreferences!.setString(AppKeys.email, data['email'] ?? "");
+      sharedPreferences!.setString(AppKeys.email, data[AppKeys.email] ?? "");
       sharedPreferences!.setString(
         AppKeys.displayName,
-        data['displayName'] ?? "",
+        data[AppKeys.displayName] ?? "",
       );
       Navigator.pushReplacementNamed(Get.context!, Routes.homeScreen)
       ;

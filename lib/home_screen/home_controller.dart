@@ -165,6 +165,7 @@ class HomeController extends GetxController
       await file.writeAsBytes(bytes);
       isSuccess = true;
     } catch (e) {
+      debugPrint("Error picking image: $e");
     } finally {
       if (isSuccess) {
         AppToast.show(

@@ -15,7 +15,7 @@ import '../utils/base/widgets/base_text.dart';
 import '../utils/routes.dart';
 
 class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
-  const ImageEditorScreen({super.key});
+const ImageEditorScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -218,11 +218,12 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
               },
               mainEditorCallbacks: MainEditorCallbacks(
                 onAddLayer: (layer) {
-                  controller.activeLayersList!.insert(0, layer);
-                  controller.selectedItems.insert(0, true);
-                  debugPrint("Layer:::::${layer.toMap()}");
-                  //controller.activeLayersList!.add(layer);
-                //  controller.selectedItems.value = List<bool>.from(controller.selectedItems,)..add(true);
+                  debugPrint("layer is added:::::");
+                  controller.activeLayersList!.add(layer);
+                  controller.selectedItems.value = List<bool>.from(
+                    controller.selectedItems,
+                  )..add(true);
+                  controller.activeLayersList!.refresh();
                 },
                 onRemoveLayer: (layer) {
                   debugPrint("layer is remove:::::");

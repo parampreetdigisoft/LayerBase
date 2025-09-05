@@ -38,6 +38,7 @@ class SidLayerList extends StatelessWidget {
               text: AppStrings.layerHistory,
               textColor: Colors.white,
               fontWeight: FontWeight.bold,
+              fontSize: fontSize13,
             ),
           ),
 
@@ -48,9 +49,8 @@ class SidLayerList extends StatelessWidget {
   }
 
   reorderableList() {
-    return ReorderableListView.builder(
+    return Obx(()=> ReorderableListView.builder(
       itemCount: controller.activeLayersList!.length,
-      reverse: true,
       padding: EdgeInsets.symmetric(
         horizontal: spacerSize10,
         vertical: spacerSize5,
@@ -69,7 +69,7 @@ class SidLayerList extends StatelessWidget {
                 child: layerItems(index, context),
               );
       },
-    );
+    ));
   }
 
   layerItems(int index, BuildContext context) {
