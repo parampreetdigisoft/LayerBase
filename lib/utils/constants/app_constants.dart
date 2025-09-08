@@ -1,4 +1,3 @@
-
 const double fontSize13 = 13;
 const double fontSize14 = 14;
 const double fontSize16 = 16;
@@ -11,7 +10,8 @@ const double fontSize30 = 30;
 /*Size*/
 
 const double spacerSize0 = 0;
-const double spacerSize2 = 2;
+const double spacerSize3 = 2;
+const double spacerSize2 = 3;
 const double spacerSize4 = 4;
 const double spacerSize5 = 5;
 const double spacerSize8 = 8;
@@ -60,3 +60,27 @@ const double spacerSize350 = 350;
 const double spacerSize400 = 400;
 const double spacerSize500 = 500;
 const double spacerSize600 = 600;
+
+var extensions = [
+  'png',
+  'jpg',
+  'jpeg',
+  'gif',
+  'cr2',
+  'tiff',
+  'psd',
+  'dng',
+  'NEF',
+  'nrw',
+  'cr3',
+  'arw',
+  'srf',
+  'sr2',
+  'orf',
+  'raw',
+  'rw2',
+  'raf',
+  'dcr',
+  'k25',
+  'kdc',
+];

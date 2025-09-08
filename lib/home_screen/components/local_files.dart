@@ -131,7 +131,7 @@ class LocalFiles extends StatelessWidget {
                   IconButton(
                     tooltip: AppStrings.delete,
                     onPressed: () {
-                      showCommonDialog(
+                      showBaseDialog(
                         context: context,
                         onNo: () => Get.back(),
                         onYes: () {

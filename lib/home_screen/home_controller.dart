@@ -12,11 +12,11 @@ import 'package:layerbase/utils/routes.dart';
 import 'package:layerbase/utils/shared_prefs_service.dart';
 
 import '../utils/base/dialogs/base_dialog.dart';
+import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_strings.dart';
 
 class HomeController extends GetxController with GetSingleTickerProviderStateMixin {
   final RxBool isLoading = true.obs;
-  final RxBool isImagePicking = true.obs;
   Rx<File>? imageFile;
   final picker = ImagePicker();
   Rx<Uint8List>? imageBytes;
@@ -27,31 +27,7 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
   late TabController tabController;
   var selectedIndex = 0.obs;
   var isPickImageOpen = false.obs;
-  final List<String> tabLabels = ["Local Files", "Cloud Files"];
-
-  var extensions = [
-    'png',
-    'jpg',
-    'jpeg',
-    'gif',
-    'cr2',
-    'tiff',
-    'psd',
-    'dng',
-    'NEF',
-    'nrw',
-    'cr3',
-    'arw',
-    'srf',
-    'sr2',
-    'orf',
-    'raw',
-    'rw2',
-    'raf',
-    'dcr',
-    'k25',
-    'kdc',
-  ];
+  final List<String> tabLabels = [AppStrings.localFiles, AppStrings.cloudFiles];
 
   @override
   Future<void> onInit() async {
@@ -109,7 +85,7 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
     try {
       await pickImage();
     } catch (e) {
-      debugPrint("Error picking image: $e");
+      debugPrint(e.toString());
     } finally {
       isPickImageOpen.value = false;
     }
@@ -173,7 +149,7 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
       await file.writeAsBytes(bytes);
       isSuccess = true;
     } catch (e) {
-      debugPrint("Error picking image: $e");
+      debugPrint(e.toString());
     } finally {
       if (isSuccess) {
         AppToast.show(
@@ -183,21 +159,6 @@ class HomeController extends GetxController with GetSingleTickerProviderStateMix
         );
       }
     }
-  }
-
-  Future<void> showLogoutDialog() {
-    return showCommonDialog(
-      context: Get.context!,
-      title: AppStrings.logout,
-      subtitle: "${AppStrings.areYouSureWantTo}\t${AppStrings.logout}?",
-      onYes: () {
-        sharedPrefsService.clear();
-        Navigator.pushNamedAndRemoveUntil(Get.context!, Routes.logIn, (route) => false);
-      },
-      onNo: () {
-        Get.back();
-      },
-    );
   }
 
   void goToEditor(int imageIndex) {

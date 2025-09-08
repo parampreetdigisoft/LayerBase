@@ -5,6 +5,7 @@ import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:layerbase/utils/constants/app_constants.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
 
+import '../utils/base/dialogs/base_dialog.dart';
 import '../utils/base/widgets/base_text.dart';
 import '../utils/routes.dart';
 import 'components/cloud_files.dart';
@@ -28,19 +29,13 @@ class HomeScreen extends GetWidget<HomeController> {
               IconButton(
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
-                style: IconButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  minimumSize: Size(0, 0),
-                ),
+                style: IconButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size(0, 0)),
                 onPressed: () {
                   controller.onClickPickImageOpen();
                 },
                 icon: Container(
                   margin: EdgeInsets.symmetric(horizontal: spacerSize15),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: spacerSize25,
-                    vertical: spacerSize5,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: spacerSize25, vertical: spacerSize5),
                   decoration: BoxDecoration(
                     color: AppColors.chineseBlack,
                     borderRadius: BorderRadius.only(
@@ -155,10 +150,7 @@ class HomeScreen extends GetWidget<HomeController> {
         dividerColor: Colors.transparent,
         indicatorColor: Colors.transparent,
 
-        labelStyle: const TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: fontSize14,
-        ),
+        labelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: fontSize14),
         indicatorSize: TabBarIndicatorSize.tab,
         overlayColor: WidgetStateProperty.all(Colors.transparent),
         automaticIndicatorColorAdjustment: true,
@@ -188,7 +180,7 @@ class HomeScreen extends GetWidget<HomeController> {
               if (controller.userDisplayName.value.isEmpty) {
                 Navigator.pushNamed(context, Routes.logIn);
               } else {
-                controller.showLogoutDialog();
+                showLogoutDialog();
               }
             },
 
@@ -196,9 +188,7 @@ class HomeScreen extends GetWidget<HomeController> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Icon(
-                  controller.userDisplayName.value.isEmpty
-                      ? Icons.person
-                      : Icons.logout,
+                  controller.userDisplayName.value.isEmpty ? Icons.person : Icons.logout,
                   size: spacerSize15,
                   color: AppColors.antiqueWhite,
                 ),
@@ -215,6 +205,21 @@ class HomeScreen extends GetWidget<HomeController> {
           ),
         ),
       ],
+    );
+  }
+
+  Future<void> showLogoutDialog() {
+    return showBaseDialog(
+      context: Get.context!,
+      title: AppStrings.logout,
+      subtitle: "${AppStrings.areYouSureWantTo}\t${AppStrings.logout}?",
+      onYes: () {
+        controller.sharedPrefsService.clear();
+        Navigator.pushNamedAndRemoveUntil(Get.context!, Routes.logIn, (route) => false);
+      },
+      onNo: () {
+        Get.back();
+      },
     );
   }
 }

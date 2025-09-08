@@ -22,19 +22,13 @@ class BaseDialog {
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: spacerSize600),
           child: Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(spacerSize16),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(spacerSize16)),
             child: Padding(
               padding: const EdgeInsets.all(spacerSize25),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    Icons.check_circle,
-                    size: spacerSize45,
-                    color: Colors.blue,
-                  ),
+                  Icon(Icons.check_circle, size: spacerSize45, color: Colors.blue),
                   SizedBox(height: spacerSize16),
                   BaseText(
                     text: dialogTitle ?? "",
@@ -70,11 +64,10 @@ class BaseDialog {
       ),
     );
   }
-
 }
 
 /// Aditya
-Future<void> showCommonDialog({
+showBaseDialog({
   required BuildContext context,
   required String title,
   required String subtitle,
@@ -88,10 +81,7 @@ Future<void> showCommonDialog({
     builder: (ctx) {
       return AlertDialog(
         backgroundColor: AppColors.gunMetal,
-
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(spacerSize12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(spacerSize12)),
         title: BaseText(
           text: title,
           textAlign: TextAlign.start,
@@ -115,11 +105,7 @@ Future<void> showCommonDialog({
             onPressed: () {
               onNo();
             },
-            child: BaseText(
-              text: noText,
-              fontWeight: FontWeight.bold,
-              textColor: Colors.black,
-            ),
+            child: BaseText(text: noText, fontWeight: FontWeight.bold, textColor: Colors.black),
           ),
           Container(
             decoration: BoxDecoration(
@@ -135,18 +121,12 @@ Future<void> showCommonDialog({
                 backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
                 enabledMouseCursor: MouseCursor.uncontrolled,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(spacerSize15),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(spacerSize15)),
               ),
               onPressed: () {
                 onYes();
               },
-              child: BaseText(
-                text: yesText,
-                fontWeight: FontWeight.bold,
-                textColor: Colors.white,
-              ),
+              child: BaseText(text: yesText, fontWeight: FontWeight.bold, textColor: Colors.white),
             ),
           ),
         ],

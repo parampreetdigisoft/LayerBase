@@ -26,23 +26,13 @@ class ForgotPasswordViewModel extends GetxController {
   void sendResetPasswordEmail() async {
     isLoading.value = true;
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(
-        email: emailController.text.trim(),
-      );
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: emailController.text.trim());
       resetPasswordDialog();
     } on FirebaseAuthException catch (exception) {
       if (exception.code == AppKeys.userNotFound) {
-        AppToast.show(
-          title: AppStrings.error,
-          AppStrings.noUserFound,
-          backgroundColor: Colors.red,
-        );
+        AppToast.show(title: AppStrings.error, AppStrings.noUserFound, backgroundColor: Colors.red);
       } else {
-        AppToast.show(
-          title: AppStrings.error,
-          exception.message!,
-          backgroundColor: Colors.red,
-        );
+        AppToast.show(title: AppStrings.error, exception.message!, backgroundColor: Colors.red);
       }
     } finally {
       isLoading.value = false;
@@ -80,10 +70,7 @@ class ForgotPasswordViewModel extends GetxController {
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'requestType': 'PASSWORD_RESET',
-        'email': emailController.text,
-      }),
+      body: jsonEncode({'requestType': 'PASSWORD_RESET', 'email': emailController.text}),
     );
 
     if (response.statusCode == 200) {
@@ -97,7 +84,6 @@ class ForgotPasswordViewModel extends GetxController {
         error['error']['message'].toString().replaceAll("_", " "),
         backgroundColor: Colors.red,
       );
-      debugPrint('Error: ${error['error']['message']}');
     }
   }
 }

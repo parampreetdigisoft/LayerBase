@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -11,7 +10,6 @@ import 'package:pro_image_editor/pro_image_editor.dart';
 import '../utils/base/dialogs/base_dialog.dart';
 import '../utils/constants/app_keys.dart';
 import '../utils/constants/app_strings.dart';
-import '../utils/routes.dart';
 import '../utils/shared_prefs_service.dart';
 
 class ImageEditorViewModel extends GetxController {
@@ -21,8 +19,8 @@ class ImageEditorViewModel extends GetxController {
   final Map<int, Layer> removedLayers = {};
   late SharedPrefsService sharedPrefsService;
   List<String> galleryImageList = [];
-
   String userDisplayName = "";
+
   var layerData = "".obs,
       stickersList = <String>[].obs,
       imageData = Rx<dynamic>(null),
@@ -109,77 +107,24 @@ class ImageEditorViewModel extends GetxController {
     Get.back();
   }
 
-  Future<void> saveImageToHive(
-    Uint8List thumbNailBytes,
-    Uint8List imageBytes,
-    int? imageIndex,
-    dynamic layerJson,
-  ) async {
-    try {
-      final box = Hive.box<dynamic>(AppKeys.imageLayerBox);
-      if (imageIndex != null && imageIndex >= 0 && imageIndex < box.length) {
-        if (removedLayers.isNotEmpty) {
-          removedLayers.forEach((index, layer) {
-            if (index >= 0 && index <= editorKey.currentState!.stateHistory.last.layers.length) {
-              editorKey.currentState!.stateHistory.last.layers.insert(index, layer);
-            }
-            // editorKey.currentState!.stateHistory.last.layers.insert(index,layer);
-          });
-        }
-        final export = await editorKey.currentState?.exportStateHistory(
-          configs: ExportEditorConfigs(
-            exportBlur: true,
-            enableMinify: false,
-            exportCropRotate: true,
-            exportEmoji: true,
-            exportFilter: true,
-            exportPaint: true,
-            exportText: true,
-            exportTuneAdjustments: true,
-            exportWidgets: true,
-            historySpan: ExportHistorySpan.all,
-          ),
-        );
-        Map<String, dynamic>? jsonMap = await export?.toMap();
-        final layerJson = jsonEncode(jsonMap);
-        await box.putAt(imageIndex, {
-          AppKeys.imageThumbnail: thumbNailBytes,
-          AppKeys.image: imageBytes,
-          AppKeys.layerJson: layerJson,
-        });
-        debugPrint("Updated item at index::::: $imageIndex");
-      } else {
-        await box.add({
-          AppKeys.imageThumbnail: thumbNailBytes,
-          AppKeys.image: imageBytes,
-          AppKeys.layerJson: layerJson,
-        });
-        debugPrint("Added new item::: ${activeLayersList!.length}");
-      }
-    } catch (e, stack) {
-      debugPrint("saveImageToHive crashed::::: $e");
-      debugPrint("stack:::: $stack");
-      if (e.toString().contains("Unexpected error")) {
-        debugPrint("Hive box corrupted. Resetting::::::");
-        await Hive.deleteBoxFromDisk(AppKeys.imageLayerBox);
-        final box = await Hive.openBox<dynamic>(
-          AppKeys.imageLayerBox,
-          compactionStrategy: (entries, deletedEntries) => false,
-        );
-        await box.add({
-          AppKeys.imageThumbnail: thumbNailBytes,
-          AppKeys.image: imageBytes,
-          AppKeys.layerJson: layerJson,
-        });
-        debugPrint("Recovered::::: Box reset and data saved");
-      }
-      debugPrint("Stack trace:\n$stack");
-    } finally {
-      AppToast.show(
-        title: AppStrings.savedSuccessfully,
-        "${AppStrings.image}\t${AppStrings.savedSuccessfully}",
-        backgroundColor: Colors.green,
-      );
+  void updateDragLayer(int newIndex, int oldIndex) {
+    if (newIndex > oldIndex) newIndex -= 1;
+    if (oldIndex < 0 ||
+        oldIndex >= activeLayersList!.length ||
+        newIndex < 0 ||
+        newIndex >= activeLayersList!.length) {
+      return;
+    }
+    final movedLayer = activeLayersList!.removeAt(oldIndex);
+    activeLayersList!.insert(newIndex, movedLayer);
+    if (editorKey.currentState != null &&
+        editorKey.currentState!.activeLayers.isNotEmpty &&
+        editorKey.currentState!.activeLayers.length == activeLayersList!.length) {
+      final movedCanvasLayer = editorKey.currentState!.activeLayers.removeAt(oldIndex);
+      editorKey.currentState!.activeLayers.insert(newIndex, movedCanvasLayer);
+      //editorKey.currentState!.stateHistory.last.layers.insert(newIndex, movedCanvasLayer);
+      editorKey.currentState!.setState(() {});
+      activeLayersList?.refresh();
     }
   }
 
@@ -191,6 +136,92 @@ class ImageEditorViewModel extends GetxController {
       final ref = entry.value as Map<String, dynamic>;
       ref['f'] = filters[index];
       index++;
+    }
+  }
+
+  Future<void> saveImageToHive(
+    Uint8List thumbNailBytes,
+    Uint8List imageBytes,
+    int? imageIndex,
+    dynamic layerJson,
+  ) async {
+    try {
+      await exportImageAndSaveInHive(thumbNailBytes, imageBytes, imageIndex!, layerJson);
+    } catch (e) {
+      saveImageCatchError(e.toString(), thumbNailBytes, imageBytes, imageIndex!, layerJson);
+    } finally {
+      AppToast.show(
+        title: AppStrings.savedSuccessfully,
+        "${AppStrings.image}\t${AppStrings.savedSuccessfully}",
+        backgroundColor: Colors.green,
+      );
+    }
+  }
+
+  exportImageAndSaveInHive(
+    Uint8List thumbNailBytes,
+    Uint8List imageBytes,
+    int imageIndex,
+    dynamic layerJson,
+  ) async {
+    final box = Hive.box<dynamic>(AppKeys.imageLayerBox);
+    if (imageIndex >= 0 && imageIndex < box.length) {
+      if (removedLayers.isNotEmpty) {
+        removedLayers.forEach((index, layer) {
+          if (index >= 0 && index <= editorKey.currentState!.stateHistory.last.layers.length) {
+            editorKey.currentState!.stateHistory.last.layers.insert(index, layer);
+          }
+          // editorKey.currentState!.stateHistory.last.layers.insert(index,layer);
+        });
+      }
+      final export = await editorKey.currentState?.exportStateHistory(
+        configs: ExportEditorConfigs(
+          exportBlur: true,
+          enableMinify: false,
+          exportCropRotate: true,
+          exportEmoji: true,
+          exportFilter: true,
+          exportPaint: true,
+          exportText: true,
+          exportTuneAdjustments: true,
+          exportWidgets: true,
+          historySpan: ExportHistorySpan.all,
+        ),
+      );
+      Map<String, dynamic>? jsonMap = await export?.toMap();
+      final layerJson = jsonEncode(jsonMap);
+      await box.putAt(imageIndex, {
+        AppKeys.imageThumbnail: thumbNailBytes,
+        AppKeys.image: imageBytes,
+        AppKeys.layerJson: layerJson,
+      });
+    } else {
+      await box.add({
+        AppKeys.imageThumbnail: thumbNailBytes,
+        AppKeys.image: imageBytes,
+        AppKeys.layerJson: layerJson,
+      });
+    }
+  }
+
+  saveImageCatchError(
+    String errorMsg,
+    Uint8List thumbNailBytes,
+    Uint8List imageBytes,
+    int imageIndex,
+    dynamic layerJson,
+  ) async {
+    if (errorMsg.toString().contains("Unexpected error")) {
+      await Hive.deleteBoxFromDisk(AppKeys.imageLayerBox);
+      final box = await Hive.openBox<dynamic>(
+        AppKeys.imageLayerBox,
+        compactionStrategy: (entries, deletedEntries) => false,
+      );
+      await box.add({
+        AppKeys.imageThumbnail: thumbNailBytes,
+        AppKeys.image: imageBytes,
+        AppKeys.layerJson: layerJson,
+      });
     }
   }
 
@@ -247,41 +278,5 @@ class ImageEditorViewModel extends GetxController {
       activeLayersList!.assignAll(newLayers);
       activeLayersList!.refresh();
     }
-  }
-
-  void updateDragLayer(int newIndex, int oldIndex) {
-    if (newIndex > oldIndex) newIndex -= 1;
-    if (oldIndex < 0 ||
-        oldIndex >= activeLayersList!.length ||
-        newIndex < 0 ||
-        newIndex >= activeLayersList!.length) {
-      return;
-    }
-    final movedLayer = activeLayersList!.removeAt(oldIndex);
-    activeLayersList!.insert(newIndex, movedLayer);
-    if (editorKey.currentState != null &&
-        editorKey.currentState!.activeLayers.isNotEmpty &&
-        editorKey.currentState!.activeLayers.length == activeLayersList!.length) {
-      final movedCanvasLayer = editorKey.currentState!.activeLayers.removeAt(oldIndex);
-      editorKey.currentState!.activeLayers.insert(newIndex, movedCanvasLayer);
-      //editorKey.currentState!.stateHistory.last.layers.insert(newIndex, movedCanvasLayer);
-      editorKey.currentState!.setState(() {});
-      activeLayersList?.refresh();
-    }
-  }
-
-  logoutDialog() {
-    return showCommonDialog(
-      context: Get.context!,
-      title: AppStrings.logout,
-      subtitle: "${AppStrings.areYouSureWantTo}\t${AppStrings.logout}?",
-      onYes: () {
-        sharedPrefsService.clear();
-        Navigator.pushNamedAndRemoveUntil(Get.context!, Routes.logIn, (route) => false);
-      },
-      onNo: () {
-        Get.back();
-      },
-    );
   }
 }

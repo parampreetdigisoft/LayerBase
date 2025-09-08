@@ -45,10 +45,11 @@ dependencies:
   image: ^4.5.4
   image_picker: ^1.0.6
   path_provider: ^2.1.5
-  pro_image_editor: ^11.4.1
+  pro_image_editor: ^11.5.6
   shared_preferences: ^2.5.3
   url_launcher: ^6.3.2
   shimmer_animation: ^2.2.2
+  photo_manager: ^3.7.1
 
 dev_dependencies:
   flutter_test:
@@ -58,7 +59,7 @@ dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deact  ivating specific lint
+  # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   dependency_validator: ^3.0.0
   flutter_lints: ^5.0.0

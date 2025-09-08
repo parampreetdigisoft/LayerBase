@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-class AppColors{
+class AppColors {
   static const antiqueWhite = Color(0xFFE4E0D4);
   static const darkBlue = Color(0xFF15387C);
   static const lightBlue = Color(0xA815387C);
@@ -14,5 +14,4 @@ class AppColors{
   static const violet = Color(0xFF7B2FF7);
   static const brightCyan = Color(0xFF00C6FF);
   static const gunMetal = Color(0xFF181E2A);
-
 }

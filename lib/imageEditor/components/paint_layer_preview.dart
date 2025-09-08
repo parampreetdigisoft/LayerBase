@@ -5,11 +5,7 @@ class PaintLayerPreview extends CustomPainter {
   final Color color;
   final double strokeWidth;
 
-  PaintLayerPreview({
-    required this.points,
-    required this.color,
-    required this.strokeWidth,
-  });
+  PaintLayerPreview({required this.points, required this.color, required this.strokeWidth});
 
   @override
   void paint(Canvas canvas, Size size) {

@@ -79,28 +79,30 @@ class AppStrings {
   static const whoIsYourFavoriteSportsTeam = 'Who is your favorite sports team?';
   static const inWhatCityWereYouBorn = 'In what city were you born?';
 
-
   /// aditya
 
-static const deleteLayer= "Delete layer";
-static const deleteImage= "Delete Image";
-static const deleteThisLayer= " delete this Layer?";
-static const deleteThisImage= " delete this Image?";
-static const profile= "Profile";
-static const fileUpload= "File Upload";
-static const layerHistory= "Layers History";
-static const noLayers= "No Layers";
-static const clickHereToBrowseAnImage= "Click here to browse an image";
-static const selectImageDesc= "Click here to add an image \nand start editing. Customize, enhance, \nand make it your own with our editor.";
-static const hide= "Hide";
-static const show= "Show";
-static const holdToDrag= "Hold to drag";
-static const noImageFound= "No images found.";
-static const areYouSureWantTo= "Are you sure you want to";
-static const logout= "Logout";
-static const downloadSuccessfully= "Download successfully";
-static const file= "File";
-static const image= "Image";
-static const savedSuccessfully= "Saved Successfully";
-
+  static const deleteLayer = "Delete layer";
+  static const deleteImage = "Delete Image";
+  static const deleteThisLayer = " delete this Layer?";
+  static const deleteThisImage = " delete this Image?";
+  static const profile = "Profile";
+  static const fileUpload = "File Upload";
+  static const layerHistory = "Layers History";
+  static const noLayers = "No Layers";
+  static const clickHereToBrowseAnImage = "Click here to browse an image";
+  static const selectImageDesc =
+      "Click here to add an image \nand start editing. Customize, enhance, \nand make it your own with our editor.";
+  static const hide = "Hide";
+  static const show = "Show";
+  static const holdToDrag = "Hold to drag";
+  static const noImageFound = "No images found.";
+  static const areYouSureWantTo = "Are you sure you want to";
+  static const logout = "Logout";
+  static const downloadSuccessfully = "Download successfully";
+  static const file = "File";
+  static const image = "Image";
+  static const savedSuccessfully = "Saved Successfully";
+  static const aiGenerate = "Ai Generate";
+  static const closeImageEditor = "Close Image Editor";
+  static const yourChangeWillNotBeSaved = "Your changes will not be saved.";
 }

@@ -25,8 +25,7 @@ class LayerHistoryLayout extends StatelessWidget {
           borderRadius: BorderRadius.circular(spacerSize8),
         ),
         child: Obx(() {
-          return (controller!.isLoading.value ||
-                  controller!.activeLayersList!.isEmpty)
+          return (controller!.isLoading.value || controller!.activeLayersList!.isEmpty)
               ? buildShimmerEffect(context)
               : SidLayerList(controller: controller!);
         }),
@@ -57,14 +56,10 @@ class LayerHistoryLayout extends StatelessWidget {
               ? ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: spacerSize10,
-                    vertical: spacerSize10,
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: spacerSize10, vertical: spacerSize10),
                   itemCount: 10,
                   itemBuilder: (context, index) => buildShimmerItem(),
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: spacerSize10),
+                  separatorBuilder: (context, index) => const SizedBox(height: spacerSize10),
                 )
               : const Center(
                   child: BaseText(
@@ -87,10 +82,7 @@ class LayerHistoryLayout extends StatelessWidget {
       enabled: true,
       direction: const ShimmerDirection.fromLTRB(),
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          vertical: spacerSize8,
-          horizontal: spacerSize8,
-        ),
+        padding: const EdgeInsets.symmetric(vertical: spacerSize8, horizontal: spacerSize8),
         decoration: BoxDecoration(
           color: AppColors.darkJungleGreen,
           borderRadius: BorderRadius.circular(spacerSize8),
@@ -106,10 +98,7 @@ class LayerHistoryLayout extends StatelessWidget {
             Expanded(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(spacerSize4),
-                child: Container(
-                  height: spacerSize65,
-                  color: AppColors.chineseBlack,
-                ),
+                child: Container(height: spacerSize65, color: AppColors.chineseBlack),
               ),
             ),
           ],

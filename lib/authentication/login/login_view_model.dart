@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -12,6 +13,7 @@ import 'package:layerbase/utils/constants/app_strings.dart';
 import 'package:layerbase/utils/routes.dart' show Routes;
 import 'package:layerbase/utils/shared_prefs_service.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../utils/base/dialogs/base_dialog.dart';
 
 class LoginViewModel extends GetxController {
@@ -78,21 +80,13 @@ class LoginViewModel extends GetxController {
     sharedPreferences!.clear();
     isLoading.value = true;
     try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-            email: emailController.text,
-            password: passwordController.text,
-          );
-      sharedPreferences!.setString(AppKeys.email,userCredential.user!.email?? "");
-      sharedPreferences!.setString(
-        AppKeys.displayName,
-        userCredential.user!.displayName??"",
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
       );
-      sharedPreferences!.setString(
-        AppKeys.idToken,
-        userCredential.user!.refreshToken.toString(),
-      );
-
+      sharedPreferences!.setString(AppKeys.email, userCredential.user!.email ?? "");
+      sharedPreferences!.setString(AppKeys.displayName, userCredential.user!.displayName ?? "");
+      sharedPreferences!.setString(AppKeys.idToken, userCredential.user!.refreshToken.toString());
 
       Navigator.pushReplacementNamed(Get.context!, Routes.homeScreen);
     } on FirebaseAuthException catch (exception) {
@@ -109,14 +103,10 @@ class LoginViewModel extends GetxController {
           backgroundColor: Colors.red,
         );
       } else {
-        AppToast.show(
-          title: AppStrings.error,
-          '${exception.message}',
-          backgroundColor: Colors.red,
-        );
+        AppToast.show(title: AppStrings.error, '${exception.message}', backgroundColor: Colors.red);
       }
     } catch (e) {
-      debugPrint("Unexpected error: $e");
+      debugPrint(e.toString());
     } finally {
       isLoading.value = false;
     }
@@ -158,16 +148,8 @@ class LoginViewModel extends GetxController {
     await request.response.close();
     await server.close(force: true);
 
-    final tokenResponse = await exchangeCodeForToken(
-      code!,
-      redirectUri,
-      clientId!,
-      clientSecret!,
-    );
-    sharedPreferences!.setString(
-      AppKeys.idToken,
-      tokenResponse['id_token'] ?? "",
-    );
+    final tokenResponse = await exchangeCodeForToken(code!, redirectUri, clientId!, clientSecret!);
+    sharedPreferences!.setString(AppKeys.idToken, tokenResponse['id_token'] ?? "");
     final credential = GoogleAuthProvider.credential(
       accessToken: tokenResponse['access_token'],
       idToken: tokenResponse['id_token'],
@@ -220,22 +202,12 @@ class LoginViewModel extends GetxController {
       body: jsonEncode(map),
     );
 
-    debugPrint("map::::$map");
-
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      sharedPreferences!.setString(
-        AppKeys.idToken,
-        data['refreshToken'].toString(),
-      );
-      debugPrint("data::::::$data");
+      sharedPreferences!.setString(AppKeys.idToken, data['refreshToken'].toString());
       sharedPreferences!.setString(AppKeys.email, data[AppKeys.email] ?? "");
-      sharedPreferences!.setString(
-        AppKeys.displayName,
-        data[AppKeys.displayName] ?? "",
-      );
-      Navigator.pushReplacementNamed(Get.context!, Routes.homeScreen)
-      ;
+      sharedPreferences!.setString(AppKeys.displayName, data[AppKeys.displayName] ?? "");
+      Navigator.pushReplacementNamed(Get.context!, Routes.homeScreen);
     } else {
       isLoading.value = false;
       AppToast.show(
@@ -245,5 +217,4 @@ class LoginViewModel extends GetxController {
       );
     }
   }
-
 }

@@ -49,27 +49,26 @@ class SidLayerList extends StatelessWidget {
   }
 
   reorderableList() {
-    return Obx(()=> ReorderableListView.builder(
-      itemCount: controller.activeLayersList!.length,
-      padding: EdgeInsets.symmetric(
-        horizontal: spacerSize10,
-        vertical: spacerSize5,
+    return Obx(
+      () => ReorderableListView.builder(
+        itemCount: controller.activeLayersList!.length,
+        padding: EdgeInsets.symmetric(horizontal: spacerSize10, vertical: spacerSize5),
+        onReorder: (oldIndex, newIndex) {
+          controller.updateDragLayer(newIndex, oldIndex);
+        },
+        buildDefaultDragHandles: false,
+        proxyDecorator: proxyDecorateWidget(),
+        itemBuilder: (context, index) {
+          return index >= controller.activeLayersList!.length
+              ? const SizedBox()
+              : ReorderableDelayedDragStartListener(
+                  key: ValueKey(index),
+                  index: index,
+                  child: layerItems(index, context),
+                );
+        },
       ),
-      onReorder: (oldIndex, newIndex) {
-        controller.updateDragLayer(newIndex, oldIndex);
-      },
-      buildDefaultDragHandles: false,
-      proxyDecorator: proxyDecorateWidget(),
-      itemBuilder: (context, index) {
-        return index >= controller.activeLayersList!.length
-            ? const SizedBox()
-            : ReorderableDelayedDragStartListener(
-                key: ValueKey(index),
-                index: index,
-                child: layerItems(index, context),
-              );
-      },
-    ));
+    );
   }
 
   layerItems(int index, BuildContext context) {
@@ -102,9 +101,10 @@ class SidLayerList extends StatelessWidget {
   Widget Function(Widget, int, Animation<double>) proxyDecorateWidget() {
     return (Widget child, int index, Animation<double> animation) {
       return ScaleTransition(
-        scale: Tween<double>(begin: 1.0, end: 1.07).animate(
-          CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
-        ),
+        scale: Tween<double>(
+          begin: 1.0,
+          end: 1.07,
+        ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOutBack)),
         child: Material(
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(spacerSize8),
@@ -126,12 +126,8 @@ class SidLayerList extends StatelessWidget {
   hideAndShowBtn(int index) {
     return iconLayout(
       index,
-      tooltipText: controller.selectedItems[index]
-          ? AppStrings.show
-          : AppStrings.hide,
-      icon:
-          (index < controller.selectedItems.length &&
-              controller.selectedItems[index])
+      tooltipText: controller.selectedItems[index] ? AppStrings.show : AppStrings.hide,
+      icon: (index < controller.selectedItems.length && controller.selectedItems[index])
           ? Icons.visibility_outlined
           : Icons.visibility_off_outlined,
       onPressed: () {
@@ -146,7 +142,7 @@ class SidLayerList extends StatelessWidget {
       tooltipText: AppStrings.delete,
       icon: Icons.delete_forever,
       onPressed: () {
-        showCommonDialog(
+        showBaseDialog(
           context: context,
           onNo: () => Get.back(),
           onYes: () {
@@ -159,28 +155,16 @@ class SidLayerList extends StatelessWidget {
     );
   }
 
-  iconLayout(
-    int index, {
-    String? tooltipText,
-    IconData? icon,
-    VoidCallback? onPressed,
-  }) {
+  iconLayout(int index, {String? tooltipText, IconData? icon, VoidCallback? onPressed}) {
     return IconButton(
       tooltip: tooltipText,
-      style: IconButton.styleFrom(
-        padding: EdgeInsets.zero,
-        minimumSize: Size(0, 0),
-      ),
+      style: IconButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size(0, 0)),
       onPressed: () {
         onPressed!();
       },
       icon: ShaderMask(
         shaderCallback: (bounds) => LinearGradient(
-          colors: [
-            AppColors.violet,
-            AppColors.brightCyan,
-            AppColors.antiqueWhite,
-          ],
+          colors: [AppColors.violet, AppColors.brightCyan, AppColors.antiqueWhite],
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
         ).createShader(bounds),
@@ -198,10 +182,7 @@ class SidLayerList extends StatelessWidget {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              Image.memory(
-                controller.imageFile.value ?? Uint8List(0),
-                fit: BoxFit.cover,
-              ),
+              Image.memory(controller.imageFile.value ?? Uint8List(0), fit: BoxFit.cover),
               Center(child: getLayers(index)),
             ],
           ),
@@ -219,41 +200,25 @@ class SidLayerList extends StatelessWidget {
       case (TextLayer _):
         return Text(
           layer.text,
-          style: TextStyle(
-            color: layer.color,
-            backgroundColor: layer.background,
-          ),
+          style: TextStyle(color: layer.color, backgroundColor: layer.background),
           overflow: TextOverflow.ellipsis,
         );
 
       case (EmojiLayer _):
-        return Text(
-          layer.emoji,
-          style: const TextStyle(fontSize: spacerSize20),
-        );
+        return Text(layer.emoji, style: const TextStyle(fontSize: spacerSize20));
 
       case (PaintLayer _):
         final paintData = layer.toMap();
         final offsets = (paintData[AppKeys.item][AppKeys.offsets] as List)
-            .map(
-              (p) => Offset(
-                (p['x'] as num).toDouble(),
-                (p['y'] as num).toDouble(),
-              ),
-            )
+            .map((p) => Offset((p['x'] as num).toDouble(), (p['y'] as num).toDouble()))
             .toList();
 
         final color = Color(paintData[AppKeys.item][AppKeys.color]);
-        final strokeWidth =
-            (paintData[AppKeys.item][AppKeys.strokeWidth] as num).toDouble();
+        final strokeWidth = (paintData[AppKeys.item][AppKeys.strokeWidth] as num).toDouble();
 
         return CustomPaint(
           size: Size(spacerSize20, spacerSize20),
-          painter: PaintLayerPreview(
-            points: offsets,
-            color: color,
-            strokeWidth: strokeWidth,
-          ),
+          painter: PaintLayerPreview(points: offsets, color: color, strokeWidth: strokeWidth),
         );
 
       default:
