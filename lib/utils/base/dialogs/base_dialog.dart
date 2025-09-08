@@ -66,13 +66,12 @@ class BaseDialog {
   }
 }
 
-/// Aditya
 showBaseDialog({
   required BuildContext context,
   required String title,
   required String subtitle,
-  String yesText = "Yes",
-  String noText = "No",
+  String yesText = AppStrings.yes,
+  String noText = AppStrings.no,
   required VoidCallback onYes,
   required VoidCallback onNo,
 }) {
@@ -91,7 +90,7 @@ showBaseDialog({
         ),
         content: BaseText(
           text: subtitle,
-          textAlign: TextAlign.start,
+          textAlign: TextAlign.center,
           fontWeight: FontWeight.normal,
           textColor: Colors.white,
           fontSize: spacerSize15,

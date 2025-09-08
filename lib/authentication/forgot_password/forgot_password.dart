@@ -1,15 +1,16 @@
 import 'package:flutter/foundation.dart';
-import 'package:layerbase/authentication/forgotPassword/forgot_password_view_model.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:layerbase/utils/constants/app_assets.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:layerbase/utils/constants/app_constants.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 import '../../utils/base/widgets/base_button.dart';
 import '../../utils/base/widgets/base_form.dart';
 import '../../utils/base/widgets/base_text.dart';
 import '../../utils/base/widgets/base_text_field.dart';
+import 'forgot_password_view_model.dart';
 
 class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
   const ForgotPassword({super.key});
@@ -50,12 +51,8 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
                     color: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(
-                          isMobile(context) ? spacerSize0 : spacerSize50,
-                        ),
-                        bottomLeft: Radius.circular(
-                          isMobile(context) ? spacerSize0 : spacerSize50,
-                        ),
+                        topLeft: Radius.circular(isMobile(context) ? spacerSize0 : spacerSize50),
+                        bottomLeft: Radius.circular(isMobile(context) ? spacerSize0 : spacerSize50),
                       ),
                     ),
                     elevation: 5,
@@ -101,7 +98,6 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
 
                             const SizedBox(height: spacerSize45),
                             submit(context),
-
                           ],
                         ),
                       ),
@@ -179,8 +175,7 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
         isTextObscure: controller.isPasswordObscure.value,
         suffixIcon: IconButton(
           onPressed: () {
-            controller.isPasswordObscure.value =
-                !controller.isPasswordObscure.value;
+            controller.isPasswordObscure.value = !controller.isPasswordObscure.value;
           },
           icon: controller.isPasswordObscure.value
               ? Icon(Icons.visibility)
@@ -192,9 +187,9 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
 
   submit(BuildContext context) {
     return SizedBox(
-        width: spacerSize250,
-        child: Obx(
-              () =>BaseButton(
+      width: spacerSize250,
+      child: Obx(
+        () => BaseButton(
           onPressed: () {
             if (controller.formKey.currentState!.validate()) {
               defaultTargetPlatform == TargetPlatform.linux ||
@@ -204,14 +199,12 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
             }
           },
           backgroundColor: AppColors.darkBlue,
-          buttonLabel: controller.isEmailValidated.value
-              ? AppStrings.update
-              : AppStrings.submit,
+          buttonLabel: controller.isEmailValidated.value ? AppStrings.update : AppStrings.submit,
           fontSize: fontSize18,
           textColor: Colors.white,
           showLoader: controller.isLoading.value,
-        )),
-
+        ),
+      ),
     );
   }
 

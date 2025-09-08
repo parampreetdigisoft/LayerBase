@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:layerbase/utils/base/widgets/base_shader_mask.dart';
 import 'package:layerbase/utils/constants/app_assets.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:layerbase/utils/constants/app_constants.dart';
@@ -36,13 +37,10 @@ class HomeScreen extends GetWidget<HomeController> {
                 icon: Container(
                   margin: EdgeInsets.symmetric(horizontal: spacerSize15),
                   padding: EdgeInsets.symmetric(horizontal: spacerSize25, vertical: spacerSize5),
-                  decoration: BoxDecoration(
+                  decoration: baseBoxDecoration(
                     color: AppColors.chineseBlack,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(spacerSize10),
-                      topRight: Radius.circular(spacerSize10),
-                    ),
-                    border: Border.all(color: AppColors.lightGrey),
+                    radius: spacerSize10,
+                    borderColor: AppColors.lightGrey,
                   ),
                   child: Column(
                     children: [
@@ -75,13 +73,11 @@ class HomeScreen extends GetWidget<HomeController> {
                             horizontal: spacerSize20,
                             vertical: spacerSize10,
                           ),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [AppColors.violet, AppColors.brightCyan],
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                            ),
-                            borderRadius: BorderRadius.circular(spacerSize30),
+                          decoration: baseBoxDecoration(
+                            color: AppColors.chineseBlack,
+                            radius: spacerSize30,
+                            borderColor: AppColors.lightGrey,
+                            isGradiant: true,
                           ),
 
                           child: Text(
@@ -131,10 +127,10 @@ class HomeScreen extends GetWidget<HomeController> {
   Widget buildCustomTabBar() {
     return Container(
       padding: const EdgeInsets.all(spacerSize5),
-      decoration: BoxDecoration(
+      decoration: baseBoxDecoration(
         color: AppColors.chineseBlack,
-        borderRadius: BorderRadius.circular(spacerSize10),
-        border: Border.all(color: AppColors.lightGrey),
+        radius: spacerSize10,
+        borderColor: AppColors.lightGrey,
       ),
       child: TabBar(
         onTap: (index) {

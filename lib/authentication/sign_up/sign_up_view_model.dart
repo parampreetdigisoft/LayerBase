@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:layerbase/authentication/signUp/question_response_model.dart';
-import 'package:layerbase/authentication/signUp/sign_up_repository.dart';
+import 'package:layerbase/authentication/sign_up/question_response_model.dart';
+import 'package:layerbase/authentication/sign_up/sign_up_repository.dart';
 import 'package:layerbase/utils/constants/app_keys.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
 import 'package:layerbase/utils/routes.dart';
@@ -90,7 +90,7 @@ class SignUpViewModel extends GetxController {
     isLoading.value = true;
     isLoading.refresh();
     final url = Uri.parse(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${dotenv.env['web_apiKey'] ?? ""}',
+      'https://identitytoolkit.googleapis.com/v1/accounts:sign_up?key=${dotenv.env['web_apiKey'] ?? ""}',
     );
 
     final Map<String, dynamic> map = {

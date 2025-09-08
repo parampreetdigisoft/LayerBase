@@ -122,7 +122,6 @@ class ImageEditorViewModel extends GetxController {
         editorKey.currentState!.activeLayers.length == activeLayersList!.length) {
       final movedCanvasLayer = editorKey.currentState!.activeLayers.removeAt(oldIndex);
       editorKey.currentState!.activeLayers.insert(newIndex, movedCanvasLayer);
-      //editorKey.currentState!.stateHistory.last.layers.insert(newIndex, movedCanvasLayer);
       editorKey.currentState!.setState(() {});
       activeLayersList?.refresh();
     }
@@ -146,9 +145,9 @@ class ImageEditorViewModel extends GetxController {
     dynamic layerJson,
   ) async {
     try {
-      await exportImageAndSaveInHive(thumbNailBytes, imageBytes, imageIndex!, layerJson);
+      await exportImageAndSaveInHive(thumbNailBytes, imageBytes, imageIndex, layerJson);
     } catch (e) {
-      saveImageCatchError(e.toString(), thumbNailBytes, imageBytes, imageIndex!, layerJson);
+      await saveImageCatchError(e.toString(), thumbNailBytes, imageBytes, layerJson);
     } finally {
       AppToast.show(
         title: AppStrings.savedSuccessfully,
@@ -161,17 +160,16 @@ class ImageEditorViewModel extends GetxController {
   exportImageAndSaveInHive(
     Uint8List thumbNailBytes,
     Uint8List imageBytes,
-    int imageIndex,
+    int? imageIndex,
     dynamic layerJson,
   ) async {
     final box = Hive.box<dynamic>(AppKeys.imageLayerBox);
-    if (imageIndex >= 0 && imageIndex < box.length) {
+    if (imageIndex != null && imageIndex >= 0 && imageIndex < box.length) {
       if (removedLayers.isNotEmpty) {
         removedLayers.forEach((index, layer) {
           if (index >= 0 && index <= editorKey.currentState!.stateHistory.last.layers.length) {
             editorKey.currentState!.stateHistory.last.layers.insert(index, layer);
           }
-          // editorKey.currentState!.stateHistory.last.layers.insert(index,layer);
         });
       }
       final export = await editorKey.currentState?.exportStateHistory(
@@ -208,7 +206,6 @@ class ImageEditorViewModel extends GetxController {
     String errorMsg,
     Uint8List thumbNailBytes,
     Uint8List imageBytes,
-    int imageIndex,
     dynamic layerJson,
   ) async {
     if (errorMsg.toString().contains("Unexpected error")) {
@@ -249,7 +246,6 @@ class ImageEditorViewModel extends GetxController {
       }
     }
     activeLayersList?.refresh();
-    //editorKey.currentState!.addHistory(layers:List<Layer>.from(editorKey.currentState!.stateHistory.last.layers));
     editorKey.currentState!.setState(() {});
   }
 

@@ -2,8 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:layerbase/authentication/signUp/question_response_model.dart';
-import 'package:layerbase/authentication/signUp/sign_up_view_model.dart';
+import 'package:layerbase/authentication/sign_up/question_response_model.dart';
+import 'package:layerbase/authentication/sign_up/sign_up_view_model.dart';
 import 'package:layerbase/utils/constants/app_assets.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:layerbase/utils/constants/app_constants.dart';
@@ -209,24 +209,25 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
   signUpBtn(BuildContext context) {
     return SizedBox(
       width: spacerSize250,
-      child:Obx (() =>  BaseButton(
-        onPressed: () {
-          if (controller.formKey.currentState!.validate()) {
-            if(defaultTargetPlatform == TargetPlatform.linux ||
-                defaultTargetPlatform == TargetPlatform.windows){
-              controller.registerUserUsingRestApi();
-            }else{
-              controller.registerUser(context);
+      child: Obx(
+        () => BaseButton(
+          onPressed: () {
+            if (controller.formKey.currentState!.validate()) {
+              if (defaultTargetPlatform == TargetPlatform.linux ||
+                  defaultTargetPlatform == TargetPlatform.windows) {
+                controller.registerUserUsingRestApi();
+              } else {
+                controller.registerUser(context);
+              }
             }
-          }
-
-        },
-        backgroundColor: AppColors.darkBlue,
-        buttonLabel: AppStrings.signUp,
-        fontSize: fontSize18,
-        textColor: Colors.white,
-        showLoader: controller.isLoading.value,
-      )),
+          },
+          backgroundColor: AppColors.darkBlue,
+          buttonLabel: AppStrings.signUp,
+          fontSize: fontSize18,
+          textColor: Colors.white,
+          showLoader: controller.isLoading.value,
+        ),
+      ),
     );
   }
 
@@ -249,5 +250,3 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
     return MediaQuery.of(context).size.width < 600;
   }
 }
-
-

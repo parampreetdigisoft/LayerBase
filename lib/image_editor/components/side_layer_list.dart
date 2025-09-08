@@ -2,10 +2,11 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:layerbase/imageEditor/components/paint_layer_preview.dart';
+import 'package:layerbase/image_editor/components/paint_layer_preview.dart';
 import 'package:pro_image_editor/core/models/layers/layer.dart';
 
 import '../../utils/base/dialogs/base_dialog.dart';
+import '../../utils/base/widgets/base_shader_mask.dart';
 import '../../utils/base/widgets/base_text.dart';
 import '../../utils/constants/app_color.dart';
 import '../../utils/constants/app_constants.dart';
@@ -75,10 +76,10 @@ class SidLayerList extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(vertical: spacerSize5),
       padding: EdgeInsets.all(spacerSize4),
-      decoration: BoxDecoration(
+      decoration: baseBoxDecoration(
         color: AppColors.darkJungleGreen,
-        borderRadius: BorderRadius.circular(spacerSize8),
-        border: Border.all(color: AppColors.lightGrey),
+        radius: spacerSize8,
+        borderColor: AppColors.lightGrey,
       ),
       child: Row(
         children: [
@@ -162,12 +163,7 @@ class SidLayerList extends StatelessWidget {
       onPressed: () {
         onPressed!();
       },
-      icon: ShaderMask(
-        shaderCallback: (bounds) => LinearGradient(
-          colors: [AppColors.violet, AppColors.brightCyan, AppColors.antiqueWhite],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ).createShader(bounds),
+      icon: GradientShaderMask(
         child: Icon(icon, color: Colors.white, size: spacerSize18),
       ),
     );

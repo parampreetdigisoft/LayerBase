@@ -79,8 +79,6 @@ class AppStrings {
   static const whoIsYourFavoriteSportsTeam = 'Who is your favorite sports team?';
   static const inWhatCityWereYouBorn = 'In what city were you born?';
 
-  /// aditya
-
   static const deleteLayer = "Delete layer";
   static const deleteImage = "Delete Image";
   static const deleteThisLayer = " delete this Layer?";
@@ -104,5 +102,8 @@ class AppStrings {
   static const savedSuccessfully = "Saved Successfully";
   static const aiGenerate = "Ai Generate";
   static const closeImageEditor = "Close Image Editor";
-  static const yourChangeWillNotBeSaved = "Your changes will not be saved.";
+  static const closeImageEditorDesc =
+      "You have unsaved changes.\n$areYouSureWantTo\tclose the editor ?";
+  static const yes = "Yes";
+  static const no = "No";
 }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:layerbase/imageEditor/components/side_layer_list.dart';
+import 'package:layerbase/image_editor/components/side_layer_list.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
+import '../../utils/base/widgets/base_shader_mask.dart';
 import '../../utils/base/widgets/base_text.dart';
 import '../../utils/constants/app_color.dart';
 import '../../utils/constants/app_constants.dart';
@@ -19,10 +20,10 @@ class LayerHistoryLayout extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        decoration: BoxDecoration(
+        decoration: baseBoxDecoration(
           color: AppColors.chineseBlack,
-          border: Border.all(color: AppColors.lightGrey),
-          borderRadius: BorderRadius.circular(spacerSize8),
+          radius: spacerSize8,
+          borderColor: AppColors.lightGrey,
         ),
         child: Obx(() {
           return (controller!.isLoading.value || controller!.activeLayersList!.isEmpty)
@@ -83,10 +84,7 @@ class LayerHistoryLayout extends StatelessWidget {
       direction: const ShimmerDirection.fromLTRB(),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: spacerSize8, horizontal: spacerSize8),
-        decoration: BoxDecoration(
-          color: AppColors.darkJungleGreen,
-          borderRadius: BorderRadius.circular(spacerSize8),
-        ),
+        decoration: baseBoxDecoration(color: AppColors.darkJungleGreen, radius: spacerSize8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -111,10 +109,7 @@ class LayerHistoryLayout extends StatelessWidget {
     return Container(
       width: spacerSize12,
       height: spacerSize12,
-      decoration: BoxDecoration(
-        color: AppColors.chineseBlack,
-        borderRadius: BorderRadius.circular(spacerSize4),
-      ),
+      decoration: baseBoxDecoration(color: AppColors.chineseBlack, radius: spacerSize4),
     );
   }
 }

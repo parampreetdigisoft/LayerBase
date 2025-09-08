@@ -6,6 +6,7 @@ import 'package:layerbase/home_screen/home_controller.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 import '../../utils/base/dialogs/base_dialog.dart';
+import '../../utils/base/widgets/base_shader_mask.dart';
 import '../../utils/base/widgets/base_text.dart';
 import '../../utils/constants/app_color.dart';
 import '../../utils/constants/app_constants.dart';
@@ -115,13 +116,8 @@ class LocalFiles extends StatelessWidget {
                     onPressed: () {
                       controller.downloadImage(controller.imageList[index]);
                     },
-                    icon: ShaderMask(
-                      shaderCallback: (bounds) => LinearGradient(
-                        colors: [AppColors.violet, AppColors.brightCyan, AppColors.antiqueWhite],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ).createShader(bounds),
-                      child: const Icon(
+                    icon: GradientShaderMask(
+                      child: Icon(
                         Icons.arrow_circle_down_sharp,
                         color: Colors.white,
                         size: spacerSize20,
@@ -144,17 +140,8 @@ class LocalFiles extends StatelessWidget {
                         subtitle: AppStrings.areYouSureWantTo + AppStrings.deleteThisImage,
                       );
                     },
-                    icon: ShaderMask(
-                      shaderCallback: (bounds) => LinearGradient(
-                        colors: [AppColors.violet, AppColors.brightCyan, AppColors.antiqueWhite],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ).createShader(bounds),
-                      child: const Icon(
-                        Icons.delete_forever,
-                        color: Colors.white,
-                        size: spacerSize20,
-                      ),
+                    icon: GradientShaderMask(
+                      child: Icon(Icons.delete_forever, color: Colors.white, size: spacerSize20),
                     ),
                   ),
                 ],

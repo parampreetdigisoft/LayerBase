@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:layerbase/imageEditor/components/editor_screen.dart';
-import 'package:layerbase/imageEditor/components/layer_history_layout.dart';
-import 'package:layerbase/imageEditor/image_editor_view_model.dart';
 import 'package:layerbase/utils/base/dialogs/base_dialog.dart';
 import 'package:layerbase/utils/constants/app_assets.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:layerbase/utils/constants/app_constants.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
 
+import '../utils/base/widgets/base_shader_mask.dart';
 import '../utils/base/widgets/base_text.dart';
 import '../utils/routes.dart';
+import 'components/editor_screen.dart';
+import 'components/layer_history_layout.dart';
+import 'image_editor_view_model.dart';
 
 class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
   const ImageEditorScreen({super.key});
@@ -58,12 +59,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
             ),
           ],
         ),
-        child: ShaderMask(
-          shaderCallback: (bounds) => LinearGradient(
-            colors: [AppColors.violet, AppColors.brightCyan, AppColors.antiqueWhite],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ).createShader(bounds),
+        child: GradientShaderMask(
           child: Image.asset(AppAssets.aiIcon, height: spacerSize35, width: spacerSize35),
         ),
       ),

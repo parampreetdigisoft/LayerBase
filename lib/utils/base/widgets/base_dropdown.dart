@@ -1,8 +1,7 @@
-import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:flutter/material.dart';
+import 'package:layerbase/utils/constants/app_color.dart';
 
 import '../../constants/app_strings.dart';
-
 
 class BaseDropdown extends StatelessWidget {
   const BaseDropdown({super.key, this.labelText, this.items, this.onChanged});
@@ -17,12 +16,8 @@ class BaseDropdown extends StatelessWidget {
       padding: EdgeInsets.zero,
       decoration: InputDecoration(
         labelText: labelText,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.darkBlue),
-        ),
-        border: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.darkBlue),
-        ),
+        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: AppColors.darkBlue)),
+        border: OutlineInputBorder(borderSide: BorderSide(color: AppColors.darkBlue)),
       ),
       autovalidateMode: AutovalidateMode.onUnfocus,
       validator: (value) {

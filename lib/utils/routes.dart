@@ -1,14 +1,15 @@
 import 'package:get/get.dart';
-import '../authentication/forgotPassword/forgot_password.dart';
-import '../authentication/forgotPassword/forgot_password_view_model.dart';
+
+import '../authentication/forgot_password/forgot_password.dart';
+import '../authentication/forgot_password/forgot_password_view_model.dart';
 import '../authentication/login/login_screen.dart';
 import '../authentication/login/login_view_model.dart';
-import '../authentication/signUp/sign_up_screen.dart';
-import '../authentication/signUp/sign_up_view_model.dart';
+import '../authentication/sign_up/sign_up_screen.dart';
+import '../authentication/sign_up/sign_up_view_model.dart';
 import '../home_screen/home_controller.dart';
 import '../home_screen/home_screen.dart';
-import '../imageEditor/image_editor_screen.dart';
-import '../imageEditor/image_editor_view_model.dart';
+import '../image_editor/image_editor_screen.dart';
+import '../image_editor/image_editor_view_model.dart';
 import '../splash_screen.dart';
 
 class Routes {
@@ -20,7 +21,6 @@ class Routes {
   static const imageGallery = '/image_gallery';
   static const homeScreen = '/home_screen';
 }
-
 
 routes() {
   return [
@@ -38,24 +38,18 @@ routes() {
     GetPage(
       name: Routes.forgotPassword,
       page: () => const ForgotPassword(),
-      binding: BindingsBuilder(
-            () => Get.lazyPut(() => ForgotPasswordViewModel()),
-      ),
+      binding: BindingsBuilder(() => Get.lazyPut(() => ForgotPasswordViewModel())),
     ),
     GetPage(
       name: Routes.imageEditor,
       page: () => ImageEditorScreen(),
-      binding: BindingsBuilder(
-            () => Get.lazyPut(() => ImageEditorViewModel()),
-      ),
+      binding: BindingsBuilder(() => Get.lazyPut(() => ImageEditorViewModel())),
     ),
 
     GetPage(
       name: Routes.homeScreen,
       page: () => const HomeScreen(),
-      binding: BindingsBuilder(
-            () => Get.lazyPut(() => HomeController()),
-      ),
+      binding: BindingsBuilder(() => Get.lazyPut(() => HomeController())),
     ),
   ];
 }

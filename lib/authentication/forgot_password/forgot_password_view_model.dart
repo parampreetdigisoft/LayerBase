@@ -70,7 +70,7 @@ class ForgotPasswordViewModel extends GetxController {
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'requestType': 'PASSWORD_RESET', 'email': emailController.text}),
+      body: jsonEncode({'requestType': 'PASSWORD_RESET', AppKeys.email: emailController.text}),
     );
 
     if (response.statusCode == 200) {

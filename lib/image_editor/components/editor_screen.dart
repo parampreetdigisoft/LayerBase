@@ -3,8 +3,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:layerbase/imageEditor/components/all_sticker.dart';
-import 'package:layerbase/imageEditor/image_editor_view_model.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:pro_image_editor/core/enums/editor_mode.dart';
 import 'package:pro_image_editor/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
@@ -16,8 +14,11 @@ import 'package:pro_image_editor/shared/services/import_export/models/export_sta
 import 'package:pro_image_editor/shared/services/import_export/models/import_state_history_configs.dart';
 
 import '../../utils/base/dialogs/base_dialog.dart';
+import '../../utils/base/widgets/base_shader_mask.dart';
 import '../../utils/constants/app_constants.dart';
 import '../../utils/constants/app_strings.dart';
+import '../image_editor_view_model.dart';
+import 'all_sticker.dart';
 
 class ImageEditor extends StatelessWidget {
   final ImageEditorViewModel controller;
@@ -31,10 +32,10 @@ class ImageEditor extends StatelessWidget {
       body: Container(
         margin: EdgeInsets.only(right: spacerSize10),
         padding: EdgeInsets.symmetric(horizontal: spacerSize10, vertical: spacerSize10),
-        decoration: BoxDecoration(
+        decoration: baseBoxDecoration(
           color: AppColors.chineseBlack,
-          border: Border.all(color: AppColors.lightGrey),
-          borderRadius: BorderRadius.circular(spacerSize8),
+          radius: spacerSize8,
+          borderColor: AppColors.lightGrey,
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(spacerSize8),
@@ -163,9 +164,8 @@ class ImageEditor extends StatelessWidget {
         closeWarningDialog: (editor) async {
           final result = await showBaseDialog(
             context: Get.context!,
-            title: "${AppStrings.closeImageEditor}?",
-            subtitle:
-                "${AppStrings.areYouSureWantTo}\t${AppStrings.closeImageEditor}${AppStrings.yourChangeWillNotBeSaved}",
+            title: AppStrings.closeImageEditor,
+            subtitle: AppStrings.closeImageEditorDesc,
             onYes: () {
               Get.back();
               Get.back(result: true);
