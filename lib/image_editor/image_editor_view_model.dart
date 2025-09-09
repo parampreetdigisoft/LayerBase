@@ -107,26 +107,6 @@ class ImageEditorViewModel extends GetxController {
     Get.back();
   }
 
-  void updateDragLayer(int newIndex, int oldIndex) {
-    if (newIndex > oldIndex) newIndex -= 1;
-    if (oldIndex < 0 ||
-        oldIndex >= activeLayersList!.length ||
-        newIndex < 0 ||
-        newIndex >= activeLayersList!.length) {
-      return;
-    }
-    final movedLayer = activeLayersList!.removeAt(oldIndex);
-    activeLayersList!.insert(newIndex, movedLayer);
-    if (editorKey.currentState != null &&
-        editorKey.currentState!.activeLayers.isNotEmpty &&
-        editorKey.currentState!.activeLayers.length == activeLayersList!.length) {
-      final movedCanvasLayer = editorKey.currentState!.activeLayers.removeAt(oldIndex);
-      editorKey.currentState!.activeLayers.insert(newIndex, movedCanvasLayer);
-      editorKey.currentState!.setState(() {});
-      activeLayersList?.refresh();
-    }
-  }
-
   void applyFiltersToReferences(Map<String, dynamic> data, List<List<double>> filters) {
     final references = data[AppKeys.references] as Map<String, dynamic>;
     int index = 0;
@@ -222,11 +202,97 @@ class ImageEditorViewModel extends GetxController {
     }
   }
 
+  /*
+  void updateDragLayer1(int newIndex, int oldIndex) {
+    if (newIndex > oldIndex) newIndex -= 1;
+    if (oldIndex < 0 ||
+        oldIndex >= activeLayersList!.length ||
+        newIndex < 0 ||
+        newIndex >= activeLayersList!.length) {
+      return;
+    }
+
+    final movedLayer = activeLayersList!.removeAt(oldIndex);
+    activeLayersList!.insert(newIndex, movedLayer);
+    if (editorKey.currentState != null && editorKey.currentState!.activeLayers.isNotEmpty) {
+      final movedCanvasLayer = editorKey.currentState!.activeLayers.removeAt(oldIndex);
+      editorKey.currentState!.activeLayers.insert(newIndex, movedCanvasLayer);
+      activeLayersList?.refresh();
+      editorKey.currentState!.setState(() {});
+    }
+    final movedRemoveLayer = selectedItems.removeAt(oldIndex);
+    selectedItems.insert(newIndex, movedRemoveLayer);
+    selectedItems.refresh();
+    removedLayers.forEach((key, value) {
+      debugPrint("key:::::::$key:::::::::");
+    });
+    for (var element in selectedItems) {
+      debugPrint("element::::::::::::$element");
+    }
+  }
+*/
+
+  void updateDragLayer(int newIndex, int oldIndex) {
+    if (newIndex > oldIndex) newIndex -= 1;
+
+    final len = activeLayersList!.length;
+    if (oldIndex < 0 || oldIndex >= len || newIndex < 0 || newIndex >= len) {
+      return;
+    }
+    final movedLayer = activeLayersList!.removeAt(oldIndex);
+    activeLayersList!.insert(newIndex, movedLayer);
+    if (editorKey.currentState != null &&
+        editorKey.currentState!.activeLayers.isNotEmpty &&
+        activeLayersList!.length == editorKey.currentState!.activeLayers.length) {
+      final movedCanvasLayer = editorKey.currentState!.activeLayers.removeAt(oldIndex);
+      editorKey.currentState!.activeLayers.insert(newIndex, movedCanvasLayer);
+      activeLayersList?.refresh();
+      editorKey.currentState!.setState(() {});
+    }
+
+    if (removedLayers.isNotEmpty) {
+      var itemIndex = removedLayers.keys.firstWhere((key) => key == oldIndex, orElse: () => -1);
+      if (itemIndex != -1) {
+        var layer = removedLayers[itemIndex];
+        removedLayers.remove(itemIndex);
+        removedLayers.assign(newIndex, layer!);
+      }
+    }
+    final movedSelected = selectedItems.removeAt(oldIndex);
+    selectedItems.insert(newIndex, movedSelected);
+    selectedItems.refresh();
+    /*  if (removedLayers.isNotEmpty) {
+      final updated = <int, Layer>{};
+      removedLayers.forEach((key, value) {
+        int mappedKey = key;
+        if (key == oldIndex) {
+          mappedKey = newIndex;
+        } else if (oldIndex < newIndex) {
+          if (key > oldIndex && key <= newIndex) mappedKey = key - 1;
+        } else if (oldIndex > newIndex) {
+          if (key >= newIndex && key < oldIndex) mappedKey = key + 1;
+        }
+        updated[mappedKey] = value;
+      });
+
+      removedLayers
+        ..clear()
+        ..addAll(updated);
+    }*/
+
+    removedLayers.forEach((key, value) {
+      debugPrint("removedLayers key: $key -> $value");
+    });
+    for (var element in selectedItems) {
+      debugPrint("selectedItems element: $element");
+    }
+  }
+
   Future<void> restoreLayer(int index) async {
+    print(index);
     var layers = editorKey.currentState!.stateHistory.last.layers;
     if (index < 0) return;
     if (index >= selectedItems.length) return;
-    selectedItems[index] = !selectedItems[index];
     bool isChecked = selectedItems[index];
     //Hide the layer
     if (!isChecked) {

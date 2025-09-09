@@ -132,6 +132,7 @@ class SidLayerList extends StatelessWidget {
           ? Icons.visibility_outlined
           : Icons.visibility_off_outlined,
       onPressed: () {
+        controller.selectedItems[index] = !controller.selectedItems[index];
         controller.restoreLayer(index);
       },
     );
