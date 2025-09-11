@@ -15,6 +15,7 @@ import 'package:layerbase/utils/shared_prefs_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../utils/base/dialogs/base_dialog.dart';
+import '../../utils/constants/app_constants.dart';
 
 class LoginViewModel extends GetxController {
   RxBool isLoading = false.obs;
@@ -24,7 +25,6 @@ class LoginViewModel extends GetxController {
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
   final formKey = GlobalKey<FormState>();
   SharedPrefsService? sharedPreferences;
-  ScrollController scrollController = ScrollController();
 
   @override
   onInit() {
@@ -37,7 +37,29 @@ class LoginViewModel extends GetxController {
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
-    scrollController.dispose();
+    // scrollController.dispose();
+  }
+
+  String? emailValidator(String? value) {
+    if (value == null || value
+        .trim()
+        .isEmpty) {
+      return AppStrings.required;
+    }
+    if (!emailRegExp.hasMatch(value)) {
+      return AppStrings.enterAValidEmail;
+    }
+
+    return null;
+  }
+
+  String? passwordValidator(String? value) {
+    if (value == null || value
+        .trim()
+        .isEmpty) {
+      return AppStrings.required;
+    }
+    return null;
   }
 
   Future<UserCredential?> signInWithGoogle() async {
@@ -158,12 +180,10 @@ class LoginViewModel extends GetxController {
     return data;
   }
 
-  Future<Map<String, dynamic>> exchangeCodeForToken(
-    String code,
-    String redirectUri,
-    String clientId,
-    String clientSecret,
-  ) async {
+  Future<Map<String, dynamic>> exchangeCodeForToken(String code,
+      String redirectUri,
+      String clientId,
+      String clientSecret,) async {
     final tokenUrl = Uri.parse('https://oauth2.googleapis.com/token');
 
     final response = await http.post(
@@ -187,7 +207,8 @@ class LoginViewModel extends GetxController {
     sharedPreferences!.clear();
     isLoading.value = true;
     final url = Uri.parse(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${dotenv.env['web_apiKey'] ?? ""}',
+      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${dotenv
+          .env['web_apiKey'] ?? ""}',
     );
 
     final Map<String, dynamic> map = {

@@ -1,17 +1,10 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
-import 'package:pro_image_editor/core/enums/editor_mode.dart';
-import 'package:pro_image_editor/core/models/editor_callbacks/pro_image_editor_callbacks.dart';
-import 'package:pro_image_editor/core/models/editor_configs/pro_image_editor_configs.dart';
-import 'package:pro_image_editor/features/main_editor/main_editor.dart';
-import 'package:pro_image_editor/shared/services/import_export/enums/export_import_enum.dart';
-import 'package:pro_image_editor/shared/services/import_export/import_state_history.dart';
-import 'package:pro_image_editor/shared/services/import_export/models/export_state_history_configs.dart';
-import 'package:pro_image_editor/shared/services/import_export/models/import_state_history_configs.dart';
+import 'package:pro_image_editor/pro_image_editor.dart';
 
 import '../../utils/base/dialogs/base_dialog.dart';
 import '../../utils/base/widgets/base_shader_mask.dart';
@@ -28,12 +21,12 @@ class ImageEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkJungleGreen,
+      backgroundColor: AppColors.blackColor,
       body: Container(
         margin: EdgeInsets.only(right: spacerSize10),
         padding: EdgeInsets.symmetric(horizontal: spacerSize10, vertical: spacerSize10),
         decoration: baseBoxDecoration(
-          color: AppColors.chineseBlack,
+          color: AppColors.lightGrey,
           radius: spacerSize8,
           borderColor: AppColors.lightGrey,
         ),
@@ -48,11 +41,11 @@ class ImageEditor extends StatelessWidget {
                 enablePreloadWebFont: false,
               ),
               textEditor: TextEditorConfigs(widgets: TextEditorWidgets()),
-
               i18n: I18n(
                 done: AppStrings.save,
                 undo: AppStrings.undo,
                 redo: AppStrings.redo,
+
                 doneLoadingMsg: AppStrings.savingPleaseWait,
                 importStateHistoryMsg: AppStrings.loadingPleaseWait,
                 various: I18nVarious(loadingDialogMsg: AppStrings.loading),
@@ -69,18 +62,48 @@ class ImageEditor extends StatelessWidget {
               mainEditor: mainEditorConfigs(),
               imageGeneration: imageGenerationConfigs(),
               paintEditor: paintEditorConfigs(),
-              tuneEditor: TuneEditorConfigs(enabled: true, showLayers: true),
+              dialogConfigs: DialogConfigs(
+                style: DialogStyle(
+                  loadingDialog: LoadingDialogStyle(textColor: AppColors.chineseBlack),
+                ),
+              ),
+              tuneEditor: TuneEditorConfigs(
+                icons: TuneEditorIcons(backButton: Icons.arrow_back_outlined),
+                enabled: true,
+                showLayers: true,
+                style: TuneEditorStyle(
+                  background: AppColors.lightGrey,
+                  appBarBackground: AppColors.lightGrey,
+                  bottomBarBackground: AppColors.lightGrey,
+                ),
+              ),
               layerInteraction: layerInteractionConfigs(),
               stateHistory: stateHistoryConfigs(),
               cropRotateEditor: cropRotateEditorConfigs(),
               stickerEditor: stickerEditorConfigs(),
+              filterEditor: FilterEditorConfigs(
+                icons: FilterEditorIcons(backButton: Icons.arrow_back_outlined),
+                enabled: true,
+                showLayers: true,
+                style: FilterEditorStyle(
+                  background: AppColors.lightGrey,
+                  appBarBackground: AppColors.lightGrey,
+                ),
+              ),
+              blurEditor: BlurEditorConfigs(
+                icons: BlurEditorIcons(backButton: Icons.arrow_back_outlined),
+                enabled: true,
+                showLayers: true,
+                style: BlurEditorStyle(
+                  background: AppColors.lightGrey,
+                  appBarBackgroundColor: AppColors.lightGrey,
+                ),
+              ),
             ),
             callbacks: ProImageEditorCallbacks(
               onCloseEditor: (EditorMode mode) async {
                 Get.back();
               },
-              emojiEditorCallbacks: EmojiEditorCallbacks(),
-              onImageEditingComplete: (Uint8List bytes) async {},
               filterEditorCallbacks: FilterEditorCallbacks(
                 onFilterChanged: (value) {
                   final Map<String, dynamic> jsonData = jsonDecode(controller.layerData.value);
@@ -102,8 +125,8 @@ class ImageEditor extends StatelessWidget {
                     historySpan: ExportHistorySpan.all,
                   ),
                 );
-                Map<String, dynamic>? jsonMap = await export?.toMap();
-                final layerJson = jsonEncode(jsonMap);
+                controller.exportJsonMap = await export?.toMap();
+                final layerJson = jsonEncode(controller.exportJsonMap);
                 controller.saveImageToHive(
                   parameters.image,
                   controller.imageFile.value!,
@@ -121,6 +144,7 @@ class ImageEditor extends StatelessWidget {
                 },
                 onRemoveLayer: (layer) {
                   controller.activeLayersList!.remove(layer);
+                  controller.editorKey.currentState!.activeLayers.remove(layer);
                   controller.activeLayersList!.refresh();
                   controller.editorKey.currentState!.setState(() {});
                 },
@@ -135,7 +159,6 @@ class ImageEditor extends StatelessWidget {
   HelperLineConfigs helperLineConfigs() {
     return HelperLineConfigs(
       showLayerAlignLine: true,
-      style: HelperLineStyle(horizontalColor: Colors.red),
       showHorizontalLine: true,
       showRotateLine: true,
       showVerticalLine: true,
@@ -156,9 +179,9 @@ class ImageEditor extends StatelessWidget {
       enableCloseButton: false,
       enableEscapeButton: false,
       style: MainEditorStyle(
-        background: AppColors.darkGunMetal,
-        bottomBarBackground: AppColors.darkGunMetal,
-        appBarBackground: AppColors.darkGunMetal,
+        background: AppColors.lightGrey,
+        bottomBarBackground: AppColors.lightGrey,
+        appBarBackground: AppColors.lightGrey,
       ),
       widgets: MainEditorWidgets(
         closeWarningDialog: (editor) async {
@@ -177,7 +200,6 @@ class ImageEditor extends StatelessWidget {
           return result ?? false;
         },
       ),
-
       icons: MainEditorIcons(doneIcon: Icons.check_outlined),
     );
   }
@@ -213,6 +235,11 @@ class ImageEditor extends StatelessWidget {
       showOpacityAdjustmentButton: true,
       showLineWidthAdjustmentButton: true,
       enableModePolygon: true,
+      icons: PaintEditorIcons(backButton: Icons.arrow_back_outlined),
+      style: PaintEditorStyle(
+        background: AppColors.lightGrey,
+        appBarBackground: AppColors.lightGrey,
+      ),
     );
   }
 
@@ -248,6 +275,13 @@ class ImageEditor extends StatelessWidget {
       enableTransformLayers: true,
       enableProvideImageInfos: true,
       desktopCornerDragArea: spacerSize20,
+      icons: CropRotateEditorIcons(backButton: Icons.arrow_back_outlined),
+      style: CropRotateEditorStyle(
+        background: AppColors.lightGrey,
+        appBarBackground: AppColors.lightGrey,
+        bottomBarBackground: AppColors.lightGrey,
+        bottomBarColor: AppColors.lightGrey,
+      ),
     );
   }
 
@@ -255,7 +289,7 @@ class ImageEditor extends StatelessWidget {
     return StickerEditorConfigs(
       enabled: true,
       style: StickerEditorStyle(
-        bottomSheetBackgroundColor: AppColors.chineseBlack,
+        bottomSheetBackgroundColor: AppColors.darkGunMetal,
         showDragHandle: false,
       ),
       builder: (context, addSticker) {

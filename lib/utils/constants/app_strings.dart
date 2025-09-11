@@ -13,17 +13,18 @@ class AppStrings {
   static const confirmPassword = 'Confirm Password';
   static const enterYourPassword = 'Enter your password';
   static const createYourPassword = 'Create your password';
-  static const dontHaveAccount = 'Don\'t have an account?';
-  static const alreadyHaveAccount = 'Already have an account?';
+  static const dontHaveAccount = 'Don\'t have an account?\t';
+  static const alreadyHaveAccount = 'Already have an account?\t';
   static const register = 'Register';
   static const or = 'OR';
-  static const signInWithGoogle = 'Sign in with Google';
+  static const logInWithGoogle = 'Log in with Google';
+  static const continueAsAGuest = 'Continue as a Guest';
   static const signInWithFacebook = 'Sign in with Facebook';
   static const signInToYourAccount = 'Sign in to your account';
   static const forgotPassword = 'Forgot Password?';
   static const resetPassword = 'Reset Password';
   static const continueWithoutLogin = 'Continue without login';
-  static const createAndAccount = "Create an account";
+  static const createAndAccount = "Create an Account";
   static const signUp = "Sign Up";
   static const chooseMySecurityQuestions = "Choose My Security Questions";
   static const submit = "Submit";
@@ -49,6 +50,7 @@ class AppStrings {
   static const browseImage = "Browse Image";
   static const delete = "Delete";
   static const download = "Download";
+  static const information = "Information";
   static const invalidDataEntered = "Invalid Data Entered";
   static const save = "Save";
   static const undo = "Undo";
@@ -106,4 +108,15 @@ class AppStrings {
       "You have unsaved changes.\n$areYouSureWantTo\tclose the editor ?";
   static const yes = "Yes";
   static const no = "No";
+  static const balance = "Balance";
+  static const import = "Import";
+  static const export = "Export";
+  static const local = "Local";
+  static const cloud = "Cloud";
+
+  /// validation String
+
+  static const passwordValidationDesc =
+      "Password must contain uppercase, lowercase, number, special char, min 8 chars";
+  static const enterAValidEmail = "Enter a valid email address";
 }

@@ -1,3 +1,14 @@
+import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
+
+var deviceWidth = MediaQuery.of(Get.context!).size.width;
+var deviceHeight = MediaQuery.of(Get.context!).size.height;
+
+final passwordRegExp = RegExp(
+  r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#\$%^&*(),.?":{}|<>]).{8,}$',
+);
+final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+
 const double fontSize13 = 13;
 const double fontSize14 = 14;
 const double fontSize16 = 16;

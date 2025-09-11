@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../authentication/login/login_screen.dart';
+import '../../utils/base/widgets/base_shader_mask.dart';
 import '../../utils/base/widgets/base_text.dart';
 import '../../utils/constants/app_color.dart';
 import '../../utils/constants/app_constants.dart';
@@ -12,7 +13,8 @@ import '../home_controller.dart';
 
 class CloudFiles extends StatelessWidget {
   final HomeController controller;
-  const CloudFiles({super.key,required this.controller});
+
+  const CloudFiles({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -25,13 +27,10 @@ class CloudFiles extends StatelessWidget {
             padding: EdgeInsets.all(spacerSize10),
             width: double.infinity,
             height: double.infinity,
-            decoration: BoxDecoration(
-              color: AppColors.chineseBlack,
-              border: Border.all(color: AppColors.lightGrey),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(spacerSize15),
-                topRight: Radius.circular(spacerSize15),
-              ),
+            decoration: baseBoxDecoration(
+              color: AppColors.lightBlack,
+              radius: spacerSize10,
+              borderColor: Colors.transparent,
             ),
             child: BaseText(
               text: AppStrings.noImageFound,
@@ -44,7 +43,7 @@ class CloudFiles extends StatelessWidget {
             width: double.infinity,
             decoration: BoxDecoration(
               color: AppColors.chineseBlack,
-              border: Border.all(color: AppColors.lightGrey),
+              border: Border.all(color: AppColors.lightWhite),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(spacerSize15),
                 topRight: Radius.circular(spacerSize15),
@@ -59,11 +58,7 @@ class CloudFiles extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Icon(
-                      Icons.info,
-                      color: AppColors.antiqueWhite,
-                      size: spacerSize15,
-                    ),
+                    const Icon(Icons.info, color: AppColors.antiqueWhite, size: spacerSize15),
                     const SizedBox(width: spacerSize5),
                     Expanded(
                       child: BaseText(
@@ -92,7 +87,7 @@ class CloudFiles extends StatelessWidget {
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                          Get.to(() => const LoginScreen());
+                            Get.off(LoginScreen());
                           },
                       ),
                       const TextSpan(text: AppStrings.withYourEmailAccount),

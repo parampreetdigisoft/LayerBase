@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:layerbase/utils/base/widgets/base_button.dart';
 import 'package:layerbase/utils/base/widgets/base_shader_mask.dart';
 import 'package:layerbase/utils/constants/app_assets.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
@@ -19,188 +20,228 @@ class HomeScreen extends GetWidget<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkJungleGreen,
-      appBar: appBarWidget(context),
-      body: Obx(() {
-        return DefaultTabController(
-          initialIndex: controller.selectedIndex.value,
-          length: 2,
-          child: Row(
-            children: [
-              IconButton(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                style: IconButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size(0, 0)),
-                onPressed: () {
-                  controller.onClickPickImageOpen();
-                },
-                icon: Container(
-                  margin: EdgeInsets.symmetric(horizontal: spacerSize15),
-                  padding: EdgeInsets.symmetric(horizontal: spacerSize25, vertical: spacerSize5),
-                  decoration: baseBoxDecoration(
-                    color: AppColors.chineseBlack,
-                    radius: spacerSize10,
-                    borderColor: AppColors.lightGrey,
+      backgroundColor: AppColors.blackColor,
+      body: Obx(
+        () => Column(
+          children: [
+            SizedBox(height: spacerSize15),
+            buildCustomTabBtn(),
+            SizedBox(height: spacerSize5),
+            importAndAIBtn(),
+            SizedBox(height: spacerSize5),
+            controller.selectedIndex.value == 0
+                ? Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: spacerSize15),
+                      child: CloudFiles(controller: controller),
+                    ),
+                  )
+                : Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: spacerSize15),
+                      child: LocalFiles(controller: controller),
+                    ),
                   ),
-                  child: Column(
-                    children: [
-                      BaseText(
-                        text: AppStrings.fileUpload,
-                        textColor: AppColors.antiqueWhite,
-                        fontWeight: FontWeight.w500,
-                        fontSize: fontSize16,
-                      ),
-                      Spacer(),
-                      Image.asset(
-                        AppAssets.uploadIcon,
-                        height: spacerSize50,
-                        width: spacerSize50,
-                        color: AppColors.grey,
-                      ),
-                      SizedBox(height: spacerSize5),
-                      BaseText(
-                        text: AppStrings.selectImageDesc,
-                        textAlign: TextAlign.center,
-                        textColor: AppColors.grey,
-                        fontWeight: FontWeight.w500,
-                        fontSize: spacerSize12,
-                      ),
-                      SizedBox(height: spacerSize12),
-                      Tooltip(
-                        message: AppStrings.clickHereToBrowseAnImage,
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: spacerSize20,
-                            vertical: spacerSize10,
-                          ),
-                          decoration: baseBoxDecoration(
-                            color: AppColors.chineseBlack,
-                            radius: spacerSize30,
-                            borderColor: AppColors.lightGrey,
-                            isGradiant: true,
-                          ),
+          ],
+        ),
+      ),
+    );
+  }
 
-                          child: Text(
-                            AppStrings.browseImage,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: spacerSize12,
-                              fontWeight: FontWeight.w500,
-                              letterSpacing: 1.2,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Spacer(),
-                    ],
+  Widget buildCustomTabBtn() {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.symmetric(horizontal: spacerSize15),
+      alignment: Alignment.topLeft,
+      padding: EdgeInsets.only(left: spacerSize20, right: spacerSize10),
+      decoration: baseBoxDecoration(
+        color: AppColors.lightGrey,
+        radius: spacerSize40,
+        borderColor: AppColors.blackColor,
+      ),
+      child: Row(
+        spacing: spacerSize20,
+        children: [
+          InkWell(
+            onTap: () {
+              controller.changeTab(0);
+            },
+            child: Container(
+              margin: EdgeInsets.only(top: spacerSize8),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: spacerSize18, vertical: spacerSize2),
+                    decoration: baseBoxDecoration(
+                      color: controller.selectedIndex.value == 0
+                          ? AppColors.darkSlatePurple
+                          : Colors.transparent,
+                      borderColor: Colors.transparent,
+                      radius: spacerSize20,
+                    ),
+                    child: Icon(Icons.cloud, size: spacerSize18, color: AppColors.lightWhite),
                   ),
+                  BaseText(
+                    text: AppStrings.cloud,
+                    textColor: AppColors.antiqueWhite,
+                    fontSize: fontSize13,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          InkWell(
+            onTap: () {
+              controller.changeTab(1);
+            },
+            child: Container(
+              margin: EdgeInsets.only(top: spacerSize8),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: spacerSize18, vertical: spacerSize2),
+                    decoration: baseBoxDecoration(
+                      color: controller.selectedIndex.value == 1
+                          ? AppColors.darkSlatePurple
+                          : Colors.transparent,
+                      borderColor: Colors.transparent,
+                      radius: spacerSize20,
+                    ),
+                    child: Image.asset(
+                      AppAssets.fileIcon,
+                      height: spacerSize18,
+                      width: spacerSize18,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  BaseText(
+                    text: AppStrings.local,
+                    textColor: AppColors.antiqueWhite,
+                    fontSize: fontSize13,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Spacer(),
+          InkWell(
+            onTap: () {
+              showProfilePopup(Get.context!);
+            },
+            child: Container(
+              decoration: baseBoxDecoration(
+                color: AppColors.blackColor,
+                borderColor: Colors.transparent,
+                radius: spacerSize20,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadiusGeometry.circular(spacerSize30),
+                child: Image.asset(
+                  AppAssets.dummyProfileImage,
+                  height: spacerSize40,
+                  width: spacerSize40,
+                  fit: BoxFit.cover,
                 ),
               ),
-              SizedBox(height: spacerSize20),
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(right: spacerSize12),
-                  child: Column(
-                    children: [
-                      buildCustomTabBar(),
-                      SizedBox(height: spacerSize10),
-                      Expanded(
-                        child: TabBarView(
-                          physics: NeverScrollableScrollPhysics(),
-                          children: [
-                            LocalFiles(controller: controller),
-                            CloudFiles(controller: controller),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  importAndAIBtn() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: spacerSize10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            onPressed: () {
+              controller.onClickPickImageOpen();
+            },
+            icon: Container(
+              padding: EdgeInsets.symmetric(horizontal: spacerSize15, vertical: spacerSize2),
+              decoration: baseBoxDecoration(
+                color: AppColors.darkSlatePurple,
+                borderColor: Colors.transparent,
+                radius: spacerSize20,
               ),
-            ],
+              child: Row(
+                children: [
+                  Icon(Icons.add, color: AppColors.antiqueWhite, size: spacerSize16),
+                  BaseText(
+                    text: AppStrings.import,
+                    textColor: AppColors.antiqueWhite,
+                    fontSize: fontSize14,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          IconButton(
+            onPressed: () {},
+            icon: Container(
+              padding: EdgeInsets.symmetric(horizontal: spacerSize10, vertical: spacerSize2),
+              decoration: baseBoxDecoration(
+                color: AppColors.lightPurple,
+                borderColor: Colors.transparent,
+                radius: spacerSize20,
+              ),
+              child: Row(
+                children: [
+                  Image.asset(
+                    AppAssets.aiImage,
+                    height: spacerSize20,
+                    width: spacerSize20,
+                    fit: BoxFit.cover,
+                  ),
+                  BaseText(
+                    text: "${AppStrings.balance}:\t123",
+                    textColor: AppColors.darkPurple,
+                    fontSize: fontSize14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  showProfilePopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext ctx) {
+        return AlertDialog(
+          alignment: Alignment.topRight,
+          backgroundColor: AppColors.lightGrey,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(spacerSize12)),
+          title: BaseText(
+            text: "Aditya Raj",
+            textColor: Colors.white,
+            fontSize: fontSize16,
+            fontWeight: FontWeight.bold,
+          ),
+          content: SizedBox(
+            width: spacerSize5,
+            child: BaseButton(
+              onPressed: () {
+                Get.back();
+                showLogoutDialog();
+              },
+              backgroundColor: AppColors.darkBlue,
+              buttonLabel: AppStrings.logout,
+              fontSize: fontSize16,
+              textColor: Colors.white,
+            ),
           ),
         );
-      }),
-    );
-  }
-
-  Widget buildCustomTabBar() {
-    return Container(
-      padding: const EdgeInsets.all(spacerSize5),
-      decoration: baseBoxDecoration(
-        color: AppColors.chineseBlack,
-        radius: spacerSize10,
-        borderColor: AppColors.lightGrey,
-      ),
-      child: TabBar(
-        onTap: (index) {
-          controller.changeTab(index);
-        },
-        enableFeedback: false,
-        indicator: BoxDecoration(
-          color: AppColors.darkJungleGreen,
-          borderRadius: BorderRadius.circular(spacerSize10),
-        ),
-        labelColor: AppColors.antiqueWhite,
-        unselectedLabelColor: AppColors.grey,
-        dividerColor: Colors.transparent,
-        indicatorColor: Colors.transparent,
-
-        labelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: fontSize14),
-        indicatorSize: TabBarIndicatorSize.tab,
-        overlayColor: WidgetStateProperty.all(Colors.transparent),
-        automaticIndicatorColorAdjustment: true,
-        tabs: controller.tabLabels.map((label) => Tab(text: label)).toList(),
-      ),
-    );
-  }
-
-  AppBar appBarWidget(BuildContext context) {
-    return AppBar(
-      backgroundColor: AppColors.darkJungleGreen,
-      elevation: 0,
-      scrolledUnderElevation: 0,
-      centerTitle: false,
-      title: Image.asset(AppAssets.appLogo, height: spacerSize25),
-      actions: [
-        Obx(
-          () => IconButton(
-            style: TextButton.styleFrom(
-              padding: EdgeInsets.only(right: spacerSize5),
-              minimumSize: Size(0, 0),
-            ),
-            tooltip: controller.userDisplayName.value.isEmpty
-                ? AppStrings.login
-                : AppStrings.logout,
-            onPressed: () {
-              if (controller.userDisplayName.value.isEmpty) {
-                Navigator.pushNamed(context, Routes.logIn);
-              } else {
-                showLogoutDialog();
-              }
-            },
-
-            icon: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Icon(
-                  controller.userDisplayName.value.isEmpty ? Icons.person : Icons.logout,
-                  size: spacerSize15,
-                  color: AppColors.antiqueWhite,
-                ),
-                BaseText(
-                  text: controller.userDisplayName.value.isEmpty
-                      ? AppStrings.login
-                      : AppStrings.logout,
-                  textColor: AppColors.antiqueWhite,
-                  fontWeight: FontWeight.w500,
-                  fontSize: fontSize14,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
+      },
     );
   }
 

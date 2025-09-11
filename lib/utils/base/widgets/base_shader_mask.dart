@@ -25,7 +25,7 @@ BoxDecoration baseBoxDecoration({
   double radius = spacerSize2,
   bool? isGradiant = false,
   Color color = AppColors.darkJungleGreen,
-  Color borderColor = AppColors.lightGrey,
+  Color borderColor = AppColors.lightWhite,
 }) {
   return BoxDecoration(
     borderRadius: BorderRadius.circular(radius),

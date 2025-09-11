@@ -22,6 +22,7 @@ class BaseDialog {
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: spacerSize600),
           child: Dialog(
+            backgroundColor: AppColors.lightGrey,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(spacerSize16)),
             child: Padding(
               padding: const EdgeInsets.all(spacerSize25),
@@ -34,7 +35,7 @@ class BaseDialog {
                     text: dialogTitle ?? "",
                     fontSize: fontSize20,
                     fontWeight: FontWeight.bold,
-                    textColor: Colors.black,
+                    textColor: Colors.white,
                   ),
 
                   SizedBox(height: spacerSize15),
@@ -42,19 +43,16 @@ class BaseDialog {
                     text: dialogDescription ?? "",
                     textAlign: TextAlign.center,
                     fontSize: fontSize16,
-                    textColor: Colors.black,
+                    textColor: Colors.white,
                     fontWeight: FontWeight.w400,
                   ),
                   SizedBox(height: spacerSize25),
-                  SizedBox(
-                    width: MediaQuery.of(Get.context!).size.width * .1,
-                    child: BaseButton(
-                      onPressed: onButtonPressed,
-                      backgroundColor: AppColors.darkBlue,
-                      buttonLabel: buttonLabel!.toUpperCase(),
-                      fontSize: fontSize16,
-                      textColor: Colors.white,
-                    ),
+                  BaseButton(
+                    onPressed: onButtonPressed,
+                    backgroundColor: AppColors.darkBlue,
+                    buttonLabel: buttonLabel!.toUpperCase(),
+                    fontSize: fontSize16,
+                    textColor: Colors.white,
                   ),
                 ],
               ),
@@ -108,11 +106,7 @@ showBaseDialog({
           ),
           Container(
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [AppColors.violet, AppColors.brightCyan],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              ),
+              color: AppColors.deepPurple,
               borderRadius: BorderRadius.circular(spacerSize15),
             ),
             child: ElevatedButton(

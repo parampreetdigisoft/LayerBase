@@ -9,6 +9,7 @@ import 'package:layerbase/utils/constants/app_keys.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
 
 import '../../utils/base/dialogs/base_dialog.dart';
+import '../../utils/constants/app_constants.dart';
 
 class ForgotPasswordViewModel extends GetxController {
   RxBool isLoading = false.obs;
@@ -18,6 +19,17 @@ class ForgotPasswordViewModel extends GetxController {
   TextEditingController confirmPasswordController = TextEditingController();
   RxBool isEmailValidated = false.obs;
   final formKey = GlobalKey<FormState>();
+
+  String? emailValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return AppStrings.required;
+    }
+    if (!emailRegExp.hasMatch(value)) {
+      return AppStrings.enterAValidEmail;
+    }
+
+    return null;
+  }
 
   void validateEmail() {
     isEmailValidated.value = !isEmailValidated.value;

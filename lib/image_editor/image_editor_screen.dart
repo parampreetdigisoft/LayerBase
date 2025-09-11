@@ -19,19 +19,32 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.darkJungleGreen,
-      appBar: appBarWidget(context),
+      backgroundColor: AppColors.blackColor,
       floatingActionButton: floatingBtn(),
-      body: Row(
-        spacing: spacerSize10,
+      body: Column(
+        spacing: spacerSize15,
         children: [
-          /// All layer
+          SizedBox.shrink(),
+          buildExportAndProfileBtn(),
           Expanded(
-            child: LayerHistoryLayout(controller: controller).marginOnly(left: spacerSize10),
-          ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: spacerSize5),
+              child: Row(
+                spacing: spacerSize8,
+                children: [
+                  /// All layer
+                  Expanded(
+                    child: LayerHistoryLayout(
+                      controller: controller,
+                    ).marginOnly(left: spacerSize10),
+                  ),
 
-          /// image Editor
-          Expanded(flex: 7, child: ImageEditor(controller: controller)),
+                  /// image Editor
+                  Expanded(flex: 5, child: ImageEditor(controller: controller)),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -66,47 +79,62 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
     );
   }
 
-  AppBar appBarWidget(BuildContext context) {
-    return AppBar(
-      backgroundColor: AppColors.darkJungleGreen,
-      elevation: 0,
-      scrolledUnderElevation: 0,
-      centerTitle: false,
-      leadingWidth: 0,
-      title: Image.asset(AppAssets.appLogo, height: spacerSize25),
-      actions: [
-        IconButton(
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.only(right: spacerSize5, left: 0),
-            minimumSize: Size(0, 0),
-          ),
-          tooltip: controller.userDisplayName.isEmpty ? AppStrings.login : AppStrings.logout,
-          onPressed: () {
-            if (controller.userDisplayName.isEmpty) {
-              Navigator.pushNamed(context, Routes.logIn);
-            } else {
-              logoutDialog();
-            }
-          },
-
-          icon: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Icon(
-                controller.userDisplayName.isEmpty ? Icons.person : Icons.logout,
-                size: spacerSize15,
-                color: AppColors.antiqueWhite,
+  Widget buildExportAndProfileBtn() {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.symmetric(horizontal: spacerSize15),
+      alignment: Alignment.topLeft,
+      padding: EdgeInsets.only(left: spacerSize20, right: spacerSize10),
+      decoration: baseBoxDecoration(
+        color: AppColors.lightGrey,
+        radius: spacerSize40,
+        borderColor: AppColors.blackColor,
+      ),
+      child: Row(
+        spacing: spacerSize20,
+        children: [
+          Image.asset(AppAssets.appLogo, height: spacerSize25),
+          Spacer(),
+          IconButton(
+            onPressed: () {},
+            icon: Container(
+              padding: EdgeInsets.symmetric(horizontal: spacerSize12, vertical: spacerSize2),
+              decoration: baseBoxDecoration(
+                color: AppColors.darkSlatePurple,
+                borderColor: Colors.transparent,
+                radius: spacerSize20,
               ),
-              BaseText(
-                text: controller.userDisplayName.isEmpty ? AppStrings.login : AppStrings.logout,
-                textColor: AppColors.antiqueWhite,
-                fontWeight: FontWeight.w500,
-                fontSize: fontSize14,
+              child: Row(
+                children: [
+                  Image.asset(
+                    AppAssets.downloadIcon,
+                    height: spacerSize18,
+                    width: spacerSize18,
+                    fit: BoxFit.cover,
+                  ),
+                  BaseText(text: "Export", textColor: AppColors.antiqueWhite, fontSize: fontSize14),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ],
+          Container(
+            decoration: baseBoxDecoration(
+              color: AppColors.blackColor,
+              borderColor: Colors.transparent,
+              radius: spacerSize20,
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadiusGeometry.circular(spacerSize30),
+              child: Image.asset(
+                AppAssets.dummyProfileImage,
+                height: spacerSize40,
+                width: spacerSize40,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

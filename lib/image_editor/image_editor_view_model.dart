@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -14,13 +16,12 @@ import '../utils/shared_prefs_service.dart';
 
 class ImageEditorViewModel extends GetxController {
   Box<dynamic>? hiveBox;
+  late SharedPrefsService sharedPrefsService;
   RxList<dynamic>? activeLayersList = <dynamic>[].obs;
   final editorKey = GlobalKey<ProImageEditorState>();
   final Map<int, Layer> removedLayers = {};
-  late SharedPrefsService sharedPrefsService;
-  List<String> galleryImageList = [];
+  final Map<String, Layer> removedLayersNew = {};
   String userDisplayName = "";
-
   var layerData = "".obs,
       stickersList = <String>[].obs,
       imageData = Rx<dynamic>(null),
@@ -28,6 +29,7 @@ class ImageEditorViewModel extends GetxController {
       imageFile = Rx<Uint8List?>(null),
       selectedItems = <bool>[].obs,
       isLoading = true.obs;
+  Map<String, dynamic>? exportJsonMap = {};
 
   @override
   void onInit() {
@@ -118,17 +120,16 @@ class ImageEditorViewModel extends GetxController {
     }
   }
 
-  Future<void> saveImageToHive(
-    Uint8List thumbNailBytes,
-    Uint8List imageBytes,
-    int? imageIndex,
-    dynamic layerJson,
-  ) async {
+  Future<void> saveImageToHive(Uint8List thumbNailBytes,
+      Uint8List imageBytes,
+      int? imageIndex,
+      dynamic layerJson,) async {
     try {
       await exportImageAndSaveInHive(thumbNailBytes, imageBytes, imageIndex, layerJson);
     } catch (e) {
       await saveImageCatchError(e.toString(), thumbNailBytes, imageBytes, layerJson);
     } finally {
+      // downloadImage(imageBytes);
       AppToast.show(
         title: AppStrings.savedSuccessfully,
         "${AppStrings.image}\t${AppStrings.savedSuccessfully}",
@@ -137,12 +138,10 @@ class ImageEditorViewModel extends GetxController {
     }
   }
 
-  exportImageAndSaveInHive(
-    Uint8List thumbNailBytes,
-    Uint8List imageBytes,
-    int? imageIndex,
-    dynamic layerJson,
-  ) async {
+  exportImageAndSaveInHive(Uint8List thumbNailBytes,
+      Uint8List imageBytes,
+      int? imageIndex,
+      dynamic layerJson,) async {
     final box = Hive.box<dynamic>(AppKeys.imageLayerBox);
     if (imageIndex != null && imageIndex >= 0 && imageIndex < box.length) {
       if (removedLayers.isNotEmpty) {
@@ -182,12 +181,10 @@ class ImageEditorViewModel extends GetxController {
     }
   }
 
-  saveImageCatchError(
-    String errorMsg,
-    Uint8List thumbNailBytes,
-    Uint8List imageBytes,
-    dynamic layerJson,
-  ) async {
+  saveImageCatchError(String errorMsg,
+      Uint8List thumbNailBytes,
+      Uint8List imageBytes,
+      dynamic layerJson,) async {
     if (errorMsg.toString().contains("Unexpected error")) {
       await Hive.deleteBoxFromDisk(AppKeys.imageLayerBox);
       final box = await Hive.openBox<dynamic>(
@@ -202,117 +199,72 @@ class ImageEditorViewModel extends GetxController {
     }
   }
 
-  /*
-  void updateDragLayer1(int newIndex, int oldIndex) {
-    if (newIndex > oldIndex) newIndex -= 1;
-    if (oldIndex < 0 ||
-        oldIndex >= activeLayersList!.length ||
-        newIndex < 0 ||
-        newIndex >= activeLayersList!.length) {
-      return;
-    }
-
-    final movedLayer = activeLayersList!.removeAt(oldIndex);
-    activeLayersList!.insert(newIndex, movedLayer);
-    if (editorKey.currentState != null && editorKey.currentState!.activeLayers.isNotEmpty) {
-      final movedCanvasLayer = editorKey.currentState!.activeLayers.removeAt(oldIndex);
-      editorKey.currentState!.activeLayers.insert(newIndex, movedCanvasLayer);
-      activeLayersList?.refresh();
+  void removeLayer(int index) {
+    if (index >= 0 && index < editorKey.currentState!.activeLayers.length) {
+      editorKey.currentState!.activeLayers.removeAt(index);
+      selectedItems.removeAt(index);
       editorKey.currentState!.setState(() {});
     }
-    final movedRemoveLayer = selectedItems.removeAt(oldIndex);
-    selectedItems.insert(newIndex, movedRemoveLayer);
-    selectedItems.refresh();
-    removedLayers.forEach((key, value) {
-      debugPrint("key:::::::$key:::::::::");
-    });
-    for (var element in selectedItems) {
-      debugPrint("element::::::::::::$element");
-    }
   }
-*/
 
-  void updateDragLayer(int newIndex, int oldIndex) {
+  Future<void> hideShowRestoreLayer(int index) async {
+    final editorState = editorKey.currentState;
+    if (editorState == null) return;
+    if (index < 0 || index >= selectedItems.length) return;
+
+    final layer = activeLayersList![index];
+    final layerId = layer.id;
+    final newValue = !selectedItems[index];
+    selectedItems[index] = newValue;
+
+    var layers = editorState.stateHistory.last.layers;
+
+    if (!newValue) {
+      final layerToRemove = layers
+          .where((l) => l.id == layerId)
+          .isNotEmpty
+          ? layers.firstWhere((l) => l.id == layerId)
+          : null;
+
+      if (layerToRemove != null) {
+        removedLayersNew[layerToRemove.id] = layerToRemove;
+        layers.remove(layerToRemove);
+      }
+    } else {
+      if (removedLayersNew.containsKey(layerId)) {
+        final toRestore = removedLayersNew[layerId]!;
+        int insertIndex = index.clamp(0, layers.length);
+        bool alreadyPresent = layers.any((l) => l.id == toRestore.id);
+        if (!alreadyPresent) {
+          layers.insert(insertIndex, toRestore);
+        }
+        removedLayersNew.remove(layerId);
+      }
+    }
+    activeLayersList?.refresh();
+    selectedItems.refresh();
+    editorState.setState(() {});
+  }
+
+  void updateDragLayerAndShuffle(int newIndex, int oldIndex) {
     if (newIndex > oldIndex) newIndex -= 1;
 
     final len = activeLayersList!.length;
-    if (oldIndex < 0 || oldIndex >= len || newIndex < 0 || newIndex >= len) {
-      return;
-    }
+    if (oldIndex < 0 || oldIndex >= len || newIndex < 0 || newIndex >= len) return;
     final movedLayer = activeLayersList!.removeAt(oldIndex);
     activeLayersList!.insert(newIndex, movedLayer);
+
     if (editorKey.currentState != null &&
         editorKey.currentState!.activeLayers.isNotEmpty &&
         activeLayersList!.length == editorKey.currentState!.activeLayers.length) {
       final movedCanvasLayer = editorKey.currentState!.activeLayers.removeAt(oldIndex);
       editorKey.currentState!.activeLayers.insert(newIndex, movedCanvasLayer);
-      activeLayersList?.refresh();
-      editorKey.currentState!.setState(() {});
-    }
-
-    if (removedLayers.isNotEmpty) {
-      var itemIndex = removedLayers.keys.firstWhere((key) => key == oldIndex, orElse: () => -1);
-      if (itemIndex != -1) {
-        var layer = removedLayers[itemIndex];
-        removedLayers.remove(itemIndex);
-        removedLayers.assign(newIndex, layer!);
-      }
     }
     final movedSelected = selectedItems.removeAt(oldIndex);
     selectedItems.insert(newIndex, movedSelected);
-    selectedItems.refresh();
-    /*  if (removedLayers.isNotEmpty) {
-      final updated = <int, Layer>{};
-      removedLayers.forEach((key, value) {
-        int mappedKey = key;
-        if (key == oldIndex) {
-          mappedKey = newIndex;
-        } else if (oldIndex < newIndex) {
-          if (key > oldIndex && key <= newIndex) mappedKey = key - 1;
-        } else if (oldIndex > newIndex) {
-          if (key >= newIndex && key < oldIndex) mappedKey = key + 1;
-        }
-        updated[mappedKey] = value;
-      });
-
-      removedLayers
-        ..clear()
-        ..addAll(updated);
-    }*/
-
-    removedLayers.forEach((key, value) {
-      debugPrint("removedLayers key: $key -> $value");
-    });
-    for (var element in selectedItems) {
-      debugPrint("selectedItems element: $element");
-    }
-  }
-
-  Future<void> restoreLayer(int index) async {
-    print(index);
-    var layers = editorKey.currentState!.stateHistory.last.layers;
-    if (index < 0) return;
-    if (index >= selectedItems.length) return;
-    bool isChecked = selectedItems[index];
-    //Hide the layer
-    if (!isChecked) {
-      if (index < layers.length) {
-        removedLayers[index] = layers[index];
-        layers.removeAt(index);
-      }
-    } else {
-      if (removedLayers.containsKey(index)) {
-        Layer toRestore = removedLayers[index]!;
-        bool alreadyPresent = layers.any((l) => l.id == toRestore.id);
-        if (!alreadyPresent) {
-          int insertIndex = index.clamp(0, layers.length);
-          layers.insert(insertIndex, toRestore);
-        }
-        removedLayers.remove(index);
-      }
-    }
     activeLayersList?.refresh();
-    editorKey.currentState!.setState(() {});
+    selectedItems.refresh();
+    editorKey.currentState?.setState(() {});
   }
 
   Future<void> loadStickers() async {
@@ -339,6 +291,48 @@ class ImageEditorViewModel extends GetxController {
       }
       activeLayersList!.assignAll(newLayers);
       activeLayersList!.refresh();
+    }
+  }
+
+  Future<void> downloadImage(bytes) async {
+    bool isSuccess = false;
+    try {
+      String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+      if (selectedDirectory == null) {
+        return;
+      }
+      final timestamp =
+          "${DateTime
+          .now()
+          .year}${DateTime
+          .now()
+          .month
+          .toString()
+          .padLeft(2, '0')}${DateTime
+          .now()
+          .day
+          .toString()
+          .padLeft(2, '0')}_${DateTime
+          .now()
+          .hour}${DateTime
+          .now()
+          .minute}${DateTime
+          .now()
+          .second}";
+      final filePath = "$selectedDirectory/layer_base_img_$timestamp.png";
+      final file = File(filePath);
+      await file.writeAsBytes(bytes);
+      isSuccess = true;
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      if (isSuccess) {
+        AppToast.show(
+          title: AppStrings.downloadSuccessfully,
+          "${AppStrings.file}\t ${AppStrings.downloadSuccessfully}",
+          backgroundColor: Colors.green,
+        );
+      }
     }
   }
 }

@@ -22,7 +22,7 @@ class SidLayerList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.lightBlack,
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -30,10 +30,10 @@ class SidLayerList extends StatelessWidget {
             width: double.infinity,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(spacerSize8),
-                topRight: Radius.circular(spacerSize8),
+                topLeft: Radius.circular(spacerSize5),
+                topRight: Radius.circular(spacerSize5),
               ),
-              color: AppColors.darkJungleGreen,
+              color: AppColors.lightGrey,
             ),
             child: const BaseText(
               text: AppStrings.layerHistory,
@@ -42,7 +42,6 @@ class SidLayerList extends StatelessWidget {
               fontSize: fontSize13,
             ),
           ),
-
           Expanded(child: reorderableList()),
         ],
       ),
@@ -55,7 +54,7 @@ class SidLayerList extends StatelessWidget {
         itemCount: controller.activeLayersList!.length,
         padding: EdgeInsets.symmetric(horizontal: spacerSize10, vertical: spacerSize5),
         onReorder: (oldIndex, newIndex) {
-          controller.updateDragLayer(newIndex, oldIndex);
+          controller.updateDragLayerAndShuffle(newIndex, oldIndex);
         },
         buildDefaultDragHandles: false,
         proxyDecorator: proxyDecorateWidget(),
@@ -75,25 +74,20 @@ class SidLayerList extends StatelessWidget {
   layerItems(int index, BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: spacerSize5),
-      padding: EdgeInsets.all(spacerSize4),
+      padding: EdgeInsets.all(spacerSize5),
       decoration: baseBoxDecoration(
-        color: AppColors.darkJungleGreen,
+        color: AppColors.lightBlack1,
         radius: spacerSize8,
-        borderColor: AppColors.lightGrey,
+        borderColor: AppColors.lightBlack1,
       ),
       child: Row(
+        spacing: spacerSize10,
         children: [
-          Column(
-            spacing: spacerSize5,
-            children: [
-              dragButton(index),
-              hideAndShowBtn(index),
-              deleteButton(context, index),
-              SizedBox(height: spacerSize5),
-            ],
-          ),
-          SizedBox(width: spacerSize10),
+          dragButton(index),
           showImageWithLayer(index),
+          SizedBox(width: spacerSize15),
+          hideAndShowBtn(index),
+          deleteButton(context, index),
         ],
       ),
     );
@@ -119,7 +113,7 @@ class SidLayerList extends StatelessWidget {
     return iconLayout(
       index,
       tooltipText: AppStrings.holdToDrag,
-      icon: Icons.drag_handle_sharp,
+      icon: Icons.drag_indicator_sharp,
       onPressed: () {},
     );
   }
@@ -127,13 +121,12 @@ class SidLayerList extends StatelessWidget {
   hideAndShowBtn(int index) {
     return iconLayout(
       index,
-      tooltipText: controller.selectedItems[index] ? AppStrings.show : AppStrings.hide,
+      tooltipText: !controller.selectedItems[index] ? AppStrings.show : AppStrings.hide,
       icon: (index < controller.selectedItems.length && controller.selectedItems[index])
-          ? Icons.visibility_outlined
-          : Icons.visibility_off_outlined,
+          ? Icons.visibility
+          : Icons.visibility_off,
       onPressed: () {
-        controller.selectedItems[index] = !controller.selectedItems[index];
-        controller.restoreLayer(index);
+        controller.hideShowRestoreLayer(index);
       },
     );
   }
@@ -142,7 +135,7 @@ class SidLayerList extends StatelessWidget {
     return iconLayout(
       index,
       tooltipText: AppStrings.delete,
-      icon: Icons.delete_forever,
+      icon: Icons.delete_rounded,
       onPressed: () {
         showBaseDialog(
           context: context,
@@ -164,16 +157,14 @@ class SidLayerList extends StatelessWidget {
       onPressed: () {
         onPressed!();
       },
-      icon: GradientShaderMask(
-        child: Icon(icon, color: Colors.white, size: spacerSize18),
-      ),
+      icon: Icon(icon, color: AppColors.antiqueWhite, size: spacerSize18),
     );
   }
 
   showImageWithLayer(int index) {
     return Expanded(
       child: SizedBox(
-        height: spacerSize75,
+        height: spacerSize45,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(spacerSize4),
           child: Stack(
@@ -202,7 +193,7 @@ class SidLayerList extends StatelessWidget {
         );
 
       case (EmojiLayer _):
-        return Text(layer.emoji, style: const TextStyle(fontSize: spacerSize20));
+        return BaseText(text: layer.emoji, fontSize: spacerSize20);
 
       case (PaintLayer _):
         final paintData = layer.toMap();

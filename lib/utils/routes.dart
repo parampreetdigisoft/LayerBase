@@ -38,7 +38,9 @@ routes() {
     GetPage(
       name: Routes.forgotPassword,
       page: () => const ForgotPassword(),
-      binding: BindingsBuilder(() => Get.lazyPut(() => ForgotPasswordViewModel())),
+      binding: BindingsBuilder(() {
+        Get.lazyPut(() => ForgotPasswordViewModel());
+      }),
     ),
     GetPage(
       name: Routes.imageEditor,

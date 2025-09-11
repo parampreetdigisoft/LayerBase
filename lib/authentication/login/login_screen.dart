@@ -9,10 +9,10 @@ import 'package:layerbase/utils/constants/app_constants.dart';
 import 'package:layerbase/utils/constants/app_keys.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
 import 'package:layerbase/utils/routes.dart';
+
 import '../../utils/base/widgets/base_button.dart';
 import '../../utils/base/widgets/base_form.dart';
 import '../../utils/base/widgets/base_text.dart';
-import '../../utils/base/widgets/base_text_button.dart';
 import '../../utils/base/widgets/base_text_field.dart';
 
 class LoginScreen extends GetWidget<LoginViewModel> {
@@ -22,278 +22,243 @@ class LoginScreen extends GetWidget<LoginViewModel> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(AppAssets.authBackgroundImage),
-          fit: BoxFit.cover,
-        ),
+        image: DecorationImage(image: AssetImage(AppAssets.authBg), fit: BoxFit.cover),
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: Stack(
-          children: [
-            Image.asset(
-              AppAssets.authBackgroundImage,
-              fit: BoxFit.fill,
-              width: MediaQuery.of(context).size.width * .6,
-              height: MediaQuery.of(context).size.height * 1.2,
-            ),
-            Positioned.fill(
-              left: MediaQuery.of(context).size.width * .1,
-              child: Align(
-                child: appLogo(
-                  context,
-                  AppAssets.appLogoWhite,
-                  MediaQuery.of(context).size.width * .3,
-                ),
-                alignment: Alignment.centerLeft,
+        body: BaseForm(
+          formKey: controller.formKey,
+          child: Row(
+            children: [
+              Expanded(
+                child: Image.asset(AppAssets.appLogo, height: spacerSize60, width: spacerSize300),
               ),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: SizedBox(
-                width: isMobile(context)
-                    ? MediaQuery.of(context).size.width
-                    : MediaQuery.of(context).size.width * .5,
-                height: MediaQuery.of(context).size.height,
-                child: Card(
-                  shadowColor: Colors.black,
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
+              Expanded(
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  decoration: BoxDecoration(
+                    color: AppColors.lightGrey,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(
-                        isMobile(context) ? spacerSize0 : spacerSize50,
-                      ),
-                      bottomLeft: Radius.circular(
-                        isMobile(context) ? spacerSize0 : spacerSize50,
-                      ),
+                      topLeft: Radius.circular(isMobile(context) ? spacerSize0 : spacerSize30),
+                      bottomLeft: Radius.circular(isMobile(context) ? spacerSize0 : spacerSize30),
                     ),
                   ),
-                  elevation: 5,
-                  margin: EdgeInsets.zero,
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    child: Scrollbar(
-                      thumbVisibility: true,
-                      controller: controller.scrollController,
-                      child: SingleChildScrollView(
-                        controller: controller.scrollController,
-                        child:
-                            Column(
-                              children: [
-                                SizedBox(
-                                  height: isMobile(context)
-                                      ? MediaQuery.of(context).size.height * .05
-                                      : MediaQuery.of(context).size.height * .1,
-                                ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: spacerSize135),
+                    child: Column(
+                      children: [
+                        Expanded(flex: 3, child: SizedBox.shrink()),
+                        BaseText(
+                          text: AppStrings.signInToYourAccount,
+                          textColor: AppColors.lightPurple,
+                          fontSize: spacerSize40,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        SizedBox(height: spacerSize35),
 
-                                if (isMobile(context))
-                                  appLogo(
-                                    context,
-                                    AppAssets.appLogo,
-                                    MediaQuery.of(context).size.width * .5,
-                                  ),
-                                Center(
-                                  child: const BaseText(
-                                    text: AppStrings.signInToYourAccount,
-                                    fontSize: fontSize30,
-                                    textColor: Colors.black,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                                SizedBox(height: spacerSize50),
-                                BaseForm(
-                                  formKey: controller.formKey,
-                                  child: Column(
-                                    children: [
-                                      emailField(),
-                                      const SizedBox(height: spacerSize30),
-                                      passwordField(),
-                                    ],
-                                  ),
-                                ),
-
-                                const SizedBox(height: spacerSize10),
-                                Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: BaseText(
-                                    fontSize: fontSize14,
-                                    text: AppStrings.forgotPassword,
-                                    onPressed: () {
-                                      controller.forgotPassword(context);
-                                    },
-                                  ),
-                                ),
-
-                                const SizedBox(height: spacerSize45),
-                                loginBtn(context),
-
-                                const SizedBox(height: spacerSize25),
-                                Text.rich(
-                                  TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: AppStrings.dontHaveAccount,
-                                      ),
-                                      WidgetSpan(
-                                        child: SizedBox(width: spacerSize5),
-                                      ),
-                                      TextSpan(
-                                        text: AppStrings.register,
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            Navigator.pushNamed(
-                                              context,
-                                              Routes.signUp,
-                                            );
-                                          },
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.darkBlue,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-
-                                const SizedBox(height: spacerSize25),
-                                const Row(
-                                  children: <Widget>[
-                                    Expanded(child: Divider()),
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(
-                                        horizontal: 8.0,
-                                      ),
-                                      child: Text(AppStrings.or),
-                                    ),
-                                    Expanded(child: Divider()),
-                                  ],
-                                ),
-                                const SizedBox(height: spacerSize25),
-
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                      icon: Image.asset(
-                                        AppAssets.googleIcon,
-                                        fit: BoxFit.fill,
-                                        scale: 2,
-                                      ),
-                                      onPressed: () {
-                                        controller.sharedPreferences!.clear();
-                                        defaultTargetPlatform == TargetPlatform.windows
-                                            ? controller.signInWithGoogleWindow().then((value) {
-                                                    navigateToGallery(value);
-                                                  })
-                                            : controller
-                                                  .signInWithGoogle()
-                                                  .then((value) {
-                                                    navigateToGallery(value);
-                                                  });
-                                      },
-                                      tooltip: AppStrings.signInWithGoogle,
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: spacerSize16),
-
-                                BaseTextButton(
-                                  onPressed: () {
-                                    controller.sharedPreferences!.setBool(
-                                      AppKeys.isGuestLoggedIn,
-                                      true,
-                                    );
-                                    Navigator.pushNamed(
-                                      context,
-                                      Routes.homeScreen,
-                                    );
-                                  },
-                                  textLabel: AppStrings.continueWithoutLogin,
-                                  fontSize: fontSize14,
-                                  textColor: AppColors.darkBlue,
-                                ),
-                              ],
-                            ).marginSymmetric(
-                              vertical: spacerSize20,
-                              horizontal:
-                                  MediaQuery.of(context).size.width * .03,
+                        emailField(),
+                        SizedBox(height: spacerSize35),
+                        Obx(() => passwordField()),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: TextButton(
+                            style: TextButton.styleFrom(padding: EdgeInsets.all(0)),
+                            onPressed: () {
+                              controller.forgotPassword(context);
+                            },
+                            child: BaseText(
+                              text: AppStrings.forgotPassword,
+                              textColor: AppColors.greyColor,
+                              fontSize: fontSize16,
                             ),
-                      ),
+                          ),
+                        ),
+                        SizedBox(height: spacerSize20),
+
+                        loginBtn(context),
+                        SizedBox(height: spacerSize20),
+                        doNotHaveAccount(context),
+                        SizedBox(height: spacerSize20),
+                        orText(),
+                        SizedBox(height: spacerSize20),
+                        googleAndGuestBtn(context),
+
+                        Expanded(flex: 2, child: SizedBox.shrink()),
+                      ],
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    );
-  }
-
-  appLogo(BuildContext context, String appAsset, double width) {
-    return SizedBox(
-      width: width,
-      child: Image.asset(appAsset, fit: BoxFit.fill),
     );
   }
 
   emailField() {
     return BaseTextField(
-      textEditingController: controller.emailController,
-      hintText: AppStrings.enterYourEmail,
-      labelText: AppStrings.email,
-      prefixIcon: const Icon(Icons.email),
-      keyboardType: TextInputType.emailAddress,
+      controller: controller.emailController,
+      hintText: AppKeys.email,
+      prefixIcon: Icon(Icons.email_outlined, color: AppColors.lightPink, size: spacerSize20),
+      validator: controller.emailValidator,
     );
   }
 
   passwordField() {
-    return Obx(
-      () => BaseTextField(
-        textEditingController: controller.passwordController,
-        labelText: AppStrings.password,
-        hintText: AppStrings.enterYourPassword,
-        prefixIcon: const Icon(Icons.lock),
-        keyboardType: TextInputType.visiblePassword,
-        isTextObscure: controller.isPasswordObscure.value,
-        suffixIcon: IconButton(
+    return BaseTextField(
+      controller: controller.passwordController,
+      hintText: AppStrings.password,
+      prefixIcon: Icon(Icons.lock_outline_rounded, color: AppColors.lightPink, size: spacerSize20),
+      obscureText: controller.isPasswordObscure.value,
+      validator: controller.passwordValidator,
+
+      suffixIcon: Obx(
+        () => IconButton(
           onPressed: () {
-            controller.isPasswordObscure.value =
-                !controller.isPasswordObscure.value;
+            controller.isPasswordObscure.value = !controller.isPasswordObscure.value;
           },
-          icon: controller.isPasswordObscure.value
-              ? Icon(Icons.visibility)
-              : Icon(Icons.visibility_off),
+          icon: Icon(
+            controller.isPasswordObscure.value ? Icons.visibility : Icons.visibility_off,
+            color: AppColors.lightPink,
+            size: spacerSize20,
+          ),
         ),
       ),
     );
   }
 
   loginBtn(BuildContext context) {
-    return SizedBox(
-      width: spacerSize250,
-      child: Obx(
-        () => BaseButton(
-          onPressed: () {
-            if (controller.formKey.currentState!.validate()) {
-              if (defaultTargetPlatform == TargetPlatform.linux ||
-                  defaultTargetPlatform == TargetPlatform.windows) {
-                controller.signInWithEmailRest(
-                  controller.emailController.text,
-                  controller.passwordController.text,
-                );
-              } else {
-                controller.signInWithEmailAndPassword();
-              }
+    return Obx(
+      () => BaseButton(
+        onPressed: () {
+          if (controller.formKey.currentState!.validate()) {
+            if (defaultTargetPlatform == TargetPlatform.linux ||
+                defaultTargetPlatform == TargetPlatform.windows) {
+              controller.signInWithEmailRest(
+                controller.emailController.text,
+                controller.passwordController.text,
+              );
+            } else {
+              controller.signInWithEmailAndPassword();
             }
-          },
-          backgroundColor: AppColors.darkBlue,
-          buttonLabel: AppStrings.login,
-          fontSize: fontSize18,
-          textColor: Colors.white,
-          showLoader: controller.isLoading.value,
-        ),
+          }
+        },
+        backgroundColor: AppColors.darkBlue,
+        buttonLabel: AppStrings.login,
+        fontSize: fontSize16,
+        textColor: Colors.white,
+        showLoader: controller.isLoading.value,
       ),
+    );
+  }
+
+  doNotHaveAccount(BuildContext context) {
+    return RichText(
+      text: TextSpan(
+        text: AppStrings.dontHaveAccount,
+        style: TextStyle(color: AppColors.greyColor, fontSize: fontSize16),
+        children: [
+          TextSpan(
+            text: AppStrings.register,
+            style: TextStyle(
+              color: AppColors.lightPurple,
+              fontSize: fontSize16,
+              fontWeight: FontWeight.w500,
+            ),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                Navigator.pushNamed(context, Routes.signUp);
+              },
+          ),
+        ],
+      ),
+    );
+  }
+
+  orText() {
+    return Row(
+      children: [
+        Expanded(
+          child: Image.asset(AppAssets.waveLine, fit: BoxFit.fill, width: spacerSize18),
+        ),
+        BaseText(text: AppStrings.or, textColor: AppColors.greyColor),
+        Expanded(
+          child: Image.asset(AppAssets.waveLine, fit: BoxFit.fill, width: spacerSize18),
+        ),
+      ],
+    );
+  }
+
+  googleAndGuestBtn(BuildContext context) {
+    return Row(
+      spacing: spacerSize5,
+      children: [
+        IconButton(
+          style: IconButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size(0, 0)),
+
+          onPressed: () {
+            controller.sharedPreferences!.clear();
+            defaultTargetPlatform == TargetPlatform.windows
+                ? controller.signInWithGoogleWindow().then((value) {
+                    navigateToHome(value);
+                  })
+                : controller.signInWithGoogle().then((value) {
+                    navigateToHome(value);
+                  });
+          },
+          tooltip: AppStrings.logInWithGoogle,
+          icon: Container(
+            padding: EdgeInsets.all(spacerSize12),
+            decoration: BoxDecoration(
+              color: AppColors.darkSlatePurple,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(spacerSize20),
+                bottomLeft: Radius.circular(spacerSize20),
+                topRight: Radius.circular(spacerSize10),
+                bottomRight: Radius.circular(spacerSize10),
+              ),
+            ),
+            child: Row(
+              spacing: spacerSize8,
+              children: [
+                Image.asset(AppAssets.googleIcon, height: spacerSize20, width: spacerSize20),
+                Text(
+                  AppStrings.logInWithGoogle,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white, fontSize: fontSize14),
+                ),
+              ],
+            ),
+          ),
+        ),
+        IconButton(
+          style: IconButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size(0, 0)),
+
+          onPressed: () {
+            controller.sharedPreferences!.setBool(AppKeys.isGuestLoggedIn, true);
+            Navigator.pushNamed(context, Routes.homeScreen);
+          },
+          tooltip: AppStrings.continueAsAGuest,
+          icon: Container(
+            padding: EdgeInsets.symmetric(horizontal: spacerSize24, vertical: spacerSize12),
+            decoration: BoxDecoration(
+              color: AppColors.darkSlatePurple,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(spacerSize10),
+                bottomLeft: Radius.circular(spacerSize10),
+                topRight: Radius.circular(spacerSize20),
+                bottomRight: Radius.circular(spacerSize20),
+              ),
+            ),
+            child: Text(
+              AppStrings.continueAsAGuest,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: fontSize14),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -301,13 +266,8 @@ class LoginScreen extends GetWidget<LoginViewModel> {
     return MediaQuery.of(context).size.width < 600;
   }
 
-  navigateToGallery(var value) {
+  navigateToHome(var value) {
     if (value != null) {
-      /*   Navigator.pushNamedAndRemoveUntil(
-        Get.context!,
-        Routes.imageGallery,
-            (Route<dynamic> route) => false,
-      );*/
       Navigator.pushNamedAndRemoveUntil(
         Get.context!,
         Routes.homeScreen,

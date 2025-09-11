@@ -13,13 +13,16 @@ import 'package:layerbase/utils/constants/app_strings.dart';
 import 'package:layerbase/utils/routes.dart';
 
 import '../../utils/base/dialogs/base_dialog.dart';
+import '../../utils/constants/app_constants.dart';
 
 class SignUpViewModel extends GetxController {
   RxBool isLoading = false.obs;
-  RxBool isPasswordObscure = true.obs;
+  RxBool showPassword = true.obs;
+  RxBool showConfirmPassword = true.obs;
   TextEditingController emailController = TextEditingController();
   TextEditingController fullNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController answerController = TextEditingController();
   SignUpRepository signUpRepository = SignUpRepository();
   RxList<QuestionResponseModel> securityQuestionList = <QuestionResponseModel>[].obs;
@@ -33,6 +36,54 @@ class SignUpViewModel extends GetxController {
   void onInit() {
     super.onInit();
     getSecurityQuestions();
+  }
+
+  String? fullNameValidator(String? value) {
+    if (value == null || value
+        .trim()
+        .isEmpty) {
+      return AppStrings.required;
+    }
+    return null;
+  }
+
+  String? emailValidator(String? value) {
+    if (value == null || value
+        .trim()
+        .isEmpty) {
+      return AppStrings.required;
+    }
+    if (!emailRegExp.hasMatch(value)) {
+      return AppStrings.enterAValidEmail;
+    }
+
+    return null;
+  }
+
+  String? passwordValidator(String? value) {
+    if (value == null || value
+        .trim()
+        .isEmpty) {
+      return AppStrings.required;
+    }
+    if (!passwordRegExp.hasMatch(value)) {
+      return AppStrings.passwordValidationDesc;
+    }
+
+    return null;
+  }
+
+  String? confirmPasswordValidator(String? value) {
+    if (value == null || value
+        .trim()
+        .isEmpty) {
+      return AppStrings.required;
+    }
+    if (value != passwordController.text) {
+      return 'Passwords do not match';
+    }
+
+    return null;
   }
 
   getSecurityQuestions() {
@@ -90,7 +141,8 @@ class SignUpViewModel extends GetxController {
     isLoading.value = true;
     isLoading.refresh();
     final url = Uri.parse(
-      'https://identitytoolkit.googleapis.com/v1/accounts:sign_up?key=${dotenv.env['web_apiKey'] ?? ""}',
+      'https://identitytoolkit.googleapis.com/v1/accounts:sign_up?key=${dotenv.env['web_apiKey'] ??
+          ""}',
     );
 
     final Map<String, dynamic> map = {
@@ -102,6 +154,7 @@ class SignUpViewModel extends GetxController {
       "returnSecureToken": true,
     };
 
+    debugPrint("map:::$map");
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -140,7 +193,7 @@ class SignUpViewModel extends GetxController {
         Navigator.pushNamedAndRemoveUntil(
           Get.context!,
           Routes.logIn,
-          (Route<dynamic> route) => false,
+              (Route<dynamic> route) => false,
         );
       },
     );

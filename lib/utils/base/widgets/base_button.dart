@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:layerbase/utils/constants/app_constants.dart';
 
+import '../../constants/app_assets.dart';
+
 class BaseButton extends StatelessWidget {
   const BaseButton({
     super.key,
@@ -25,31 +27,39 @@ class BaseButton extends StatelessWidget {
     return GestureDetector(
       onTap: showLoader ? null : onPressed,
       child: Container(
-        width: spacerSize250,
-        height: spacerSize50,
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [AppColors.violet, AppColors.brightCyan],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-          borderRadius: BorderRadius.circular(spacerSize30),
+        padding: EdgeInsets.only(
+          left: spacerSize18,
+          right: spacerSize12,
+          top: spacerSize10,
+          bottom: spacerSize12,
         ),
-        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: AppColors.deepPurple,
+          borderRadius: BorderRadius.circular(spacerSize16),
+        ),
         child: showLoader
-            ? const SizedBox(
-                width: spacerSize20,
-                height: spacerSize20,
-                child: CircularProgressIndicator(color: Colors.white, strokeWidth: spacerSize2),
-              )
-            : Text(
-                buttonLabel ?? "",
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: fontSize ?? fontSize14,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+            ? Container(
+          height: spacerSize20,
+          width: spacerSize20,
+          margin: EdgeInsets.only(right: spacerSize8),
+          child: CircularProgressIndicator(color: Colors.white, strokeWidth: spacerSize2),
+        )
+            : Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: spacerSize8,
+          children: [
+            Text(
+              buttonLabel ?? "",
+              textAlign: TextAlign.center,
+              style: TextStyle(color: textColor, fontSize: fontSize ?? fontSize14),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: spacerSize2),
+              child: Image.asset(AppAssets.forwardIcon, height: spacerSize20),
+            ),
+          ],
+        ),
       ),
     );
   }

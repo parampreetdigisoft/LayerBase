@@ -18,12 +18,12 @@ class LayerHistoryLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.blackColor,
       body: Container(
         decoration: baseBoxDecoration(
-          color: AppColors.chineseBlack,
+          color: AppColors.lightBlack1,
           radius: spacerSize8,
-          borderColor: AppColors.lightGrey,
+          borderColor: AppColors.lightBlack1,
         ),
         child: Obx(() {
           return (controller!.isLoading.value || controller!.activeLayersList!.isEmpty)
@@ -44,7 +44,7 @@ class LayerHistoryLayout extends StatelessWidget {
               topLeft: Radius.circular(spacerSize8),
               topRight: Radius.circular(spacerSize8),
             ),
-            color: AppColors.darkJungleGreen,
+            color: AppColors.lightGrey,
           ),
           child: const BaseText(
             text: AppStrings.layerHistory,
@@ -76,29 +76,32 @@ class LayerHistoryLayout extends StatelessWidget {
 
   Widget buildShimmerItem() {
     return Shimmer(
-      color: AppColors.lightGrey,
+      color: AppColors.lightWhite,
       interval: Duration(milliseconds: 20),
       duration: Duration(milliseconds: 2700),
       colorOpacity: 0.16,
       enabled: true,
       direction: const ShimmerDirection.fromLTRB(),
+
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: spacerSize8, horizontal: spacerSize8),
-        decoration: baseBoxDecoration(color: AppColors.darkJungleGreen, radius: spacerSize8),
+        decoration: baseBoxDecoration(
+          color: AppColors.lightGrey,
+          radius: spacerSize8,
+          borderColor: AppColors.lightBlack1,
+        ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: spacerSize10,
           children: [
-            Column(
-              spacing: spacerSize12,
-              children: [shimmerLayout(), shimmerLayout(), shimmerLayout()],
-            ),
-            const SizedBox(width: spacerSize8),
+            shimmerLayout(),
             Expanded(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(spacerSize4),
-                child: Container(height: spacerSize65, color: AppColors.chineseBlack),
+                child: Container(height: spacerSize45, color: AppColors.lightBlack),
               ),
             ),
+            shimmerLayout(),
+            shimmerLayout(),
           ],
         ),
       ),
@@ -109,7 +112,11 @@ class LayerHistoryLayout extends StatelessWidget {
     return Container(
       width: spacerSize12,
       height: spacerSize12,
-      decoration: baseBoxDecoration(color: AppColors.chineseBlack, radius: spacerSize4),
+      decoration: baseBoxDecoration(
+        color: AppColors.lightBlack1,
+        radius: spacerSize4,
+        borderColor: AppColors.lightBlack1,
+      ),
     );
   }
 }

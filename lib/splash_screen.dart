@@ -26,10 +26,7 @@ class SplashScreen extends StatelessWidget {
             child: Image.asset(AppAssets.splashImage, fit: BoxFit.fill),
           ),
           Center(
-            child: SizedBox(
-              width: spacerSize500,
-              child: Image.asset(AppAssets.appLogoWhite),
-            ),
+            child: SizedBox(width: spacerSize350, child: Image.asset(AppAssets.appLogo)),
           ),
         ],
       ),
@@ -39,9 +36,7 @@ class SplashScreen extends StatelessWidget {
   _checkLoginStatus(BuildContext context) {
     SharedPrefsService sharedPreference = SharedPrefsService.instance;
     bool? isGuestLoggedIn = sharedPreference.getBool(AppKeys.isGuestLoggedIn);
-    bool? isUserLoggedIn = sharedPreference
-        .getString(AppKeys.idToken)!
-        .isNotEmpty;
+    bool? isUserLoggedIn = sharedPreference.getString(AppKeys.idToken)!.isNotEmpty;
     Future.delayed(const Duration(milliseconds: 1000)).then((value) {
       User? user =
           defaultTargetPlatform == TargetPlatform.linux ||

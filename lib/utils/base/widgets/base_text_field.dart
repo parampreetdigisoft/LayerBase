@@ -1,69 +1,104 @@
-import 'package:layerbase/utils/constants/app_color.dart';
-import 'package:layerbase/utils/constants/app_constants.dart';
-import 'package:layerbase/utils/constants/app_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:layerbase/utils/constants/app_constants.dart';
+
+import '../../constants/app_color.dart';
 
 class BaseTextField extends StatelessWidget {
+  final TextEditingController? controller;
+  final String? hintText;
+  final String? labelText;
+  final String? initialValue;
+  final bool obscureText;
+  final bool readOnly;
+  final TextInputType keyboardType;
+  final TextInputAction? textInputAction;
+  final int? maxLength;
+  final int? maxLines;
+  final int? minLines;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
+  final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
+  final void Function(String)? onFieldSubmitted;
+  final VoidCallback? onTap;
+  final InputBorder? border;
+  final Color? fillColor;
+  final Color? hintTextColor;
+  final bool filled;
+
   const BaseTextField({
     super.key,
-    this.textEditingController,
-    this.labelText,
+    this.controller,
     this.hintText,
+    this.labelText,
+    this.initialValue,
+    this.obscureText = false,
+    this.readOnly = false,
+    this.keyboardType = TextInputType.text,
+    this.textInputAction,
+    this.maxLength,
+    this.maxLines = 1,
+    this.minLines,
     this.prefixIcon,
     this.suffixIcon,
-    this.keyboardType,
-    this.isTextObscure = false,
-    this.hintColor = AppColors.lightBlue,
-    this.fontSize = fontSize16,
+    this.validator,
+    this.onChanged,
+    this.onFieldSubmitted,
+    this.onTap,
+    this.border,
+    this.fillColor = AppColors.lightGrey,
+    this.hintTextColor = AppColors.greyColor,
+    this.filled = true,
   });
-
-  final TextEditingController? textEditingController;
-  final String? labelText;
-  final String? hintText;
-  final Icon? prefixIcon;
-  final dynamic suffixIcon;
-  final TextInputType? keyboardType;
-  final bool isTextObscure;
-  final Color hintColor;
-  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: textEditingController,
-      style: TextStyle(color: Colors.black, fontSize: fontSize),
+      controller: controller,
+      initialValue: initialValue,
+      obscureText: obscureText,
+      readOnly: readOnly,
+      keyboardType: keyboardType,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      textInputAction: textInputAction,
+      maxLength: maxLength,
+      maxLines: maxLines,
+      minLines: minLines,
+      validator: validator,
+      onChanged: onChanged,
+      onFieldSubmitted: onFieldSubmitted,
+      onTap: onTap,
+      cursorColor: Colors.white,
+      style: TextStyle(color: AppColors.greyColor, fontSize: fontSize16),
       decoration: InputDecoration(
         labelText: labelText,
         hintText: hintText,
-        hintStyle: TextStyle(color: hintColor),
         prefixIcon: prefixIcon,
-        prefixIconColor: AppColors.grey,
-        suffixIcon: suffixIcon ?? SizedBox(),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.antiqueWhite),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.antiqueWhite),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.antiqueWhite),
-        ),
-        focusColor: Colors.white,
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.antiqueWhite, width: 1.0),
-        ),
-        filled: true,
-        fillColor:Colors.white,
+        suffixIcon: suffixIcon,
+        filled: filled,
+        errorMaxLines: 2,
+        hintStyle: TextStyle(color: hintTextColor ?? AppColors.greyColor, fontSize: fontSize16),
+        fillColor: fillColor ?? Colors.grey.shade100,
+        contentPadding: EdgeInsets.symmetric(horizontal: spacerSize8, vertical: 0),
+        border:
+        border ??
+            OutlineInputBorder(
+              borderRadius: BorderRadius.circular(spacerSize16),
+              borderSide: BorderSide(color: AppColors.greyColor),
+            ),
+        enabledBorder:
+        border ??
+            OutlineInputBorder(
+              borderRadius: BorderRadius.circular(spacerSize16),
+              borderSide: BorderSide(color: AppColors.greyColor),
+            ),
+        focusedBorder:
+        border ??
+            OutlineInputBorder(
+              borderRadius: BorderRadius.circular(spacerSize16),
+              borderSide: const BorderSide(color: AppColors.greyColor, width: 1.5),
+            ),
       ),
-      autovalidateMode: AutovalidateMode.disabled,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return AppStrings.required;
-        }
-        return null;
-      },
-      obscureText: isTextObscure,
-      keyboardType: keyboardType,
     );
   }
 }
