@@ -122,11 +122,7 @@ class LocalFiles extends StatelessWidget {
                       },
                       icon: Icon(Icons.info, color: AppColors.lightWhite, size: spacerSize15),
                     ),
-                    BaseText(
-                      text: "img_layer_25",
-                      textColor: AppColors.lightWhite,
-                      fontSize: fontSize14,
-                    ),
+                    BaseText(text: "", textColor: AppColors.lightWhite, fontSize: fontSize14),
                     IconButton(
                       tooltip: AppStrings.delete,
                       onPressed: () {

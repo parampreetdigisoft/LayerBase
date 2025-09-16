@@ -125,13 +125,14 @@ class ImageEditor extends StatelessWidget {
                     historySpan: ExportHistorySpan.all,
                   ),
                 );
-                controller.exportJsonMap = await export?.toMap();
-                final layerJson = jsonEncode(controller.exportJsonMap);
+                Map<String, dynamic>? exportJsonMap = await export?.toMap();
+                final layerJson = jsonEncode(exportJsonMap);
                 controller.saveImageToHive(
                   parameters.image,
                   controller.imageFile.value!,
                   controller.imageIndex.value,
                   layerJson,
+                  "",
                 );
                 return Future.value();
               },

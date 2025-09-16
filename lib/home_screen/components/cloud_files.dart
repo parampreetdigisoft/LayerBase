@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:layerbase/utils/routes.dart';
 
-import '../../authentication/login/login_screen.dart';
 import '../../utils/base/widgets/base_shader_mask.dart';
 import '../../utils/base/widgets/base_text.dart';
 import '../../utils/constants/app_color.dart';
@@ -41,13 +41,10 @@ class CloudFiles extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.all(spacerSize10),
             width: double.infinity,
-            decoration: BoxDecoration(
-              color: AppColors.chineseBlack,
-              border: Border.all(color: AppColors.lightWhite),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(spacerSize15),
-                topRight: Radius.circular(spacerSize15),
-              ),
+            decoration: baseBoxDecoration(
+              color: AppColors.lightBlack,
+              radius: spacerSize10,
+              borderColor: Colors.transparent,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -82,12 +79,12 @@ class CloudFiles extends StatelessWidget {
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           decoration: TextDecoration.underline,
-                          color: AppColors.dodgerBlue,
-                          decorationColor: AppColors.dodgerBlue,
+                          color: AppColors.lightPurple,
+                          decorationColor: AppColors.lightPurple,
                         ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            Get.off(LoginScreen());
+                            Get.toNamed(Routes.logIn);
                           },
                       ),
                       const TextSpan(text: AppStrings.withYourEmailAccount),

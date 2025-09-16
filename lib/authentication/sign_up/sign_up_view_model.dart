@@ -39,19 +39,15 @@ class SignUpViewModel extends GetxController {
   }
 
   String? fullNameValidator(String? value) {
-    if (value == null || value
-        .trim()
-        .isEmpty) {
-      return AppStrings.required;
+    if (value == null || value.trim().isEmpty) {
+      return "${AppStrings.fullName}\t${AppStrings.isText}\t${AppStrings.required}";
     }
     return null;
   }
 
   String? emailValidator(String? value) {
-    if (value == null || value
-        .trim()
-        .isEmpty) {
-      return AppStrings.required;
+    if (value == null || value.trim().isEmpty) {
+      return "${AppStrings.email}\t${AppStrings.isText}\t${AppStrings.required}";
     }
     if (!emailRegExp.hasMatch(value)) {
       return AppStrings.enterAValidEmail;
@@ -61,10 +57,8 @@ class SignUpViewModel extends GetxController {
   }
 
   String? passwordValidator(String? value) {
-    if (value == null || value
-        .trim()
-        .isEmpty) {
-      return AppStrings.required;
+    if (value == null || value.trim().isEmpty) {
+      return "${AppStrings.password}\t${AppStrings.isText}\t${AppStrings.required}";
     }
     if (!passwordRegExp.hasMatch(value)) {
       return AppStrings.passwordValidationDesc;
@@ -74,13 +68,11 @@ class SignUpViewModel extends GetxController {
   }
 
   String? confirmPasswordValidator(String? value) {
-    if (value == null || value
-        .trim()
-        .isEmpty) {
-      return AppStrings.required;
+    if (value == null || value.trim().isEmpty) {
+      return "${AppStrings.confirmPassword}\t${AppStrings.isText}\t${AppStrings.required}";
     }
     if (value != passwordController.text) {
-      return 'Passwords do not match';
+      return AppStrings.passwordDoNotMatch;
     }
 
     return null;
@@ -141,8 +133,7 @@ class SignUpViewModel extends GetxController {
     isLoading.value = true;
     isLoading.refresh();
     final url = Uri.parse(
-      'https://identitytoolkit.googleapis.com/v1/accounts:sign_up?key=${dotenv.env['web_apiKey'] ??
-          ""}',
+      'https://identitytoolkit.googleapis.com/v1/accounts:sign_up?key=${dotenv.env['web_apiKey'] ?? ""}',
     );
 
     final Map<String, dynamic> map = {
@@ -193,7 +184,7 @@ class SignUpViewModel extends GetxController {
         Navigator.pushNamedAndRemoveUntil(
           Get.context!,
           Routes.logIn,
-              (Route<dynamic> route) => false,
+          (Route<dynamic> route) => false,
         );
       },
     );

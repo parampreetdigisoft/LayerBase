@@ -22,7 +22,7 @@ class ForgotPasswordViewModel extends GetxController {
 
   String? emailValidator(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return AppStrings.required;
+      return "${AppStrings.email}\t${AppStrings.isText}\t${AppStrings.required}";
     }
     if (!emailRegExp.hasMatch(value)) {
       return AppStrings.enterAValidEmail;

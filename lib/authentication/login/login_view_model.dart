@@ -41,10 +41,8 @@ class LoginViewModel extends GetxController {
   }
 
   String? emailValidator(String? value) {
-    if (value == null || value
-        .trim()
-        .isEmpty) {
-      return AppStrings.required;
+    if (value == null || value.trim().isEmpty) {
+      return "${AppStrings.email}\t${AppStrings.isText}\t${AppStrings.required}";
     }
     if (!emailRegExp.hasMatch(value)) {
       return AppStrings.enterAValidEmail;
@@ -54,10 +52,8 @@ class LoginViewModel extends GetxController {
   }
 
   String? passwordValidator(String? value) {
-    if (value == null || value
-        .trim()
-        .isEmpty) {
-      return AppStrings.required;
+    if (value == null || value.trim().isEmpty) {
+      return "${AppStrings.password}\t${AppStrings.isText}\t${AppStrings.required}";
     }
     return null;
   }
@@ -180,10 +176,12 @@ class LoginViewModel extends GetxController {
     return data;
   }
 
-  Future<Map<String, dynamic>> exchangeCodeForToken(String code,
-      String redirectUri,
-      String clientId,
-      String clientSecret,) async {
+  Future<Map<String, dynamic>> exchangeCodeForToken(
+    String code,
+    String redirectUri,
+    String clientId,
+    String clientSecret,
+  ) async {
     final tokenUrl = Uri.parse('https://oauth2.googleapis.com/token');
 
     final response = await http.post(
@@ -207,8 +205,7 @@ class LoginViewModel extends GetxController {
     sharedPreferences!.clear();
     isLoading.value = true;
     final url = Uri.parse(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${dotenv
-          .env['web_apiKey'] ?? ""}',
+      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${dotenv.env['web_apiKey'] ?? ""}',
     );
 
     final Map<String, dynamic> map = {

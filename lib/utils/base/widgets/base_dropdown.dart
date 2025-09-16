@@ -18,13 +18,15 @@ class BaseDropdown extends StatelessWidget {
       isExpanded: true,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       borderRadius: BorderRadius.circular(spacerSize10),
+      style: TextStyle(
+        color: AppColors.greyColor,
+        fontSize: fontSize14,
+        fontWeight: FontWeight.w500,
+      ),
       decoration: InputDecoration(
-        hint: Text(
-          "Choose My Security Question",
-          style: TextStyle(color: AppColors.greyColor, fontSize: fontSize16),
-          overflow: TextOverflow.ellipsis,
-        ),
-
+        contentPadding: const EdgeInsets.symmetric(horizontal: spacerSize8),
+        hintText: "Choose My Security Question",
+        hintStyle: TextStyle(color: AppColors.greyColor, fontSize: fontSize16),
         suffixIcon: IconButton(
           style: IconButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size(0, 0)),
           onPressed: () {},

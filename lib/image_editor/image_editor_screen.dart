@@ -6,6 +6,7 @@ import 'package:layerbase/utils/constants/app_color.dart';
 import 'package:layerbase/utils/constants/app_constants.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
 
+import '../utils/base/widgets/base_button.dart';
 import '../utils/base/widgets/base_shader_mask.dart';
 import '../utils/base/widgets/base_text.dart';
 import '../utils/routes.dart';
@@ -96,7 +97,9 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
           Image.asset(AppAssets.appLogo, height: spacerSize25),
           Spacer(),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              controller.exportAndDownloadImage();
+            },
             icon: Container(
               padding: EdgeInsets.symmetric(horizontal: spacerSize12, vertical: spacerSize2),
               decoration: baseBoxDecoration(
@@ -112,24 +115,33 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
                     width: spacerSize18,
                     fit: BoxFit.cover,
                   ),
-                  BaseText(text: "Export", textColor: AppColors.antiqueWhite, fontSize: fontSize14),
+                  BaseText(
+                    text: AppStrings.export,
+                    textColor: AppColors.antiqueWhite,
+                    fontSize: fontSize14,
+                  ),
                 ],
               ),
             ),
           ),
-          Container(
-            decoration: baseBoxDecoration(
-              color: AppColors.blackColor,
-              borderColor: Colors.transparent,
-              radius: spacerSize20,
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadiusGeometry.circular(spacerSize30),
-              child: Image.asset(
-                AppAssets.dummyProfileImage,
-                height: spacerSize40,
-                width: spacerSize40,
-                fit: BoxFit.cover,
+          InkWell(
+            onTap: () {
+              showProfilePopup(Get.context!);
+            },
+            child: Container(
+              decoration: baseBoxDecoration(
+                color: AppColors.blackColor,
+                borderColor: Colors.transparent,
+                radius: spacerSize20,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadiusGeometry.circular(spacerSize30),
+                child: Image.asset(
+                  AppAssets.dummyProfileImage,
+                  height: spacerSize40,
+                  width: spacerSize40,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
@@ -138,7 +150,45 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
     );
   }
 
-  logoutDialog() {
+  showProfilePopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext ctx) {
+        return AlertDialog(
+          alignment: Alignment.topRight,
+          backgroundColor: AppColors.lightGrey,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(spacerSize12)),
+          title: BaseText(
+            text: controller.userDisplayName,
+            textColor: Colors.white,
+            fontSize: fontSize16,
+            fontWeight: FontWeight.bold,
+          ),
+          content: SizedBox(
+            width: spacerSize5,
+            child: BaseButton(
+              onPressed: () {
+                if (controller.userDisplayName.isNotEmpty) {
+                  Get.back();
+                  showLogoutDialog();
+                } else {
+                  Get.toNamed(Routes.logIn);
+                }
+              },
+              backgroundColor: AppColors.darkBlue,
+              buttonLabel: controller.userDisplayName.isNotEmpty
+                  ? AppStrings.logout
+                  : AppStrings.login,
+              fontSize: fontSize16,
+              textColor: Colors.white,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  showLogoutDialog() {
     return showBaseDialog(
       context: Get.context!,
       title: AppStrings.logout,

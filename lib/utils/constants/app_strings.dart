@@ -17,6 +17,7 @@ class AppStrings {
   static const alreadyHaveAccount = 'Already have an account?\t';
   static const register = 'Register';
   static const or = 'OR';
+  static const isText = 'is';
   static const logInWithGoogle = 'Log in with Google';
   static const continueAsAGuest = 'Continue as a Guest';
   static const signInWithFacebook = 'Sign in with Facebook';
@@ -33,7 +34,7 @@ class AppStrings {
   static const passwordChanged = "Password Changed";
   static const passwordChangedSuccessfully =
       "Your password has been successfully reset.\nPlease login with new password.";
-  static const required = "Required!";
+  static const required = "required!";
   static const validate = "Validate!";
   static const error = "Error!";
   static const noUserFound = "No user found.";
@@ -117,6 +118,7 @@ class AppStrings {
   /// validation String
 
   static const passwordValidationDesc =
-      "Password must contain uppercase, lowercase, number, special char, min 8 chars";
+      "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.";
   static const enterAValidEmail = "Enter a valid email address";
+  static const passwordDoNotMatch = "Passwords do not match";
 }

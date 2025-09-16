@@ -33,13 +33,13 @@ class HomeScreen extends GetWidget<HomeController> {
                 ? Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: spacerSize15),
-                      child: CloudFiles(controller: controller),
+                      child: LocalFiles(controller: controller),
                     ),
                   )
                 : Expanded(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: spacerSize15),
-                      child: LocalFiles(controller: controller),
+                      child: CloudFiles(controller: controller),
                     ),
                   ),
           ],
@@ -80,10 +80,15 @@ class HomeScreen extends GetWidget<HomeController> {
                       borderColor: Colors.transparent,
                       radius: spacerSize20,
                     ),
-                    child: Icon(Icons.cloud, size: spacerSize18, color: AppColors.lightWhite),
+                    child: Image.asset(
+                      AppAssets.fileIcon,
+                      height: spacerSize18,
+                      width: spacerSize18,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   BaseText(
-                    text: AppStrings.cloud,
+                    text: AppStrings.local,
                     textColor: AppColors.antiqueWhite,
                     fontSize: fontSize13,
                   ),
@@ -109,15 +114,10 @@ class HomeScreen extends GetWidget<HomeController> {
                       borderColor: Colors.transparent,
                       radius: spacerSize20,
                     ),
-                    child: Image.asset(
-                      AppAssets.fileIcon,
-                      height: spacerSize18,
-                      width: spacerSize18,
-                      fit: BoxFit.cover,
-                    ),
+                    child: Icon(Icons.cloud, size: spacerSize18, color: AppColors.lightWhite),
                   ),
                   BaseText(
-                    text: AppStrings.local,
+                    text: AppStrings.cloud,
                     textColor: AppColors.antiqueWhite,
                     fontSize: fontSize13,
                   ),
@@ -125,6 +125,7 @@ class HomeScreen extends GetWidget<HomeController> {
               ),
             ),
           ),
+
           Spacer(),
           InkWell(
             onTap: () {
@@ -222,7 +223,7 @@ class HomeScreen extends GetWidget<HomeController> {
           backgroundColor: AppColors.lightGrey,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(spacerSize12)),
           title: BaseText(
-            text: "Aditya Raj",
+            text: controller.userDisplayName.value,
             textColor: Colors.white,
             fontSize: fontSize16,
             fontWeight: FontWeight.bold,
@@ -231,11 +232,17 @@ class HomeScreen extends GetWidget<HomeController> {
             width: spacerSize5,
             child: BaseButton(
               onPressed: () {
-                Get.back();
-                showLogoutDialog();
+                if (controller.userDisplayName.value.isNotEmpty) {
+                  Get.back();
+                  showLogoutDialog();
+                } else {
+                  Get.toNamed(Routes.logIn);
+                }
               },
               backgroundColor: AppColors.darkBlue,
-              buttonLabel: AppStrings.logout,
+              buttonLabel: controller.userDisplayName.isNotEmpty
+                  ? AppStrings.logout
+                  : AppStrings.login,
               fontSize: fontSize16,
               textColor: Colors.white,
             ),

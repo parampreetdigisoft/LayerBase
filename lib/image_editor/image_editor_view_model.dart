@@ -30,6 +30,8 @@ class ImageEditorViewModel extends GetxController {
       selectedItems = <bool>[].obs,
       isLoading = true.obs;
   Map<String, dynamic>? exportJsonMap = {};
+  var exportLayerJson = "".obs;
+  var exportImage = Rx<Uint8List?>(null);
 
   @override
   void onInit() {
@@ -67,7 +69,6 @@ class ImageEditorViewModel extends GetxController {
       } else {
         activeLayersList!.value = [];
       }
-
       activeLayersList!.refresh();
 
       initSelection();
@@ -120,28 +121,34 @@ class ImageEditorViewModel extends GetxController {
     }
   }
 
-  Future<void> saveImageToHive(Uint8List thumbNailBytes,
-      Uint8List imageBytes,
-      int? imageIndex,
-      dynamic layerJson,) async {
+  Future<void> saveImageToHive(
+    Uint8List thumbNailBytes,
+    Uint8List imageBytes,
+    int? imageIndex,
+    dynamic layerJson,
+    String type,
+  ) async {
     try {
       await exportImageAndSaveInHive(thumbNailBytes, imageBytes, imageIndex, layerJson);
     } catch (e) {
       await saveImageCatchError(e.toString(), thumbNailBytes, imageBytes, layerJson);
     } finally {
-      // downloadImage(imageBytes);
-      AppToast.show(
-        title: AppStrings.savedSuccessfully,
-        "${AppStrings.image}\t${AppStrings.savedSuccessfully}",
-        backgroundColor: Colors.green,
-      );
+      if (type != AppStrings.export) {
+        AppToast.show(
+          title: AppStrings.savedSuccessfully,
+          "${AppStrings.image}\t${AppStrings.savedSuccessfully}",
+          backgroundColor: Colors.green,
+        );
+      }
     }
   }
 
-  exportImageAndSaveInHive(Uint8List thumbNailBytes,
-      Uint8List imageBytes,
-      int? imageIndex,
-      dynamic layerJson,) async {
+  exportImageAndSaveInHive(
+    Uint8List thumbNailBytes,
+    Uint8List imageBytes,
+    int? imageIndex,
+    dynamic layerJson,
+  ) async {
     final box = Hive.box<dynamic>(AppKeys.imageLayerBox);
     if (imageIndex != null && imageIndex >= 0 && imageIndex < box.length) {
       if (removedLayers.isNotEmpty) {
@@ -181,10 +188,12 @@ class ImageEditorViewModel extends GetxController {
     }
   }
 
-  saveImageCatchError(String errorMsg,
-      Uint8List thumbNailBytes,
-      Uint8List imageBytes,
-      dynamic layerJson,) async {
+  saveImageCatchError(
+    String errorMsg,
+    Uint8List thumbNailBytes,
+    Uint8List imageBytes,
+    dynamic layerJson,
+  ) async {
     if (errorMsg.toString().contains("Unexpected error")) {
       await Hive.deleteBoxFromDisk(AppKeys.imageLayerBox);
       final box = await Hive.openBox<dynamic>(
@@ -220,9 +229,7 @@ class ImageEditorViewModel extends GetxController {
     var layers = editorState.stateHistory.last.layers;
 
     if (!newValue) {
-      final layerToRemove = layers
-          .where((l) => l.id == layerId)
-          .isNotEmpty
+      final layerToRemove = layers.where((l) => l.id == layerId).isNotEmpty
           ? layers.firstWhere((l) => l.id == layerId)
           : null;
 
@@ -248,7 +255,6 @@ class ImageEditorViewModel extends GetxController {
 
   void updateDragLayerAndShuffle(int newIndex, int oldIndex) {
     if (newIndex > oldIndex) newIndex -= 1;
-
     final len = activeLayersList!.length;
     if (oldIndex < 0 || oldIndex >= len || newIndex < 0 || newIndex >= len) return;
     final movedLayer = activeLayersList!.removeAt(oldIndex);
@@ -294,7 +300,7 @@ class ImageEditorViewModel extends GetxController {
     }
   }
 
-  Future<void> downloadImage(bytes) async {
+  Future<void> exportAndDownloadImage() async {
     bool isSuccess = false;
     try {
       String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
@@ -302,26 +308,13 @@ class ImageEditorViewModel extends GetxController {
         return;
       }
       final timestamp =
-          "${DateTime
-          .now()
-          .year}${DateTime
-          .now()
-          .month
-          .toString()
-          .padLeft(2, '0')}${DateTime
-          .now()
-          .day
-          .toString()
-          .padLeft(2, '0')}_${DateTime
-          .now()
-          .hour}${DateTime
-          .now()
-          .minute}${DateTime
-          .now()
-          .second}";
+          "${DateTime.now().year}${DateTime.now().month.toString().padLeft(2, '0')}${DateTime.now().day.toString().padLeft(2, '0')}_${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}";
       final filePath = "$selectedDirectory/layer_base_img_$timestamp.png";
       final file = File(filePath);
-      await file.writeAsBytes(bytes);
+      final Uint8List imageBytes = await editorKey.currentState!.captureEditorImage();
+      await file.writeAsBytes(imageBytes);
+
+      saveImageToHive(imageBytes, imageBytes, imageIndex.value, layerData.value, AppStrings.export);
       isSuccess = true;
     } catch (e) {
       debugPrint(e.toString());
