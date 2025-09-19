@@ -1,10 +1,10 @@
 [Desktop Entry]
-Version=1.0
+Version=1.0.0
 Name=Layerbase
 Comment=A powerful Flutter image editor
 Exec=/opt/layerbase/layerbase
 Icon=layerbase
 Terminal=false
 Type=Application
-Categories=Graphics;Utility;
+Categories=Utility;
 StartupNotify=true
