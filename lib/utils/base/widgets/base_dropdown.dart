@@ -25,7 +25,7 @@ class BaseDropdown extends StatelessWidget {
       ),
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(horizontal: spacerSize8),
-        hintText: "Choose My Security Question",
+        hintText: "",
         hintStyle: TextStyle(color: AppColors.greyColor, fontSize: fontSize16),
         suffixIcon: IconButton(
           style: IconButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size(0, 0)),

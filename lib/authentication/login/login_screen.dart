@@ -64,7 +64,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
                           child: TextButton(
                             style: TextButton.styleFrom(padding: EdgeInsets.all(0)),
                             onPressed: () {
-                              controller.forgotPassword(context);
+                              Navigator.pushNamed(context, Routes.forgotPassword);
                             },
                             child: BaseText(
                               text: AppStrings.forgotPassword,
@@ -99,7 +99,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
   emailField() {
     return BaseTextField(
       controller: controller.emailController,
-      hintText: AppKeys.email,
+      hintText: AppStrings.email,
       prefixIcon: Icon(Icons.email_outlined, color: AppColors.lightPink, size: spacerSize20),
       validator: controller.emailValidator,
     );

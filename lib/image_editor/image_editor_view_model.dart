@@ -220,14 +220,11 @@ class ImageEditorViewModel extends GetxController {
     final editorState = editorKey.currentState;
     if (editorState == null) return;
     if (index < 0 || index >= selectedItems.length) return;
-
     final layer = activeLayersList![index];
     final layerId = layer.id;
     final newValue = !selectedItems[index];
     selectedItems[index] = newValue;
-
     var layers = editorState.stateHistory.last.layers;
-
     if (!newValue) {
       final layerToRemove = layers.where((l) => l.id == layerId).isNotEmpty
           ? layers.firstWhere((l) => l.id == layerId)

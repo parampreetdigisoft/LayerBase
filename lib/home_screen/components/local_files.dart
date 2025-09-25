@@ -81,7 +81,7 @@ class LocalFiles extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(spacerSize12),
                     child: FutureBuilder(
-                      future: Future.delayed(const Duration(milliseconds: 300), () {
+                      future: Future.delayed(const Duration(milliseconds: 0), () {
                         return controller.imageList[index];
                       }),
                       builder: (context, snapshot) {
@@ -130,9 +130,8 @@ class LocalFiles extends StatelessWidget {
                           context: context,
                           onNo: () => Get.back(),
                           onYes: () {
-                            controller.imageList.removeAt(index);
                             controller.hiveBox!.deleteAt(index);
-                            controller.imageList.refresh();
+                            controller.imageList.removeAt(index);
                             Get.back();
                           },
                           title: AppStrings.deleteImage,
@@ -158,13 +157,13 @@ class LocalFiles extends StatelessWidget {
   Widget shimmerPlaceHolder() {
     return Shimmer(
       color: AppColors.lightWhite,
-      colorOpacity: 0.16,
+      colorOpacity: 0.25,
       interval: Duration(milliseconds: 20),
       duration: Duration(milliseconds: 2700),
       child: Container(
         height: double.infinity,
         width: double.infinity,
-        color: AppColors.darkJungleGreen,
+        color: AppColors.lightBlack,
       ),
     );
   }

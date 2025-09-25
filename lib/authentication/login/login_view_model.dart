@@ -130,10 +130,6 @@ class LoginViewModel extends GetxController {
     }
   }
 
-  forgotPassword(BuildContext context) {
-    Navigator.pushNamed(context, Routes.forgotPassword);
-  }
-
   Future<UserCredential> signInWithGoogleWindow() async {
     final clientId = dotenv.env['windows_clientId'];
     final clientSecret = dotenv.env['windows_secretId'];

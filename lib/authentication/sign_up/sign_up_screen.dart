@@ -36,10 +36,7 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
               ),
               Expanded(
                 child: Container(
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height,
+                  height: MediaQuery.of(context).size.height,
                   decoration: BoxDecoration(
                     color: AppColors.lightGrey,
                     borderRadius: BorderRadius.only(
@@ -134,17 +131,16 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
       obscureText: controller.showConfirmPassword.value,
       validator: controller.confirmPasswordValidator,
       suffixIcon: Obx(
-            () =>
-            IconButton(
-              onPressed: () {
-                controller.showConfirmPassword.value = !controller.showConfirmPassword.value;
-              },
-              icon: Icon(
-                controller.showConfirmPassword.value ? Icons.visibility : Icons.visibility_off,
-                color: AppColors.lightPink,
-                size: spacerSize20,
-              ),
-            ),
+        () => IconButton(
+          onPressed: () {
+            controller.showConfirmPassword.value = !controller.showConfirmPassword.value;
+          },
+          icon: Icon(
+            controller.showConfirmPassword.value ? Icons.visibility : Icons.visibility_off,
+            color: AppColors.lightPink,
+            size: spacerSize20,
+          ),
+        ),
       ),
     );
   }
@@ -159,24 +155,23 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
 
   signUpBtn(BuildContext context) {
     return Obx(
-          () =>
-          BaseButton(
-            onPressed: () {
-              if (controller.formKey.currentState!.validate()) {
-                if (defaultTargetPlatform == TargetPlatform.linux ||
-                    defaultTargetPlatform == TargetPlatform.windows) {
-                  controller.registerUserUsingRestApi();
-                } else {
-                  controller.registerUser(context);
-                }
-              }
-            },
-            backgroundColor: AppColors.darkBlue,
-            buttonLabel: AppStrings.signUp,
-            fontSize: fontSize16,
-            textColor: Colors.white,
-            showLoader: controller.isLoading.value,
-          ),
+      () => BaseButton(
+        onPressed: () {
+          if (controller.formKey.currentState!.validate()) {
+            if (defaultTargetPlatform == TargetPlatform.linux ||
+                defaultTargetPlatform == TargetPlatform.windows) {
+              controller.registerUserUsingRestApi();
+            } else {
+              controller.registerUser(context);
+            }
+          }
+        },
+        backgroundColor: AppColors.darkBlue,
+        buttonLabel: AppStrings.signUp,
+        fontSize: fontSize16,
+        textColor: Colors.white,
+        showLoader: controller.isLoading.value,
+      ),
     );
   }
 
@@ -224,9 +219,6 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
   }
 
   isMobile(BuildContext context) {
-    return MediaQuery
-        .of(context)
-        .size
-        .width < 600;
+    return MediaQuery.of(context).size.width < 600;
   }
 }
