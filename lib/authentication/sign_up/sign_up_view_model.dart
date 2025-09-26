@@ -133,7 +133,7 @@ class SignUpViewModel extends GetxController {
     isLoading.value = true;
     isLoading.refresh();
     final url = Uri.parse(
-      'https://identitytoolkit.googleapis.com/v1/accounts:sign_up?key=${dotenv.env['web_apiKey'] ?? ""}',
+      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${dotenv.env['web_apiKey'] ?? ""}',
     );
 
     final Map<String, dynamic> map = {
@@ -151,10 +151,22 @@ class SignUpViewModel extends GetxController {
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(map),
     );
+    debugPrint("statusCode::::${response.body}");
 
     if (response.statusCode == 200) {
       isLoading.value = false;
-      registerSuccessDialog();
+      await FirebaseFirestore.instance
+          .collection(AppKeys.users)
+          .add({
+            AppKeys.email: emailController.text,
+            AppKeys.name: fullNameController.text,
+            AppKeys.createdAt: FieldValue.serverTimestamp(),
+            AppKeys.securityQuestion: selectedQuestion.value,
+            AppKeys.securityAnswer: answerController.text,
+          })
+          .then((v) {
+            registerSuccessDialog();
+          });
     } else {
       isLoading.value = false;
       AppToast.show(

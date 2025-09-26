@@ -158,8 +158,7 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
       () => BaseButton(
         onPressed: () {
           if (controller.formKey.currentState!.validate()) {
-            if (defaultTargetPlatform == TargetPlatform.linux ||
-                defaultTargetPlatform == TargetPlatform.windows) {
+            if (defaultTargetPlatform == TargetPlatform.linux) {
               controller.registerUserUsingRestApi();
             } else {
               controller.registerUser(context);

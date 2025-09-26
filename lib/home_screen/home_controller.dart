@@ -21,6 +21,7 @@ class HomeController extends GetxController {
   Rx<Uint8List>? imageBytes;
   Box<dynamic>? hiveBox;
   RxString userDisplayName = "".obs;
+  RxString userEmail = "".obs;
   RxList<dynamic> imageList = <Uint8List>[].obs;
   late SharedPrefsService sharedPrefsService;
   var selectedIndex = 0.obs;
@@ -31,19 +32,10 @@ class HomeController extends GetxController {
     super.onInit();
     sharedPrefsService = SharedPrefsService.instance;
     userDisplayName.value = sharedPrefsService.getString(AppKeys.displayName) ?? "";
-    await fetchImagesFromDb();
-  }
+    userEmail.value = sharedPrefsService.getString(AppKeys.email) ?? "";
 
-  @override
-  void onClose() {
-    imageFile?.close();
-    imageBytes?.close();
-    imageList.close();
-    userDisplayName.close();
-    isPickImageOpen.close();
-    selectedIndex.close();
-    isLoading.close();
-    super.onClose();
+    debugPrint("email:::${userEmail.value}::::${userDisplayName.value}");
+    await fetchImagesFromDb();
   }
 
   void changeTab(int index) {

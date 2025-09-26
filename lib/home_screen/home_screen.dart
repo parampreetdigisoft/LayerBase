@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:layerbase/utils/base/widgets/base_button.dart';
 import 'package:layerbase/utils/base/widgets/base_shader_mask.dart';
 import 'package:layerbase/utils/constants/app_assets.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
@@ -222,29 +221,77 @@ class HomeScreen extends GetWidget<HomeController> {
           alignment: Alignment.topRight,
           backgroundColor: AppColors.lightGrey,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(spacerSize12)),
-          title: BaseText(
-            text: controller.userDisplayName.value,
-            textColor: Colors.white,
-            fontSize: fontSize16,
-            fontWeight: FontWeight.bold,
-          ),
-          content: SizedBox(
-            width: spacerSize5,
-            child: BaseButton(
-              onPressed: () {
-                if (controller.userDisplayName.value.isNotEmpty) {
-                  Get.back();
-                  showLogoutDialog();
-                } else {
-                  Get.toNamed(Routes.logIn);
-                }
-              },
-              backgroundColor: AppColors.darkBlue,
-              buttonLabel: controller.userDisplayName.isNotEmpty
-                  ? AppStrings.logout
-                  : AppStrings.login,
-              fontSize: fontSize16,
+          title: Visibility(
+            visible: controller.userEmail.isNotEmpty,
+            replacement: BaseText(
+              text: "You’re currently using the app as a guest.\nPlease log in to continue.",
+              textAlign: TextAlign.center,
               textColor: Colors.white,
+              fontSize: fontSize13,
+              fontWeight: FontWeight.w500,
+            ),
+            child: Row(
+              spacing: spacerSize5,
+              children: [
+                Container(
+                  decoration: baseBoxDecoration(
+                    color: AppColors.blackColor,
+                    borderColor: Colors.transparent,
+                    radius: spacerSize30,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadiusGeometry.circular(spacerSize30),
+                    child: Image.asset(
+                      AppAssets.dummyProfileImage,
+                      height: spacerSize45,
+                      width: spacerSize45,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    BaseText(
+                      text: controller.userDisplayName.value.toCapitalized(),
+                      textColor: Colors.white,
+                      fontSize: fontSize14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    BaseText(
+                      text: controller.userEmail.value,
+                      textColor: AppColors.antiqueWhite,
+                      fontSize: fontSize13,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          content: InkWell(
+            onTap: () {
+              if (controller.userEmail.value.isNotEmpty) {
+                Get.back();
+                showLogoutDialog();
+              } else {
+                Get.toNamed(Routes.logIn);
+              }
+            },
+            child: Container(
+              decoration: baseBoxDecoration(
+                color: AppColors.darkBlue,
+                radius: spacerSize10,
+                borderColor: Colors.transparent,
+              ),
+              child: BaseText(
+                text: controller.userEmail.isNotEmpty ? AppStrings.logout : AppStrings.login,
+                textColor: AppColors.antiqueWhite,
+                fontSize: fontSize13,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
         );

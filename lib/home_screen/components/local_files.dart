@@ -72,7 +72,7 @@ class LocalFiles extends StatelessWidget {
                   controller.goToEditor(index);
                 },
                 child: Container(
-                  height: (170 + (index % 3) * 50).toDouble(),
+                  height: (170 + (index % 3) * 70).toDouble(),
                   decoration: BoxDecoration(
                     color: AppColors.chineseBlack,
                     border: Border.all(color: AppColors.darkSlatePurple, width: 1),
@@ -96,7 +96,7 @@ class LocalFiles extends StatelessWidget {
                             width: double.infinity,
                           );
                         } else {
-                          return const Center(child: Icon(Icons.broken_image, color: Colors.white));
+                          return const Center(child: Icon(Icons.broken_image));
                         }
                       },
                     ),

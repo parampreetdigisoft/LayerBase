@@ -21,7 +21,8 @@ class ImageEditorViewModel extends GetxController {
   final editorKey = GlobalKey<ProImageEditorState>();
   final Map<int, Layer> removedLayers = {};
   final Map<String, Layer> removedLayersNew = {};
-  String userDisplayName = "";
+  RxString userDisplayName = "".obs;
+  RxString userEmail = "".obs;
   var layerData = "".obs,
       stickersList = <String>[].obs,
       imageData = Rx<dynamic>(null),
@@ -29,31 +30,18 @@ class ImageEditorViewModel extends GetxController {
       imageFile = Rx<Uint8List?>(null),
       selectedItems = <bool>[].obs,
       isLoading = true.obs;
-  Map<String, dynamic>? exportJsonMap = {};
-  var exportLayerJson = "".obs;
-  var exportImage = Rx<Uint8List?>(null);
 
   @override
   void onInit() {
     super.onInit();
     sharedPrefsService = SharedPrefsService.instance;
-    userDisplayName = sharedPrefsService.getString(AppKeys.displayName) ?? "";
+    userDisplayName.value = sharedPrefsService.getString(AppKeys.displayName) ?? "";
+    userEmail.value = sharedPrefsService.getString(AppKeys.email) ?? "";
     loadStickers();
     initHiveData();
     Future.delayed(Duration(seconds: 2), () {
       initializeLayer();
     });
-  }
-
-  @override
-  void onClose() {
-    layerData.close();
-    stickersList.close();
-    activeLayersList?.close();
-    imageData.close();
-    imageIndex.close();
-    imageFile.close();
-    super.onClose();
   }
 
   @override
@@ -98,16 +86,25 @@ class ImageEditorViewModel extends GetxController {
     isLoading.value = false;
   }
 
-  void deleteLayer(int index) {
-    if (index >= 0 && index < activeLayersList!.length) {
+  void deleteSideLayer(int index) {
+    if (index >= 0 &&
+        index < activeLayersList!.length &&
+        index < editorKey.currentState!.activeLayers.length) {
       activeLayersList!.removeAt(index);
-    }
-    if (index >= 0 && index < editorKey.currentState!.activeLayers.length) {
       editorKey.currentState!.activeLayers.removeAt(index);
     }
     activeLayersList!.refresh();
     editorKey.currentState!.setState(() {});
     Get.back();
+  }
+
+  void onRemoveLayer(Layer layer) {
+    int index = activeLayersList!.indexWhere((activeLayer) => activeLayer.id == layer.id);
+    if (index != -1) {
+      activeLayersList!.removeAt(index);
+      selectedItems.removeAt(index);
+      activeLayersList!.refresh();
+    }
   }
 
   void applyFiltersToReferences(Map<String, dynamic> data, List<List<double>> filters) {
@@ -158,22 +155,9 @@ class ImageEditorViewModel extends GetxController {
           }
         });
       }
-      final export = await editorKey.currentState?.exportStateHistory(
-        configs: ExportEditorConfigs(
-          exportBlur: true,
-          enableMinify: false,
-          exportCropRotate: true,
-          exportEmoji: true,
-          exportFilter: true,
-          exportPaint: true,
-          exportText: true,
-          exportTuneAdjustments: true,
-          exportWidgets: true,
-          historySpan: ExportHistorySpan.all,
-        ),
-      );
-      Map<String, dynamic>? jsonMap = await export?.toMap();
-      final layerJson = jsonEncode(jsonMap);
+      //  var data = await box.getAt(imageIndex);
+      // data[AppKeys.imageThumbnail] = thumbNailBytes;
+      //  data[AppKeys.layerJson] = editorKey.currentState!.stateHistory.last;
       await box.putAt(imageIndex, {
         AppKeys.imageThumbnail: thumbNailBytes,
         AppKeys.image: imageBytes,
@@ -304,13 +288,16 @@ class ImageEditorViewModel extends GetxController {
       if (selectedDirectory == null) {
         return;
       }
-      final timestamp =
-          "${DateTime.now().year}${DateTime.now().month.toString().padLeft(2, '0')}${DateTime.now().day.toString().padLeft(2, '0')}_${DateTime.now().hour}${DateTime.now().minute}${DateTime.now().second}";
-      final filePath = "$selectedDirectory/layer_base_img_$timestamp.png";
+      final currentDate = DateTime.now();
+      final year = currentDate.year;
+      final month = currentDate.month.toString().padLeft(2, '0');
+      final day = currentDate.day.toString().padLeft(2, '0');
+      final time = "${currentDate.hour}${currentDate.minute}${currentDate.second}";
+      final timestamp = "$year$month${day}_$time";
+      final filePath = "$selectedDirectory/layer_base_$timestamp.png";
       final file = File(filePath);
       final Uint8List imageBytes = await editorKey.currentState!.captureEditorImage();
       await file.writeAsBytes(imageBytes);
-
       saveImageToHive(imageBytes, imageBytes, imageIndex.value, layerData.value, AppStrings.export);
       isSuccess = true;
     } catch (e) {

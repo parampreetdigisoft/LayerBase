@@ -14,7 +14,8 @@ import 'package:path_provider/path_provider.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: "secret.env");
-  if (defaultTargetPlatform == TargetPlatform.macOS) {
+  if (defaultTargetPlatform == TargetPlatform.macOS ||
+      defaultTargetPlatform == TargetPlatform.windows) {
     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   }
   await SharedPrefsService().init();

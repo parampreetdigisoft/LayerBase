@@ -218,6 +218,7 @@ class LoginViewModel extends GetxController {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
+      debugPrint("data::::::$data");
       sharedPreferences!.setString(AppKeys.idToken, data['refreshToken'].toString());
       sharedPreferences!.setString(AppKeys.email, data[AppKeys.email] ?? "");
       sharedPreferences!.setString(AppKeys.displayName, data[AppKeys.displayName] ?? "");

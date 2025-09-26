@@ -127,6 +127,7 @@ class ImageEditor extends StatelessWidget {
                 );
                 Map<String, dynamic>? exportJsonMap = await export?.toMap();
                 final layerJson = jsonEncode(exportJsonMap);
+
                 controller.saveImageToHive(
                   parameters.image,
                   controller.imageFile.value!,
@@ -144,10 +145,7 @@ class ImageEditor extends StatelessWidget {
                   controller.activeLayersList!.refresh();
                 },
                 onRemoveLayer: (layer) {
-                  controller.activeLayersList!.remove(layer);
-                  controller.editorKey.currentState!.activeLayers.remove(layer);
-                  controller.activeLayersList!.refresh();
-                  controller.editorKey.currentState!.setState(() {});
+                  controller.onRemoveLayer(layer);
                 },
               ),
             ),
@@ -216,7 +214,7 @@ class ImageEditor extends StatelessWidget {
       cropToImageBounds: true,
       enableIsolateGeneration: false,
       singleFrame: false,
-      outputFormat: OutputFormat.tiff,
+      outputFormat: OutputFormat.png,
     );
   }
 

@@ -95,3 +95,10 @@ var extensions = [
   'k25',
   'kdc',
 ];
+
+extension ToCapitalized on String {
+  String toCapitalized() {
+    if (isEmpty) return this;
+    return this[0].toUpperCase() + substring(1);
+  }
+}

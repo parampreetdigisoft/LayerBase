@@ -25,6 +25,7 @@ class BaseTextField extends StatelessWidget {
   final Color? fillColor;
   final Color? hintTextColor;
   final bool filled;
+  final FocusNode? focusNode;
 
   const BaseTextField({
     super.key,
@@ -46,6 +47,7 @@ class BaseTextField extends StatelessWidget {
     this.onFieldSubmitted,
     this.onTap,
     this.border,
+    this.focusNode,
     this.fillColor = AppColors.lightGrey,
     this.hintTextColor = AppColors.greyColor,
     this.filled = true,
@@ -59,6 +61,7 @@ class BaseTextField extends StatelessWidget {
       obscureText: obscureText,
       readOnly: readOnly,
       keyboardType: keyboardType,
+      focusNode: focusNode,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       textInputAction: textInputAction,
       maxLength: maxLength,
@@ -81,19 +84,19 @@ class BaseTextField extends StatelessWidget {
         fillColor: fillColor ?? Colors.grey.shade100,
         contentPadding: EdgeInsets.symmetric(horizontal: spacerSize8, vertical: 0),
         border:
-        border ??
+            border ??
             OutlineInputBorder(
               borderRadius: BorderRadius.circular(spacerSize16),
               borderSide: BorderSide(color: AppColors.greyColor),
             ),
         enabledBorder:
-        border ??
+            border ??
             OutlineInputBorder(
               borderRadius: BorderRadius.circular(spacerSize16),
               borderSide: BorderSide(color: AppColors.greyColor),
             ),
         focusedBorder:
-        border ??
+            border ??
             OutlineInputBorder(
               borderRadius: BorderRadius.circular(spacerSize16),
               borderSide: const BorderSide(color: AppColors.greyColor, width: 1.5),

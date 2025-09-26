@@ -141,7 +141,7 @@ class SidLayerList extends StatelessWidget {
           context: context,
           onNo: () => Get.back(),
           onYes: () {
-            controller.deleteLayer(index);
+            controller.deleteSideLayer(index);
           },
           title: AppStrings.deleteLayer,
           subtitle: AppStrings.areYouSureWantTo + AppStrings.deleteThisLayer,

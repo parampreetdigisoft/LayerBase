@@ -11,7 +11,6 @@ import 'package:layerbase/utils/constants/app_strings.dart';
 import 'package:layerbase/utils/routes.dart';
 
 import '../../utils/base/widgets/base_button.dart';
-import '../../utils/base/widgets/base_form.dart';
 import '../../utils/base/widgets/base_text.dart';
 import '../../utils/base/widgets/base_text_field.dart';
 
@@ -26,71 +25,68 @@ class LoginScreen extends GetWidget<LoginViewModel> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: BaseForm(
-          formKey: controller.formKey,
-          child: Row(
-            children: [
-              Expanded(
-                child: Image.asset(AppAssets.appLogo, height: spacerSize60, width: spacerSize300),
-              ),
-              Expanded(
-                child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  decoration: BoxDecoration(
-                    color: AppColors.lightGrey,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(isMobile(context) ? spacerSize0 : spacerSize30),
-                      bottomLeft: Radius.circular(isMobile(context) ? spacerSize0 : spacerSize30),
-                    ),
+        body: Row(
+          children: [
+            Expanded(
+              child: Image.asset(AppAssets.appLogo, height: spacerSize60, width: spacerSize300),
+            ),
+            Expanded(
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(
+                  color: AppColors.lightGrey,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(isMobile(context) ? spacerSize0 : spacerSize30),
+                    bottomLeft: Radius.circular(isMobile(context) ? spacerSize0 : spacerSize30),
                   ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: spacerSize135),
-                    child: Column(
-                      children: [
-                        Expanded(flex: 3, child: SizedBox.shrink()),
-                        BaseText(
-                          text: AppStrings.signInToYourAccount,
-                          textColor: AppColors.lightPurple,
-                          fontSize: spacerSize40,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        SizedBox(height: spacerSize35),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: spacerSize135),
+                  child: Column(
+                    children: [
+                      Expanded(flex: 3, child: SizedBox.shrink()),
+                      BaseText(
+                        text: AppStrings.signInToYourAccount,
+                        textColor: AppColors.lightPurple,
+                        fontSize: spacerSize40,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      SizedBox(height: spacerSize35),
 
-                        emailField(),
-                        SizedBox(height: spacerSize35),
-                        Obx(() => passwordField()),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: TextButton(
-                            style: TextButton.styleFrom(padding: EdgeInsets.all(0)),
-                            onPressed: () {
-                              Navigator.pushNamed(context, Routes.forgotPassword);
-                            },
-                            child: BaseText(
-                              text: AppStrings.forgotPassword,
-                              textColor: AppColors.greyColor,
-                              fontSize: fontSize16,
-                            ),
+                      emailField(),
+                      SizedBox(height: spacerSize35),
+                      Obx(() => passwordField()),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: TextButton(
+                          style: TextButton.styleFrom(padding: EdgeInsets.all(0)),
+                          onPressed: () {
+                            Navigator.pushNamed(context, Routes.forgotPassword);
+                          },
+                          child: BaseText(
+                            text: AppStrings.forgotPassword,
+                            textColor: AppColors.greyColor,
+                            fontSize: fontSize16,
                           ),
                         ),
-                        SizedBox(height: spacerSize20),
+                      ),
+                      SizedBox(height: spacerSize20),
 
-                        loginBtn(context),
-                        SizedBox(height: spacerSize20),
-                        doNotHaveAccount(context),
-                        SizedBox(height: spacerSize20),
-                        orText(),
-                        SizedBox(height: spacerSize20),
-                        googleAndGuestBtn(context),
+                      loginBtn(context),
+                      SizedBox(height: spacerSize20),
+                      doNotHaveAccount(context),
+                      SizedBox(height: spacerSize20),
+                      orText(),
+                      SizedBox(height: spacerSize20),
+                      googleAndGuestBtn(context),
 
-                        Expanded(flex: 2, child: SizedBox.shrink()),
-                      ],
-                    ),
+                      Expanded(flex: 2, child: SizedBox.shrink()),
+                    ],
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -112,7 +108,6 @@ class LoginScreen extends GetWidget<LoginViewModel> {
       prefixIcon: Icon(Icons.lock_outline_rounded, color: AppColors.lightPink, size: spacerSize20),
       obscureText: controller.isPasswordObscure.value,
       validator: controller.passwordValidator,
-
       suffixIcon: Obx(
         () => IconButton(
           onPressed: () {
@@ -262,10 +257,6 @@ class LoginScreen extends GetWidget<LoginViewModel> {
     );
   }
 
-  isMobile(BuildContext context) {
-    return MediaQuery.of(context).size.width < 600;
-  }
-
   navigateToHome(var value) {
     if (value != null) {
       Navigator.pushNamedAndRemoveUntil(
@@ -274,7 +265,15 @@ class LoginScreen extends GetWidget<LoginViewModel> {
         (Route<dynamic> route) => false,
       );
     } else {
-      Navigator.pushReplacementNamed(Get.context!, Routes.logIn);
+      Navigator.pushNamedAndRemoveUntil(
+        Get.context!,
+        Routes.logIn,
+        (Route<dynamic> route) => false,
+      );
     }
+  }
+
+  isMobile(BuildContext context) {
+    return MediaQuery.of(context).size.width < 600;
   }
 }
