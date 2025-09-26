@@ -96,6 +96,8 @@ var extensions = [
   'kdc',
 ];
 
+const String appFontFamily = "Outfit";
+
 extension ToCapitalized on String {
   String toCapitalized() {
     if (isEmpty) return this;

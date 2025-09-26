@@ -21,8 +21,7 @@ class ImageEditorViewModel extends GetxController {
   final editorKey = GlobalKey<ProImageEditorState>();
   final Map<int, Layer> removedLayers = {};
   final Map<String, Layer> removedLayersNew = {};
-  RxString userDisplayName = "".obs;
-  RxString userEmail = "".obs;
+  RxString userDisplayName = "".obs, userEmail = "".obs;
   var layerData = "".obs,
       stickersList = <String>[].obs,
       imageData = Rx<dynamic>(null),

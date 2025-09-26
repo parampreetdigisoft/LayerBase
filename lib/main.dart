@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
+import 'package:layerbase/utils/constants/app_constants.dart';
 import 'package:layerbase/utils/constants/app_keys.dart';
 import 'package:layerbase/utils/firebase_options.dart';
 import 'package:layerbase/utils/routes.dart';
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
-        fontFamily: "Outfit",
+        fontFamily: appFontFamily,
         scaffoldBackgroundColor: AppColors.blackColor,
       ),
       color: Colors.white,

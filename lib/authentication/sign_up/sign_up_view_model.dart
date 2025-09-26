@@ -38,6 +38,16 @@ class SignUpViewModel extends GetxController {
     getSecurityQuestions();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    emailController.dispose();
+    fullNameController.dispose();
+    passwordController.dispose();
+    answerController.dispose();
+    scrollController.dispose();
+  }
+
   String? fullNameValidator(String? value) {
     if (value == null || value.trim().isEmpty) {
       return "${AppStrings.fullName}\t${AppStrings.isText}\t${AppStrings.required}";
@@ -52,7 +62,6 @@ class SignUpViewModel extends GetxController {
     if (!emailRegExp.hasMatch(value)) {
       return AppStrings.enterAValidEmail;
     }
-
     return null;
   }
 
@@ -78,7 +87,7 @@ class SignUpViewModel extends GetxController {
     return null;
   }
 
-  getSecurityQuestions() {
+  void getSecurityQuestions() {
     securityQuestionList.value = signUpRepository.fetchSecurityQuestion();
   }
 
@@ -95,7 +104,7 @@ class SignUpViewModel extends GetxController {
         await FirebaseFirestore.instance.collection(AppKeys.users).add({
           AppKeys.uid: user.uid,
           AppKeys.email: emailController.text,
-          AppKeys.name: fullNameController.text,
+          AppKeys.displayName: fullNameController.text,
           AppKeys.createdAt: FieldValue.serverTimestamp(),
           AppKeys.securityQuestion: selectedQuestion.value,
           AppKeys.securityAnswer: answerController.text,
@@ -159,7 +168,7 @@ class SignUpViewModel extends GetxController {
           .collection(AppKeys.users)
           .add({
             AppKeys.email: emailController.text,
-            AppKeys.name: fullNameController.text,
+            AppKeys.displayName: fullNameController.text,
             AppKeys.createdAt: FieldValue.serverTimestamp(),
             AppKeys.securityQuestion: selectedQuestion.value,
             AppKeys.securityAnswer: answerController.text,
@@ -175,16 +184,6 @@ class SignUpViewModel extends GetxController {
         backgroundColor: Colors.red,
       );
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    emailController.dispose();
-    fullNameController.dispose();
-    passwordController.dispose();
-    answerController.dispose();
-    scrollController.dispose();
   }
 
   registerSuccessDialog() {
