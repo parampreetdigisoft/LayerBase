@@ -26,9 +26,7 @@ class SignUpViewModel extends GetxController {
   TextEditingController answerController = TextEditingController();
   SignUpRepository signUpRepository = SignUpRepository();
   RxList<QuestionResponseModel> securityQuestionList = <QuestionResponseModel>[].obs;
-
   ScrollController scrollController = ScrollController();
-
   RxString selectedQuestion = "".obs;
   final formKey = GlobalKey<FormState>();
 

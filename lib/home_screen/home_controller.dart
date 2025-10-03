@@ -15,17 +15,17 @@ import '../utils/constants/app_constants.dart';
 import '../utils/constants/app_strings.dart';
 
 class HomeController extends GetxController {
-  final RxBool isLoading = true.obs;
-  Rx<File>? imageFile;
   final picker = ImagePicker();
-  Rx<Uint8List>? imageBytes;
+  late SharedPrefsService sharedPrefsService;
   Box<dynamic>? hiveBox;
+  Rx<File>? imageFile;
+  Rx<Uint8List>? imageBytes;
   RxString userDisplayName = "".obs;
   RxString userEmail = "".obs;
   RxList<dynamic> imageList = <Uint8List>[].obs;
-  late SharedPrefsService sharedPrefsService;
+  RxBool isPickImageOpen = false.obs;
+  RxBool isLoading = true.obs;
   var selectedIndex = 0.obs;
-  var isPickImageOpen = false.obs;
 
   @override
   Future<void> onInit() async {
@@ -33,7 +33,6 @@ class HomeController extends GetxController {
     sharedPrefsService = SharedPrefsService.instance;
     userDisplayName.value = sharedPrefsService.getString(AppKeys.displayName) ?? "";
     userEmail.value = sharedPrefsService.getString(AppKeys.email) ?? "";
-
     debugPrint("email:::${userEmail.value}::::${userDisplayName.value}");
     await fetchImagesFromDb();
   }

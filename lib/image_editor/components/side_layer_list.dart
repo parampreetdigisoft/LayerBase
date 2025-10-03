@@ -21,9 +21,12 @@ class SidLayerList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.lightBlack,
-      body: Column(
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.lightBlack,
+        borderRadius: BorderRadius.circular(spacerSize5),
+      ),
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
@@ -52,6 +55,7 @@ class SidLayerList extends StatelessWidget {
     return Obx(
       () => ReorderableListView.builder(
         itemCount: controller.activeLayersList!.length,
+        reverse: true,
         padding: EdgeInsets.symmetric(horizontal: spacerSize10, vertical: spacerSize5),
         onReorder: (oldIndex, newIndex) {
           controller.updateDragLayerAndShuffle(newIndex, oldIndex);
@@ -72,23 +76,33 @@ class SidLayerList extends StatelessWidget {
   }
 
   layerItems(int index, BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: spacerSize5),
-      padding: EdgeInsets.all(spacerSize5),
-      decoration: baseBoxDecoration(
-        color: AppColors.lightBlack1,
-        radius: spacerSize8,
-        borderColor: AppColors.lightBlack1,
-      ),
-      child: Row(
-        spacing: spacerSize10,
-        children: [
-          dragButton(index),
-          showImageWithLayer(index),
-          SizedBox(width: spacerSize15),
-          hideAndShowBtn(index),
-          deleteButton(context, index),
-        ],
+    return InkWell(
+      onTap: () {
+        controller.onSideLayerTapped(index);
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: spacerSize3),
+        padding: EdgeInsets.all(spacerSize5),
+        decoration: baseBoxDecoration(
+          color: AppColors.lightGrey1,
+          radius: spacerSize8,
+          borderColor:
+              controller.editorKey.currentState!.selectedLayers.any(
+                (element) => element.id == controller.activeLayersList![index].id,
+              )
+              ? AppColors.lightPurple
+              : AppColors.lightGrey1,
+        ),
+        child: Row(
+          spacing: spacerSize10,
+          children: [
+            dragButton(index),
+            showImageWithLayer(index),
+            SizedBox(width: spacerSize15),
+            hideAndShowBtn(index),
+            deleteButton(context, index),
+          ],
+        ),
       ),
     );
   }

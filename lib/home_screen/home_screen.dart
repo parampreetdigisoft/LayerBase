@@ -19,7 +19,6 @@ class HomeScreen extends GetWidget<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.blackColor,
       body: Obx(
         () => Column(
           children: [
@@ -41,6 +40,7 @@ class HomeScreen extends GetWidget<HomeController> {
                       child: CloudFiles(controller: controller),
                     ),
                   ),
+            SizedBox(height: spacerSize10),
           ],
         ),
       ),
@@ -282,7 +282,7 @@ class HomeScreen extends GetWidget<HomeController> {
             },
             child: Container(
               decoration: baseBoxDecoration(
-                color: AppColors.darkBlue,
+                color: AppColors.deepPurple,
                 radius: spacerSize10,
                 borderColor: Colors.transparent,
               ),
@@ -304,10 +304,12 @@ class HomeScreen extends GetWidget<HomeController> {
       context: Get.context!,
       title: AppStrings.logout,
       subtitle: "${AppStrings.areYouSureWantTo}\t${AppStrings.logout}?",
+
       onYes: () {
         controller.sharedPrefsService.clear();
         Navigator.pushNamedAndRemoveUntil(Get.context!, Routes.logIn, (route) => false);
       },
+
       onNo: () {
         Get.back();
       },

@@ -18,6 +18,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("${Get.arguments}");
     return Scaffold(
       backgroundColor: AppColors.blackColor,
       floatingActionButton: floatingBtn(),
@@ -79,7 +80,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
     );
   }
 
-  Widget buildExportAndProfileBtn() {
+  buildExportAndProfileBtn() {
     return Container(
       width: double.infinity,
       margin: EdgeInsets.symmetric(horizontal: spacerSize15),
@@ -160,7 +161,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
           title: Visibility(
             visible: controller.userEmail.isNotEmpty,
             replacement: BaseText(
-              text: "You’re currently using the app as a guest.\nPlease log in to continue.",
+              text: AppStrings.guestModeDesc,
               textAlign: TextAlign.center,
               textColor: Colors.white,
               fontSize: fontSize13,
@@ -218,7 +219,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
             },
             child: Container(
               decoration: baseBoxDecoration(
-                color: AppColors.darkBlue,
+                color: AppColors.deepPurple,
                 radius: spacerSize10,
                 borderColor: Colors.transparent,
               ),

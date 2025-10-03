@@ -17,24 +17,21 @@ class LayerHistoryLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.blackColor,
-      body: Container(
-        decoration: baseBoxDecoration(
-          color: AppColors.lightBlack1,
-          radius: spacerSize8,
-          borderColor: AppColors.lightBlack1,
-        ),
-        child: Obx(() {
-          return (controller!.isLoading.value || controller!.activeLayersList!.isEmpty)
-              ? buildShimmerEffect(context)
-              : SidLayerList(controller: controller!);
-        }),
+    return Container(
+      decoration: baseBoxDecoration(
+        color: AppColors.lightBlack,
+        radius: spacerSize8,
+        borderColor: AppColors.lightBlack,
       ),
+      child: Obx(() {
+        return (controller!.isLoading.value || controller!.activeLayersList!.isEmpty)
+            ? buildShimmerEffect(context)
+            : SidLayerList(controller: controller!);
+      }),
     );
   }
 
-  Widget buildShimmerEffect(BuildContext context) {
+  buildShimmerEffect(BuildContext context) {
     return Column(
       children: [
         Container(
@@ -74,7 +71,7 @@ class LayerHistoryLayout extends StatelessWidget {
     );
   }
 
-  Widget buildShimmerItem() {
+  buildShimmerItem() {
     return Shimmer(
       color: AppColors.lightWhite,
       interval: Duration(milliseconds: 20),
@@ -82,7 +79,6 @@ class LayerHistoryLayout extends StatelessWidget {
       colorOpacity: 0.16,
       enabled: true,
       direction: const ShimmerDirection.fromLTRB(),
-
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: spacerSize8, horizontal: spacerSize8),
         decoration: baseBoxDecoration(

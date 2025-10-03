@@ -12,13 +12,13 @@ import '../../utils/base/dialogs/base_dialog.dart';
 import '../../utils/constants/app_constants.dart';
 
 class ForgotPasswordViewModel extends GetxController {
-  RxBool isLoading = false.obs;
-  RxBool isPasswordObscure = true.obs;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-  RxBool isEmailValidated = false.obs;
   final formKey = GlobalKey<FormState>();
+  RxBool isLoading = false.obs;
+  RxBool isPasswordObscure = true.obs;
+  RxBool isEmailValidated = false.obs;
 
   String? emailValidator(String? value) {
     if (value == null || value.trim().isEmpty) {

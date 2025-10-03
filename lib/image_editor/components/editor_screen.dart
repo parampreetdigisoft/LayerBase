@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -20,134 +18,126 @@ class ImageEditor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.blackColor,
-      body: Container(
-        margin: EdgeInsets.only(right: spacerSize10),
-        padding: EdgeInsets.symmetric(horizontal: spacerSize10, vertical: spacerSize10),
-        decoration: baseBoxDecoration(
-          color: AppColors.lightGrey,
-          radius: spacerSize8,
-          borderColor: AppColors.lightGrey,
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(spacerSize8),
-          child: ProImageEditor.memory(
-            controller.imageFile.value ?? Uint8List(0),
-            key: controller.editorKey,
-            configs: ProImageEditorConfigs(
-              emojiEditor: EmojiEditorConfigs(
-                checkPlatformCompatibility: true,
-                enablePreloadWebFont: false,
+    return Container(
+      margin: EdgeInsets.only(right: spacerSize10),
+      padding: EdgeInsets.symmetric(horizontal: spacerSize10, vertical: spacerSize10),
+      decoration: baseBoxDecoration(
+        color: AppColors.lightBlack,
+        radius: spacerSize8,
+        borderColor: AppColors.lightBlack,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(spacerSize8),
+        child: ProImageEditor.memory(
+          controller.imageFile.value ?? Uint8List(0),
+          key: controller.editorKey,
+          configs: ProImageEditorConfigs(
+            emojiEditor: EmojiEditorConfigs(
+              checkPlatformCompatibility: true,
+              enablePreloadWebFont: false,
+            ),
+            textEditor: TextEditorConfigs(
+              style: TextEditorStyle(
+                background: AppColors.lightBlack,
+                appBarBackground: AppColors.lightBlack,
+                bottomBarBackground: AppColors.lightBlack,
               ),
-              textEditor: TextEditorConfigs(widgets: TextEditorWidgets()),
-              i18n: I18n(
-                done: AppStrings.save,
-                undo: AppStrings.undo,
-                redo: AppStrings.redo,
+              widgets: TextEditorWidgets(),
+            ),
+            i18n: I18n(
+              done: AppStrings.save,
+              undo: AppStrings.undo,
+              redo: AppStrings.redo,
 
-                doneLoadingMsg: AppStrings.savingPleaseWait,
-                importStateHistoryMsg: AppStrings.loadingPleaseWait,
-                various: I18nVarious(loadingDialogMsg: AppStrings.loading),
-              ),
-              heroTag: 'hero-tag',
-              theme: ThemeData(
-                cardColor: AppColors.gunMetal,
-                useMaterial3: true,
-                canvasColor: AppColors.gunMetal,
-              ),
-              helperLines: helperLineConfigs(),
-              progressIndicatorConfigs: progressIndicatorConfigs(),
-              designMode: ImageEditorDesignMode.material,
-              mainEditor: mainEditorConfigs(),
-              imageGeneration: imageGenerationConfigs(),
-              paintEditor: paintEditorConfigs(),
-              dialogConfigs: DialogConfigs(
-                style: DialogStyle(
-                  loadingDialog: LoadingDialogStyle(textColor: AppColors.chineseBlack),
-                ),
-              ),
-              tuneEditor: TuneEditorConfigs(
-                icons: TuneEditorIcons(backButton: Icons.arrow_back_outlined),
-                enabled: true,
-                showLayers: true,
-                style: TuneEditorStyle(
-                  background: AppColors.lightGrey,
-                  appBarBackground: AppColors.lightGrey,
-                  bottomBarBackground: AppColors.lightGrey,
-                ),
-              ),
-              layerInteraction: layerInteractionConfigs(),
-              stateHistory: stateHistoryConfigs(),
-              cropRotateEditor: cropRotateEditorConfigs(),
-              stickerEditor: stickerEditorConfigs(),
-              filterEditor: FilterEditorConfigs(
-                icons: FilterEditorIcons(backButton: Icons.arrow_back_outlined),
-                enabled: true,
-                showLayers: true,
-                style: FilterEditorStyle(
-                  background: AppColors.lightGrey,
-                  appBarBackground: AppColors.lightGrey,
-                ),
-              ),
-              blurEditor: BlurEditorConfigs(
-                icons: BlurEditorIcons(backButton: Icons.arrow_back_outlined),
-                enabled: true,
-                showLayers: true,
-                style: BlurEditorStyle(
-                  background: AppColors.lightGrey,
-                  appBarBackgroundColor: AppColors.lightGrey,
-                ),
+              doneLoadingMsg: AppStrings.savingPleaseWait,
+              importStateHistoryMsg: AppStrings.loadingPleaseWait,
+              various: I18nVarious(loadingDialogMsg: AppStrings.loading),
+            ),
+            heroTag: 'hero-tag',
+            theme: ThemeData(
+              cardColor: AppColors.gunMetal,
+              useMaterial3: true,
+              canvasColor: AppColors.gunMetal,
+            ),
+            helperLines: helperLineConfigs(),
+            progressIndicatorConfigs: progressIndicatorConfigs(),
+            designMode: ImageEditorDesignMode.material,
+            mainEditor: mainEditorConfigs(),
+            imageGeneration: imageGenerationConfigs(),
+            paintEditor: paintEditorConfigs(),
+            dialogConfigs: DialogConfigs(
+              style: DialogStyle(
+                loadingDialog: LoadingDialogStyle(textColor: AppColors.lightGrey1),
               ),
             ),
-            callbacks: ProImageEditorCallbacks(
-              onCloseEditor: (EditorMode mode) async {
-                Get.back();
-              },
-              filterEditorCallbacks: FilterEditorCallbacks(
-                onFilterChanged: (value) {
-                  final Map<String, dynamic> jsonData = jsonDecode(controller.layerData.value);
-                  controller.applyFiltersToReferences(jsonData, value.filters);
-                },
+            tuneEditor: TuneEditorConfigs(
+              icons: TuneEditorIcons(backButton: Icons.arrow_back_outlined),
+              enabled: true,
+              showLayers: true,
+              style: TuneEditorStyle(
+                background: AppColors.lightBlack,
+                appBarBackground: AppColors.lightBlack,
+                bottomBarBackground: AppColors.lightBlack,
               ),
-              onCompleteWithParameters: (parameters) async {
-                final export = await controller.editorKey.currentState?.exportStateHistory(
-                  configs: ExportEditorConfigs(
-                    exportBlur: true,
-                    enableMinify: false,
-                    exportCropRotate: true,
-                    exportEmoji: true,
-                    exportFilter: true,
-                    exportPaint: true,
-                    exportText: true,
-                    exportTuneAdjustments: true,
-                    exportWidgets: true,
-                    historySpan: ExportHistorySpan.all,
-                  ),
-                );
-                Map<String, dynamic>? exportJsonMap = await export?.toMap();
-                final layerJson = jsonEncode(exportJsonMap);
+            ),
+            layerInteraction: layerInteractionConfigs(),
+            stateHistory: stateHistoryConfigs(),
+            cropRotateEditor: cropRotateEditorConfigs(),
+            stickerEditor: stickerEditorConfigs(),
+            filterEditor: FilterEditorConfigs(
+              icons: FilterEditorIcons(backButton: Icons.arrow_back_outlined),
+              enabled: true,
+              showLayers: true,
+              style: FilterEditorStyle(
+                background: AppColors.lightBlack,
+                appBarBackground: AppColors.lightBlack,
+              ),
+            ),
+            blurEditor: BlurEditorConfigs(
+              icons: BlurEditorIcons(backButton: Icons.arrow_back_outlined),
+              enabled: true,
+              showLayers: true,
+              style: BlurEditorStyle(
+                background: AppColors.lightBlack,
+                appBarBackgroundColor: AppColors.lightBlack,
+              ),
+            ),
+          ),
+          callbacks: ProImageEditorCallbacks(
+            onCloseEditor: (EditorMode mode) async {
+              Get.back();
+            },
+            filterEditorCallbacks: FilterEditorCallbacks(
+              onFilterChanged: (value) {
+                controller.applyFiltersToReferences(value.filters);
+              },
+            ),
+            onCompleteWithParameters: (parameters) async {
+              controller.saveImageToHive(
+                parameters.image,
+                controller.imageFile.value!,
+                controller.imageIndex.value,
+                "",
+              );
+              return Future.value();
+            },
+            mainEditorCallbacks: MainEditorCallbacks(
+              onAddLayer: (layer) {
+                controller.onAddLayer(layer);
+              },
+              onRemoveLayer: (layer) {
+                controller.onRemoveLayer(layer);
+              },
 
-                controller.saveImageToHive(
-                  parameters.image,
-                  controller.imageFile.value!,
-                  controller.imageIndex.value,
-                  layerJson,
-                  "",
-                );
-                return Future.value();
+              onRedo: () {
+                controller.onUndoAddRedoLayer();
               },
-              mainEditorCallbacks: MainEditorCallbacks(
-                onAddLayer: (layer) {
-                  controller.activeLayersList!.add(layer);
-                  controller.selectedItems.value = List<bool>.from(controller.selectedItems)
-                    ..add(true);
-                  controller.activeLayersList!.refresh();
-                },
-                onRemoveLayer: (layer) {
-                  controller.onRemoveLayer(layer);
-                },
-              ),
+              onUndo: () {
+                controller.onUndoAddRedoLayer();
+              },
+              onSelectedLayerChanged: (selectedLayer) {
+                controller.onSelectLayerTapped(selectedLayer);
+              },
             ),
           ),
         ),
@@ -178,9 +168,9 @@ class ImageEditor extends StatelessWidget {
       enableCloseButton: false,
       enableEscapeButton: false,
       style: MainEditorStyle(
-        background: AppColors.lightGrey,
-        bottomBarBackground: AppColors.lightGrey,
-        appBarBackground: AppColors.lightGrey,
+        background: AppColors.lightBlack,
+        bottomBarBackground: AppColors.lightBlack,
+        appBarBackground: AppColors.lightBlack,
       ),
       widgets: MainEditorWidgets(
         closeWarningDialog: (editor) async {
@@ -236,8 +226,9 @@ class ImageEditor extends StatelessWidget {
       enableModePolygon: true,
       icons: PaintEditorIcons(backButton: Icons.arrow_back_outlined),
       style: PaintEditorStyle(
-        background: AppColors.lightGrey,
-        appBarBackground: AppColors.lightGrey,
+        background: AppColors.lightBlack,
+        appBarBackground: AppColors.lightBlack,
+        bottomBarBackground: AppColors.lightBlack,
       ),
     );
   }

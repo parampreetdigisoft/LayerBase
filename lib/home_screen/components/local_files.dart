@@ -9,6 +9,7 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 import '../../utils/base/dialogs/base_dialog.dart';
 import '../../utils/base/widgets/base_shader_mask.dart';
 import '../../utils/base/widgets/base_text.dart';
+import '../../utils/constants/app_assets.dart';
 import '../../utils/constants/app_color.dart';
 import '../../utils/constants/app_constants.dart';
 import '../../utils/constants/app_strings.dart';
@@ -20,29 +21,26 @@ class LocalFiles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.blackColor,
-      body: Obx(
-        () => Visibility(
-          visible: controller.imageList.isNotEmpty,
-          replacement: Container(
-            padding: EdgeInsets.all(spacerSize10),
-            width: double.infinity,
-            decoration: baseBoxDecoration(
-              color: AppColors.lightBlack,
-              radius: spacerSize10,
-              borderColor: Colors.transparent,
-            ),
-            child: Center(
-              child: BaseText(
-                text: AppStrings.noImageFound,
-                fontSize: fontSize16,
-                textColor: Colors.white,
-              ),
+    return Obx(
+      () => Visibility(
+        visible: controller.imageList.isNotEmpty,
+        replacement: Container(
+          padding: EdgeInsets.all(spacerSize10),
+          width: double.infinity,
+          decoration: baseBoxDecoration(
+            color: AppColors.lightBlack,
+            radius: spacerSize10,
+            borderColor: Colors.transparent,
+          ),
+          child: Center(
+            child: BaseText(
+              text: AppStrings.noImageFound,
+              fontSize: fontSize16,
+              textColor: Colors.white,
             ),
           ),
-          child: layerItemWidget(),
         ),
+        child: layerItemWidget(),
       ),
     );
   }
@@ -74,12 +72,12 @@ class LocalFiles extends StatelessWidget {
                 child: Container(
                   height: (170 + (index % 3) * 70).toDouble(),
                   decoration: BoxDecoration(
-                    color: AppColors.chineseBlack,
-                    border: Border.all(color: AppColors.darkSlatePurple, width: 1),
-                    borderRadius: BorderRadius.circular(spacerSize12),
+                    color: AppColors.lightBlack,
+                    border: Border.all(color: AppColors.darkSlatePurple, width: spacerSize2),
+                    borderRadius: BorderRadius.circular(spacerSize10),
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(spacerSize12),
+                    borderRadius: BorderRadius.circular(spacerSize9),
                     child: FutureBuilder(
                       future: Future.delayed(const Duration(milliseconds: 0), () {
                         return controller.imageList[index];
@@ -120,7 +118,7 @@ class LocalFiles extends StatelessWidget {
                       onPressed: () {
                         //   controller.downloadImage(controller.imageList[index]);
                       },
-                      icon: Icon(Icons.info, color: AppColors.lightWhite, size: spacerSize15),
+                      icon: Image.asset(AppAssets.info, height: spacerSize20, width: spacerSize20),
                     ),
                     BaseText(text: "", textColor: AppColors.lightWhite, fontSize: fontSize14),
                     IconButton(
@@ -138,10 +136,10 @@ class LocalFiles extends StatelessWidget {
                           subtitle: AppStrings.areYouSureWantTo + AppStrings.deleteThisImage,
                         );
                       },
-                      icon: Icon(
-                        Icons.delete_rounded,
-                        color: AppColors.lightWhite,
-                        size: spacerSize15,
+                      icon: Image.asset(
+                        AppAssets.delete,
+                        height: spacerSize20,
+                        width: spacerSize20,
                       ),
                     ),
                   ],

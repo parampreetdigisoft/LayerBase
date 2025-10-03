@@ -18,12 +18,12 @@ import '../../utils/base/dialogs/base_dialog.dart';
 import '../../utils/constants/app_constants.dart';
 
 class LoginViewModel extends GetxController {
-  RxBool isLoading = false.obs;
-  RxBool isPasswordObscure = true.obs;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
   final formKey = GlobalKey<FormState>();
+  RxBool isLoading = false.obs;
+  RxBool isPasswordObscure = true.obs;
   SharedPrefsService? sharedPreferences;
 
   @override
@@ -179,7 +179,6 @@ class LoginViewModel extends GetxController {
     String clientSecret,
   ) async {
     final tokenUrl = Uri.parse('https://oauth2.googleapis.com/token');
-
     final response = await http.post(
       tokenUrl,
       body: {
@@ -203,7 +202,6 @@ class LoginViewModel extends GetxController {
     final url = Uri.parse(
       'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${dotenv.env['web_apiKey'] ?? ""}',
     );
-
     final Map<String, dynamic> map = {
       AppKeys.email: emailController.text,
       AppKeys.password: passwordController.text,

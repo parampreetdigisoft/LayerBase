@@ -26,7 +26,7 @@ Future<void> main() async {
     AppKeys.imageLayerBox,
     compactionStrategy: (entries, deletedEntries) => false,
   );
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -36,6 +36,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
+      color: Colors.white,
+      initialRoute: Routes.splash,
+      getPages: routes(),
       theme: ThemeData(
         useMaterial3: true,
         splashColor: Colors.transparent,
@@ -43,9 +46,6 @@ class MyApp extends StatelessWidget {
         fontFamily: appFontFamily,
         scaffoldBackgroundColor: AppColors.blackColor,
       ),
-      color: Colors.white,
-      initialRoute: Routes.splash,
-      getPages: routes(),
     );
   }
 }

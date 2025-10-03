@@ -47,7 +47,6 @@ routes() {
       page: () => ImageEditorScreen(),
       binding: BindingsBuilder(() => Get.lazyPut(() => ImageEditorViewModel())),
     ),
-
     GetPage(
       name: Routes.homeScreen,
       page: () => const HomeScreen(),

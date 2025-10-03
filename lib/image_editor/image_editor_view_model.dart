@@ -15,20 +15,21 @@ import '../utils/constants/app_strings.dart';
 import '../utils/shared_prefs_service.dart';
 
 class ImageEditorViewModel extends GetxController {
-  Box<dynamic>? hiveBox;
   late SharedPrefsService sharedPrefsService;
-  RxList<dynamic>? activeLayersList = <dynamic>[].obs;
+  Box<dynamic>? hiveBox;
   final editorKey = GlobalKey<ProImageEditorState>();
   final Map<int, Layer> removedLayers = {};
   final Map<String, Layer> removedLayersNew = {};
-  RxString userDisplayName = "".obs, userEmail = "".obs;
-  var layerData = "".obs,
-      stickersList = <String>[].obs,
-      imageData = Rx<dynamic>(null),
-      imageIndex = Rx<int?>(null),
-      imageFile = Rx<Uint8List?>(null),
-      selectedItems = <bool>[].obs,
-      isLoading = true.obs;
+  RxList<dynamic>? activeLayersList = <dynamic>[].obs;
+  RxString userDisplayName = "".obs;
+  RxString userEmail = "".obs;
+  RxBool isLoading = true.obs;
+  var layerData = "".obs;
+  var stickersList = <String>[].obs;
+  var imageData = Rx<dynamic>(null);
+  var imageIndex = Rx<int?>(null);
+  var imageFile = Rx<Uint8List?>(null);
+  var selectedItems = <bool>[].obs;
 
   @override
   void onInit() {
@@ -86,15 +87,22 @@ class ImageEditorViewModel extends GetxController {
   }
 
   void deleteSideLayer(int index) {
-    if (index >= 0 &&
-        index < activeLayersList!.length &&
-        index < editorKey.currentState!.activeLayers.length) {
-      activeLayersList!.removeAt(index);
-      editorKey.currentState!.activeLayers.removeAt(index);
-    }
+    if (index < 0 || index >= activeLayersList!.length) return;
+    final layerToDelete = activeLayersList![index];
+    final layerId = layerToDelete.id;
+    activeLayersList!.removeAt(index);
+    selectedItems.removeAt(index);
+    editorKey.currentState?.activeLayers.removeWhere((layer) => layer.id == layerId);
+    editorKey.currentState?.stateHistory.last.layers.removeWhere((layer) => layer.id == layerId);
     activeLayersList!.refresh();
     editorKey.currentState!.setState(() {});
     Get.back();
+  }
+
+  void onAddLayer(Layer layer) {
+    activeLayersList!.add(layer);
+    selectedItems.value = List<bool>.from(selectedItems)..add(true);
+    activeLayersList!.refresh();
   }
 
   void onRemoveLayer(Layer layer) {
@@ -103,11 +111,40 @@ class ImageEditorViewModel extends GetxController {
       activeLayersList!.removeAt(index);
       selectedItems.removeAt(index);
       activeLayersList!.refresh();
+      selectedItems.refresh();
     }
   }
 
-  void applyFiltersToReferences(Map<String, dynamic> data, List<List<double>> filters) {
-    final references = data[AppKeys.references] as Map<String, dynamic>;
+  void onUndoAddRedoLayer() {
+    if (editorKey.currentState != null) {
+      editorKey.currentState!.setState(() {
+        activeLayersList!.assignAll(editorKey.currentState!.activeLayers);
+        selectedItems.value = List.filled(activeLayersList!.length, true, growable: true);
+        activeLayersList!.refresh();
+        selectedItems.refresh();
+        editorKey.currentState!.stateHistory.last.layers.assignAll(
+          editorKey.currentState!.activeLayers,
+        );
+      });
+    }
+  }
+
+  void onSideLayerTapped(int index) {
+    editorKey.currentState!.setState(() {
+      editorKey.currentState!.selectLayerById(activeLayersList![index].id);
+    });
+    activeLayersList!.refresh();
+  }
+
+  void onSelectLayerTapped(String selectedLayer) {
+    int index = activeLayersList!.indexWhere((element) => element.id == selectedLayer);
+    if (index != -1) activeLayersList![index].id = selectedLayer;
+    activeLayersList!.refresh();
+  }
+
+  void applyFiltersToReferences(List<List<double>> filters) {
+    final Map<String, dynamic> jsonData = jsonDecode(layerData.value);
+    final references = jsonData[AppKeys.references] as Map<String, dynamic>;
     int index = 0;
     for (final entry in references.entries) {
       if (index >= filters.length) break;
@@ -117,17 +154,36 @@ class ImageEditorViewModel extends GetxController {
     }
   }
 
+  void updateDragLayerAndShuffle(int newIndex, int oldIndex) {
+    if (newIndex > oldIndex) newIndex -= 1;
+    final len = activeLayersList!.length;
+    if (oldIndex < 0 || oldIndex >= len || newIndex < 0 || newIndex >= len) return;
+    final movedLayer = activeLayersList!.removeAt(oldIndex);
+    activeLayersList!.insert(newIndex, movedLayer);
+
+    if (editorKey.currentState != null &&
+        editorKey.currentState!.activeLayers.isNotEmpty &&
+        activeLayersList!.length == editorKey.currentState!.activeLayers.length) {
+      final movedCanvasLayer = editorKey.currentState!.activeLayers.removeAt(oldIndex);
+      editorKey.currentState!.activeLayers.insert(newIndex, movedCanvasLayer);
+    }
+    final movedSelected = selectedItems.removeAt(oldIndex);
+    selectedItems.insert(newIndex, movedSelected);
+    activeLayersList?.refresh();
+    selectedItems.refresh();
+    editorKey.currentState?.setState(() {});
+  }
+
   Future<void> saveImageToHive(
     Uint8List thumbNailBytes,
     Uint8List imageBytes,
     int? imageIndex,
-    dynamic layerJson,
     String type,
   ) async {
     try {
-      await exportImageAndSaveInHive(thumbNailBytes, imageBytes, imageIndex, layerJson);
+      await exportImageAndSaveInHive(thumbNailBytes, imageBytes, imageIndex);
     } catch (e) {
-      await saveImageCatchError(e.toString(), thumbNailBytes, imageBytes, layerJson);
+      debugPrint("Exception:::::::$e");
     } finally {
       if (type != AppStrings.export) {
         AppToast.show(
@@ -139,12 +195,27 @@ class ImageEditorViewModel extends GetxController {
     }
   }
 
-  exportImageAndSaveInHive(
+  Future<void> exportImageAndSaveInHive(
     Uint8List thumbNailBytes,
     Uint8List imageBytes,
     int? imageIndex,
-    dynamic layerJson,
   ) async {
+    final export = await editorKey.currentState?.exportStateHistory(
+      configs: ExportEditorConfigs(
+        exportBlur: true,
+        enableMinify: false,
+        exportCropRotate: true,
+        exportEmoji: true,
+        exportFilter: true,
+        exportPaint: true,
+        exportText: true,
+        exportTuneAdjustments: true,
+        exportWidgets: true,
+        historySpan: ExportHistorySpan.all,
+      ),
+    );
+    Map<String, dynamic>? exportJsonMap = await export?.toMap();
+    final layerJson = jsonEncode(exportJsonMap);
     final box = Hive.box<dynamic>(AppKeys.imageLayerBox);
     if (imageIndex != null && imageIndex >= 0 && imageIndex < box.length) {
       if (removedLayers.isNotEmpty) {
@@ -154,48 +225,15 @@ class ImageEditorViewModel extends GetxController {
           }
         });
       }
-      //  var data = await box.getAt(imageIndex);
-      // data[AppKeys.imageThumbnail] = thumbNailBytes;
-      //  data[AppKeys.layerJson] = editorKey.currentState!.stateHistory.last;
-      await box.putAt(imageIndex, {
-        AppKeys.imageThumbnail: thumbNailBytes,
-        AppKeys.image: imageBytes,
-        AppKeys.layerJson: layerJson,
-      });
+      var data = await box.getAt(imageIndex);
+      data[AppKeys.imageThumbnail] = thumbNailBytes;
+      data[AppKeys.layerJson] = layerJson;
     } else {
       await box.add({
         AppKeys.imageThumbnail: thumbNailBytes,
         AppKeys.image: imageBytes,
         AppKeys.layerJson: layerJson,
       });
-    }
-  }
-
-  saveImageCatchError(
-    String errorMsg,
-    Uint8List thumbNailBytes,
-    Uint8List imageBytes,
-    dynamic layerJson,
-  ) async {
-    if (errorMsg.toString().contains("Unexpected error")) {
-      await Hive.deleteBoxFromDisk(AppKeys.imageLayerBox);
-      final box = await Hive.openBox<dynamic>(
-        AppKeys.imageLayerBox,
-        compactionStrategy: (entries, deletedEntries) => false,
-      );
-      await box.add({
-        AppKeys.imageThumbnail: thumbNailBytes,
-        AppKeys.image: imageBytes,
-        AppKeys.layerJson: layerJson,
-      });
-    }
-  }
-
-  void removeLayer(int index) {
-    if (index >= 0 && index < editorKey.currentState!.activeLayers.length) {
-      editorKey.currentState!.activeLayers.removeAt(index);
-      selectedItems.removeAt(index);
-      editorKey.currentState!.setState(() {});
     }
   }
 
@@ -231,26 +269,43 @@ class ImageEditorViewModel extends GetxController {
     activeLayersList?.refresh();
     selectedItems.refresh();
     editorState.setState(() {});
+    editorKey.currentState!.activeLayers.assignAll(
+      editorState.stateHistory.last.layers
+          .where((layer) => selectedItems[activeLayersList!.indexWhere((al) => al.id == layer.id)])
+          .toList(),
+    );
   }
 
-  void updateDragLayerAndShuffle(int newIndex, int oldIndex) {
-    if (newIndex > oldIndex) newIndex -= 1;
-    final len = activeLayersList!.length;
-    if (oldIndex < 0 || oldIndex >= len || newIndex < 0 || newIndex >= len) return;
-    final movedLayer = activeLayersList!.removeAt(oldIndex);
-    activeLayersList!.insert(newIndex, movedLayer);
-
-    if (editorKey.currentState != null &&
-        editorKey.currentState!.activeLayers.isNotEmpty &&
-        activeLayersList!.length == editorKey.currentState!.activeLayers.length) {
-      final movedCanvasLayer = editorKey.currentState!.activeLayers.removeAt(oldIndex);
-      editorKey.currentState!.activeLayers.insert(newIndex, movedCanvasLayer);
+  Future<void> exportAndDownloadImage() async {
+    bool isSuccess = false;
+    try {
+      String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
+      if (selectedDirectory == null) {
+        return;
+      }
+      final currentDate = DateTime.now();
+      final year = currentDate.year;
+      final month = currentDate.month.toString().padLeft(2, '0');
+      final day = currentDate.day.toString().padLeft(2, '0');
+      final time = "${currentDate.hour}${currentDate.minute}${currentDate.second}";
+      final timestamp = "$year$month${day}_$time";
+      final filePath = "$selectedDirectory/layer_base_$timestamp.png";
+      final file = File(filePath);
+      final Uint8List imageBytes = await editorKey.currentState!.captureEditorImage();
+      await file.writeAsBytes(imageBytes);
+      saveImageToHive(imageBytes, imageBytes, imageIndex.value, AppStrings.export);
+      isSuccess = true;
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {
+      if (isSuccess) {
+        AppToast.show(
+          title: AppStrings.downloadSuccessfully,
+          "${AppStrings.file}\t ${AppStrings.downloadSuccessfully}",
+          backgroundColor: Colors.green,
+        );
+      }
     }
-    final movedSelected = selectedItems.removeAt(oldIndex);
-    selectedItems.insert(newIndex, movedSelected);
-    activeLayersList?.refresh();
-    selectedItems.refresh();
-    editorKey.currentState?.setState(() {});
   }
 
   Future<void> loadStickers() async {
@@ -277,38 +332,6 @@ class ImageEditorViewModel extends GetxController {
       }
       activeLayersList!.assignAll(newLayers);
       activeLayersList!.refresh();
-    }
-  }
-
-  Future<void> exportAndDownloadImage() async {
-    bool isSuccess = false;
-    try {
-      String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
-      if (selectedDirectory == null) {
-        return;
-      }
-      final currentDate = DateTime.now();
-      final year = currentDate.year;
-      final month = currentDate.month.toString().padLeft(2, '0');
-      final day = currentDate.day.toString().padLeft(2, '0');
-      final time = "${currentDate.hour}${currentDate.minute}${currentDate.second}";
-      final timestamp = "$year$month${day}_$time";
-      final filePath = "$selectedDirectory/layer_base_$timestamp.png";
-      final file = File(filePath);
-      final Uint8List imageBytes = await editorKey.currentState!.captureEditorImage();
-      await file.writeAsBytes(imageBytes);
-      saveImageToHive(imageBytes, imageBytes, imageIndex.value, layerData.value, AppStrings.export);
-      isSuccess = true;
-    } catch (e) {
-      debugPrint(e.toString());
-    } finally {
-      if (isSuccess) {
-        AppToast.show(
-          title: AppStrings.downloadSuccessfully,
-          "${AppStrings.file}\t ${AppStrings.downloadSuccessfully}",
-          backgroundColor: Colors.green,
-        );
-      }
     }
   }
 }

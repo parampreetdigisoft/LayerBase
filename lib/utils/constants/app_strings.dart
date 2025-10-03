@@ -95,7 +95,8 @@ class AppStrings {
       "Click here to add an image \nand start editing. Customize, enhance, \nand make it your own with our editor.";
   static const hide = "Hide";
   static const show = "Show";
-  static const holdToDrag = "Hold to drag";
+
+  static const holdToDrag = "Hold to Drag";
   static const noImageFound = "No images found.";
   static const areYouSureWantTo = "Are you sure you want to";
   static const logout = "Logout";
@@ -114,9 +115,10 @@ class AppStrings {
   static const export = "Export";
   static const local = "Local";
   static const cloud = "Cloud";
+  static const guestModeDesc =
+      "You’re currently using the app as a guest.\nPlease log in to continue.";
 
   /// validation String
-
   static const passwordValidationDesc =
       "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.";
   static const enterAValidEmail = "Enter a valid email address";
