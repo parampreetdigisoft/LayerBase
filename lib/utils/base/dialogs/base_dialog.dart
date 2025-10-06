@@ -64,7 +64,7 @@ class BaseDialog {
   }
 }
 
-showBaseDialog({
+Future showBaseDialog({
   required BuildContext context,
   required String title,
   required String subtitle,

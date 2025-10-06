@@ -22,20 +22,7 @@ class AllSticker extends StatelessWidget {
         final path = controller.stickersList[index];
         return GestureDetector(
           onTap: () {
-            final path = controller.stickersList[index];
-            controller.editorKey.currentState!.addLayer(
-              WidgetLayer(
-                exportConfigs: WidgetLayerExportConfigs(assetPath: path),
-                widget: Image.asset(
-                  path,
-                  fit: BoxFit.contain,
-                  width: spacerSize30,
-                  height: spacerSize30,
-                ),
-              ),
-            );
-            controller.selectedItems.add(true);
-            Navigator.of(context).pop();
+            onTabAddSticker(context, path);
           },
           child: Padding(
             padding: EdgeInsets.all(spacerSize5),
@@ -44,5 +31,16 @@ class AllSticker extends StatelessWidget {
         );
       },
     );
+  }
+
+  void onTabAddSticker(BuildContext context, String path) {
+    controller.editorKey.currentState!.addLayer(
+      WidgetLayer(
+        exportConfigs: WidgetLayerExportConfigs(assetPath: path),
+        widget: Image.asset(path, fit: BoxFit.contain, width: spacerSize30, height: spacerSize30),
+      ),
+    );
+    controller.selectedItems.add(true);
+    Navigator.of(context).pop();
   }
 }

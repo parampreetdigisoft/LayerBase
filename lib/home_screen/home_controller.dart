@@ -10,9 +10,7 @@ import 'package:layerbase/utils/constants/app_keys.dart';
 import 'package:layerbase/utils/routes.dart';
 import 'package:layerbase/utils/shared_prefs_service.dart';
 
-import '../utils/base/dialogs/base_dialog.dart';
 import '../utils/constants/app_constants.dart';
-import '../utils/constants/app_strings.dart';
 
 class HomeController extends GetxController {
   final picker = ImagePicker();
@@ -30,15 +28,28 @@ class HomeController extends GetxController {
   @override
   Future<void> onInit() async {
     super.onInit();
+    await fetchImagesFromDb();
     sharedPrefsService = SharedPrefsService.instance;
     userDisplayName.value = sharedPrefsService.getString(AppKeys.displayName) ?? "";
     userEmail.value = sharedPrefsService.getString(AppKeys.email) ?? "";
-    debugPrint("email:::${userEmail.value}::::${userDisplayName.value}");
-    await fetchImagesFromDb();
+    debugPrint("email:::${userEmail.value} / Name::::${userDisplayName.value}");
   }
 
   void changeTab(int index) {
     selectedIndex.value = index;
+  }
+
+  void goToEditor(int imageIndex) {
+    Navigator.pushNamed(
+      Get.context!,
+      Routes.imageEditor,
+      arguments: {AppKeys.imageIndex: imageIndex},
+    ).then((value) async {
+      Future.delayed(
+        Duration(milliseconds: 500),
+        () => refreshImages(imageIndex, isImageEdited: true),
+      );
+    });
   }
 
   Future<void> pickImage() async {
@@ -94,7 +105,7 @@ class HomeController extends GetxController {
     return true;
   }
 
-  Future<void> refreshImages(var index, {bool isImageEdited = false}) async {
+  Future<void> refreshImages(int index, {bool isImageEdited = false}) async {
     hiveBox ??= Hive.box<dynamic>(AppKeys.imageLayerBox);
     final thumbnail = hiveBox!.values.elementAt(index)[AppKeys.imageThumbnail];
     if (isImageEdited) {
@@ -107,48 +118,5 @@ class HomeController extends GetxController {
   Future<void> saveImageToHive(Uint8List imageBytes) async {
     final box = Hive.box<dynamic>(AppKeys.imageLayerBox);
     await box.add(imageBytes);
-  }
-
-  Future<void> downloadImage(bytes) async {
-    bool isSuccess = false;
-    try {
-      String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
-      if (selectedDirectory == null) {
-        return;
-      }
-      final currentDate = DateTime.now();
-      final year = currentDate.year;
-      final month = currentDate.month.toString().padLeft(2, '0');
-      final day = currentDate.day.toString().padLeft(2, '0');
-      final time = "${currentDate.hour}${currentDate.minute}${currentDate.second}";
-      final timestamp = "$year$month${day}_$time";
-      final filePath = "$selectedDirectory/layer_base_$timestamp.png";
-      final file = File(filePath);
-      await file.writeAsBytes(bytes);
-      isSuccess = true;
-    } catch (e) {
-      debugPrint(e.toString());
-    } finally {
-      if (isSuccess) {
-        AppToast.show(
-          title: AppStrings.downloadSuccessfully,
-          "${AppStrings.file}\t ${AppStrings.downloadSuccessfully}",
-          backgroundColor: Colors.green,
-        );
-      }
-    }
-  }
-
-  void goToEditor(int imageIndex) {
-    Navigator.pushNamed(
-      Get.context!,
-      Routes.imageEditor,
-      arguments: {AppKeys.imageIndex: imageIndex},
-    ).then((value) async {
-      Future.delayed(
-        Duration(milliseconds: 500),
-        () => refreshImages(imageIndex, isImageEdited: true),
-      );
-    });
   }
 }

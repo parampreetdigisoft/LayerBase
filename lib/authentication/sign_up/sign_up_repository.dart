@@ -2,7 +2,7 @@ import 'package:layerbase/authentication/sign_up/question_response_model.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
 
 class SignUpRepository {
-  fetchSecurityQuestion() {
+  List<QuestionResponseModel> fetchSecurityQuestion() {
     return [
       QuestionResponseModel(id: "1", question: AppStrings.whatWasYourChildhoodNickname),
       QuestionResponseModel(id: "2", question: AppStrings.whatIsYourFavoriteFood),

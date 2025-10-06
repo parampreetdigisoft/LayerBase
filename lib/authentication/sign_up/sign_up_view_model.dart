@@ -140,7 +140,7 @@ class SignUpViewModel extends GetxController {
     isLoading.value = true;
     isLoading.refresh();
     final url = Uri.parse(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${dotenv.env['web_apiKey'] ?? ""}',
+      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${dotenv.env[AppKeys.webApiKey] ?? ""}',
     );
 
     final Map<String, dynamic> map = {
@@ -149,13 +149,13 @@ class SignUpViewModel extends GetxController {
       AppKeys.displayName: fullNameController.text,
       AppKeys.securityQuestion: selectedQuestion.value,
       AppKeys.securityAnswer: answerController.text,
-      "returnSecureToken": true,
+      AppKeys.returnSecureToken: true,
     };
 
     debugPrint("map:::$map");
     final response = await http.post(
       url,
-      headers: {'Content-Type': 'application/json'},
+      headers: {AppKeys.contentType: 'application/json'},
       body: jsonEncode(map),
     );
     debugPrint("statusCode::::${response.body}");
@@ -184,7 +184,7 @@ class SignUpViewModel extends GetxController {
     }
   }
 
-  registerSuccessDialog() {
+  void registerSuccessDialog() {
     return BaseDialog.show(
       Get.context!,
       dialogTitle: AppStrings.success,

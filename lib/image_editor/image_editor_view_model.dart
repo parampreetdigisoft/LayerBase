@@ -160,7 +160,6 @@ class ImageEditorViewModel extends GetxController {
     if (oldIndex < 0 || oldIndex >= len || newIndex < 0 || newIndex >= len) return;
     final movedLayer = activeLayersList!.removeAt(oldIndex);
     activeLayersList!.insert(newIndex, movedLayer);
-
     if (editorKey.currentState != null &&
         editorKey.currentState!.activeLayers.isNotEmpty &&
         activeLayersList!.length == editorKey.currentState!.activeLayers.length) {

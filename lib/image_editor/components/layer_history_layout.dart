@@ -31,7 +31,7 @@ class LayerHistoryLayout extends StatelessWidget {
     );
   }
 
-  buildShimmerEffect(BuildContext context) {
+  Widget buildShimmerEffect(BuildContext context) {
     return Column(
       children: [
         Container(
@@ -55,7 +55,8 @@ class LayerHistoryLayout extends StatelessWidget {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   padding: EdgeInsets.symmetric(horizontal: spacerSize10, vertical: spacerSize10),
-                  itemCount: 10,
+                  itemCount: 6,
+                  reverse: true,
                   itemBuilder: (context, index) => buildShimmerItem(),
                   separatorBuilder: (context, index) => const SizedBox(height: spacerSize10),
                 )
@@ -71,7 +72,7 @@ class LayerHistoryLayout extends StatelessWidget {
     );
   }
 
-  buildShimmerItem() {
+  Widget buildShimmerItem() {
     return Shimmer(
       color: AppColors.lightWhite,
       interval: Duration(milliseconds: 20),
@@ -104,7 +105,7 @@ class LayerHistoryLayout extends StatelessWidget {
     );
   }
 
-  shimmerLayout() {
+  Widget shimmerLayout() {
     return Container(
       width: spacerSize12,
       height: spacerSize12,

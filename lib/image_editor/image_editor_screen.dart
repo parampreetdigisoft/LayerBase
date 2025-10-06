@@ -18,7 +18,6 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("${Get.arguments}");
     return Scaffold(
       backgroundColor: AppColors.blackColor,
       floatingActionButton: floatingBtn(),
@@ -51,7 +50,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
     );
   }
 
-  floatingBtn() {
+  Widget floatingBtn() {
     return IconButton(
       tooltip: AppStrings.aiGenerate,
       style: TextButton.styleFrom(
@@ -80,7 +79,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
     );
   }
 
-  buildExportAndProfileBtn() {
+  Widget buildExportAndProfileBtn() {
     return Container(
       width: double.infinity,
       margin: EdgeInsets.symmetric(horizontal: spacerSize15),
@@ -96,6 +95,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
         children: [
           Image.asset(AppAssets.appLogo, height: spacerSize25),
           Spacer(),
+
           IconButton(
             onPressed: () {
               controller.exportAndDownloadImage();
@@ -150,7 +150,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
     );
   }
 
-  showProfilePopup(BuildContext context) {
+  void showProfilePopup(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext ctx) {
@@ -236,7 +236,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
     );
   }
 
-  showLogoutDialog() {
+  Future<void> showLogoutDialog() {
     return showBaseDialog(
       context: Get.context!,
       title: AppStrings.logout,

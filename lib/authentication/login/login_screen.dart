@@ -95,7 +95,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
     );
   }
 
-  emailField() {
+  Widget emailField() {
     return BaseTextField(
       controller: controller.emailController,
       hintText: AppStrings.email,
@@ -104,7 +104,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
     );
   }
 
-  passwordField() {
+  Widget passwordField() {
     return BaseTextField(
       controller: controller.passwordController,
       hintText: AppStrings.password,
@@ -126,7 +126,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
     );
   }
 
-  loginBtn(BuildContext context) {
+  Widget loginBtn(BuildContext context) {
     return Obx(
       () => BaseButton(
         onPressed: () {
@@ -151,7 +151,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
     );
   }
 
-  doNotHaveAccount(BuildContext context) {
+  Widget doNotHaveAccount(BuildContext context) {
     return RichText(
       text: TextSpan(
         text: AppStrings.dontHaveAccount,
@@ -174,7 +174,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
     );
   }
 
-  orText() {
+  Widget orText() {
     return Row(
       children: [
         Expanded(
@@ -188,7 +188,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
     );
   }
 
-  googleAndGuestBtn(BuildContext context) {
+  Widget googleAndGuestBtn(BuildContext context) {
     return Row(
       spacing: spacerSize5,
       children: [
@@ -260,7 +260,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
     );
   }
 
-  navigateToHome(var value) {
+  void navigateToHome(dynamic value) {
     if (value != null) {
       Navigator.pushNamedAndRemoveUntil(
         Get.context!,
@@ -276,7 +276,7 @@ class LoginScreen extends GetWidget<LoginViewModel> {
     }
   }
 
-  isMobile(BuildContext context) {
+  bool isMobile(BuildContext context) {
     return MediaQuery.of(context).size.width < 600;
   }
 }
