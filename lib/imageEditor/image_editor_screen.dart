@@ -168,7 +168,7 @@ class ImageEditorScreen extends GetWidget<ImageEditorViewModel> {
                 Map<String, dynamic>? jsonMap = await export?.toMap();
                 final layerJson = jsonEncode(jsonMap);
                 controller.saveImageToHive(parameters.image, imageFile!, imageIndex, layerJson);
-                return Future.value(true);
+                return Future.value();
               },
               mainEditorCallbacks: MainEditorCallbacks(),
             ),

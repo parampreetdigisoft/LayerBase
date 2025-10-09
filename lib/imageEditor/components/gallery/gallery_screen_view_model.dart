@@ -11,14 +11,14 @@ import 'package:layerbase/utils/constants/app_keys.dart';
 import 'package:layerbase/utils/routes.dart';
 import 'package:layerbase/utils/shared_prefs_service.dart';
 
-class GalleryScreenViewModel extends GetxController
-    with GetTickerProviderStateMixin {
+class GalleryScreenViewModel extends GetxController with GetTickerProviderStateMixin {
   final RxBool isLoading = true.obs;
   late TabController tabController;
   Rx<File>? imageFile;
   final picker = ImagePicker();
   Rx<Uint8List>? imageBytes;
   Box<dynamic>? hiveBox;
+  RxInt selectIndex = 0.obs;
 
   RxList<dynamic>? imageList = <Uint8List>[].obs;
   late SharedPrefsService sharedPrefsService;
@@ -52,15 +52,15 @@ class GalleryScreenViewModel extends GetxController
     sharedPrefsService = SharedPrefsService.instance;
     tabController = TabController(length: 2, vsync: this);
     tabController.addListener(() {
-      if (tabController.indexIsChanging) {
-        if (tabController.index == 1) {
-          Future.delayed(Duration.zero, () {
-            tabController.index = tabController.previousIndex;
-          });
-        }
-      }
+      selectIndex.value = tabController.index;
     });
     fetchImagesFromDb();
+  }
+
+  @override
+  void onClose() {
+    tabController.dispose();
+    super.onClose();
   }
 
   Future<void> pickImage() async {
@@ -92,6 +92,11 @@ class GalleryScreenViewModel extends GetxController
     } else {}
   }
 
+  void changeTab(int index) {
+    selectIndex.value = index;
+    tabController.animateTo(index);
+  }
+
   fetchImagesFromDb() async {
     imageList!.clear();
     isLoading.value = true;
@@ -100,9 +105,7 @@ class GalleryScreenViewModel extends GetxController
     List<Uint8List> tempImageList = [];
     for (var bytes in hiveBox!.values) {
       // Attempt to load as TIFF first
-      dynamic loadedImage = await loadTiffAsImage(
-        bytes[AppKeys.imageThumbnail],
-      );
+      dynamic loadedImage = await loadTiffAsImage(bytes[AppKeys.imageThumbnail]);
       if (loadedImage != null) {
         tempImageList.add(loadedImage);
       } else {

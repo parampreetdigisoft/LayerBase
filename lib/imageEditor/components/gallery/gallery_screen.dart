@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:layerbase/imageEditor/components/cloud_storage_access_tooltip.dart';
 import 'package:layerbase/imageEditor/components/gallery/gallery_screen_view_model.dart';
 import 'package:layerbase/utils/constants/app_color.dart';
@@ -6,9 +7,6 @@ import 'package:layerbase/utils/constants/app_constants.dart';
 import 'package:layerbase/utils/constants/app_keys.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
 import 'package:layerbase/utils/routes.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
   const GalleryScreen({super.key});
@@ -27,56 +25,83 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  height: spacerSize50,
-                  width: spacerSize400,
-                  padding: const EdgeInsets.all(spacerSize4),
-                  decoration: BoxDecoration(
-                    color: AppColors.chineseBlack,
-                    borderRadius: BorderRadius.circular(spacerSize10),
-                    border: Border.all(color: AppColors.lightGrey),
-                  ),
-                  child: TabBar(
-                    onTap: (index) {
-                      if (index == 1 &&
-                          (defaultTargetPlatform == TargetPlatform.linux ||
-                                  defaultTargetPlatform ==
-                                      TargetPlatform.windows
-                              ? controller.sharedPrefsService
-                                    .getString(AppKeys.idToken)!
-                                    .isEmpty
-                              : FirebaseAuth.instance.currentUser == null)) {
-                        _showCloudFeatureDialog(context);
-                      }
-                    },
-                    enableFeedback: false,
-                    controller: controller.tabController,
-                    indicator: BoxDecoration(
-                      color: AppColors.darkJungleGreen,
+              Obx(
+                () => Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    height: spacerSize50,
+                    width: spacerSize400,
+                    padding: const EdgeInsets.all(spacerSize4),
+                    decoration: BoxDecoration(
+                      color: AppColors.chineseBlack,
                       borderRadius: BorderRadius.circular(spacerSize10),
+                      border: Border.all(color: AppColors.lightGrey),
                     ),
-                    labelColor: Colors.white,
-                    dividerColor: Colors.transparent,
-                    indicatorColor: Colors.transparent,
-                    unselectedLabelColor: AppColors.grey,
-                    labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    overlayColor: WidgetStateProperty.all(Colors.transparent),
-                    automaticIndicatorColorAdjustment: true,
-                    tabs: const [
-                      Tab(text: AppStrings.localFiles),
-                      Tab(text: AppStrings.cloudFiles),
-                    ],
+                    child: TabBar(
+                      controller: controller.tabController,
+                      physics: NeverScrollableScrollPhysics(),
+                      onTap: (index) {
+                        // controller.changeTab(index);
+                        /* if (index == 1 && (defaultTargetPlatform == TargetPlatform.linux ||
+                                    defaultTargetPlatform == TargetPlatform.windows
+                                ? controller.sharedPrefsService.getString(AppKeys.idToken)!.isEmpty
+                                : FirebaseAuth.instance.currentUser == null)) {
+                          _showCloudFeatureDialog(context);
+                        }*/
+                        if (index == 1) {
+                          _showCloudFeatureDialog(context);
+                        }
+                      },
+                      enableFeedback: false,
+                      /*indicator: BoxDecoration(
+                        color: AppColors.darkJungleGreen,
+                        borderRadius: BorderRadius.circular(spacerSize10),
+                      ),*/
+                      labelColor: Colors.white,
+                      dividerColor: Colors.transparent,
+                      indicatorColor: Colors.transparent,
+                      unselectedLabelColor: AppColors.grey,
+                      labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      overlayColor: WidgetStateProperty.all(Colors.transparent),
+                      automaticIndicatorColorAdjustment: true,
+                      tabs: [
+                        Tab(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: controller.selectIndex.value == 0
+                                  ? AppColors.darkJungleGreen
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(spacerSize10),
+                            ),
+                            alignment: Alignment.center,
+                            child: const Text(AppStrings.localFiles),
+                          ),
+                        ),
+
+                        Tab(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: controller.selectIndex.value == 1
+                                  ? AppColors.darkJungleGreen
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(spacerSize10),
+                            ),
+                            alignment: Alignment.center,
+                            child: const Text(AppStrings.cloudFiles),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
               const SizedBox(height: spacerSize24),
               Expanded(
                 child: TabBarView(
+                  physics: NeverScrollableScrollPhysics(),
                   controller: controller.tabController,
-                  children: [buildHistoryGallery(), buildHistoryGallery()],
+                  children: [buildHistoryGallery(), CloudStorageAccessTooltip()],
                 ),
               ),
             ],
@@ -176,11 +201,7 @@ class GalleryScreen extends GetWidget<GalleryScreenViewModel> {
       ),
       color: Colors.transparent,
       items: [
-        PopupMenuItem(
-          enabled: false,
-          padding: EdgeInsets.zero,
-          child: CloudStorageAccessTooltip(),
-        ),
+        PopupMenuItem(enabled: false, padding: EdgeInsets.zero, child: CloudStorageAccessTooltip()),
       ],
       elevation: 0,
     ).then((value) {
