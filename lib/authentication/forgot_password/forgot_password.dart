@@ -90,14 +90,7 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
     );
   }
 
-  appLogo(BuildContext context, String appAsset, double width) {
-    return SizedBox(
-      width: width,
-      child: Image.asset(appAsset, fit: BoxFit.fill),
-    );
-  }
-
-  emailField() {
+  Widget emailField() {
     return BaseForm(
       formKey: controller.formKey,
       child: BaseTextField(
@@ -110,7 +103,7 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
     );
   }
 
-  passwordField() {
+  Widget passwordField() {
     return Obx(
       () => BaseTextField(
         controller: controller.passwordController,
@@ -122,7 +115,7 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
     );
   }
 
-  confirmPasswordField() {
+  Widget confirmPasswordField() {
     return Obx(
       () => BaseTextField(
         controller: controller.confirmPasswordController,
@@ -142,7 +135,7 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
     );
   }
 
-  submit(BuildContext context) {
+  Widget submit(BuildContext context) {
     return BaseButton(
       onPressed: () {
         if (controller.formKey.currentState!.validate()) {
@@ -160,11 +153,11 @@ class ForgotPassword extends GetWidget<ForgotPasswordViewModel> {
     );
   }
 
-  isMobile(BuildContext context) {
+  bool isMobile(BuildContext context) {
     return MediaQuery.of(context).size.width < 600;
   }
 
-  resetPasswordFields() {
+  Widget resetPasswordFields() {
     return Obx(
       () => controller.isEmailValidated.value
           ? Wrap(

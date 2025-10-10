@@ -8,14 +8,24 @@ import 'package:layerbase/utils/constants/app_keys.dart';
 import 'package:layerbase/utils/routes.dart';
 import 'package:layerbase/utils/shared_prefs_service.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkLoginStatus(context);
+      checkLoginStatus(context);
     });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
@@ -32,7 +42,7 @@ class SplashScreen extends StatelessWidget {
     );
   }
 
-  _checkLoginStatus(BuildContext context) {
+  void checkLoginStatus(BuildContext context) {
     SharedPrefsService sharedPreference = SharedPrefsService.instance;
     bool? isGuestLoggedIn = sharedPreference.getBool(AppKeys.isGuestLoggedIn);
     bool? isUserLoggedIn = sharedPreference.getString(AppKeys.idToken)!.isNotEmpty;
@@ -51,7 +61,7 @@ class SplashScreen extends StatelessWidget {
     });
   }
 
-  navigateToLogin(
+  void navigateToLogin(
     BuildContext context,
     User? user, {
     bool isGuestLoggedIn = false,

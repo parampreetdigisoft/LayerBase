@@ -152,7 +152,7 @@ class HomeScreen extends GetWidget<HomeController> {
     );
   }
 
-  importAndAIBtn() {
+  Widget importAndAIBtn() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: spacerSize10),
       child: Row(
@@ -213,7 +213,7 @@ class HomeScreen extends GetWidget<HomeController> {
     );
   }
 
-  showProfilePopup(BuildContext context) {
+  void showProfilePopup(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext ctx) {
@@ -224,7 +224,7 @@ class HomeScreen extends GetWidget<HomeController> {
           title: Visibility(
             visible: controller.userEmail.isNotEmpty,
             replacement: BaseText(
-              text: "You’re currently using the app as a guest.\nPlease log in to continue.",
+              text: AppStrings.guestModeDesc,
               textAlign: TextAlign.center,
               textColor: Colors.white,
               fontSize: fontSize13,

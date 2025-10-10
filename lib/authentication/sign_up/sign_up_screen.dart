@@ -84,7 +84,7 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
     );
   }
 
-  fullName() {
+  Widget fullName() {
     return BaseTextField(
       controller: controller.fullNameController,
       hintText: AppStrings.fullName,
@@ -93,7 +93,7 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
     );
   }
 
-  emailField() {
+  Widget emailField() {
     return BaseTextField(
       controller: controller.emailController,
       hintText: AppKeys.email,
@@ -103,7 +103,7 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
     );
   }
 
-  passwordField() {
+  Widget passwordField() {
     return BaseTextField(
       controller: controller.passwordController,
       hintText: AppStrings.password,
@@ -123,7 +123,7 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
     );
   }
 
-  confirmPasswordField() {
+  Widget confirmPasswordField() {
     return BaseTextField(
       controller: controller.confirmPasswordController,
       hintText: AppStrings.confirmPassword,
@@ -145,7 +145,7 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
     );
   }
 
-  answerField() {
+  Widget answerField() {
     return BaseTextField(
       controller: controller.answerController,
       hintText: AppStrings.enterYourAnswer,
@@ -153,7 +153,7 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
     );
   }
 
-  signUpBtn(BuildContext context) {
+  Widget signUpBtn(BuildContext context) {
     return Obx(
       () => BaseButton(
         onPressed: () {
@@ -175,7 +175,7 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
     );
   }
 
-  alreadyHaveAccount(BuildContext context) {
+  Widget alreadyHaveAccount(BuildContext context) {
     return RichText(
       text: TextSpan(
         text: AppStrings.alreadyHaveAccount,
@@ -198,7 +198,7 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
     );
   }
 
-  questionDropDown() {
+  Widget questionDropDown() {
     return BaseDropdown(
       labelText: AppStrings.chooseMySecurityQuestions,
       items: controller.securityQuestionList.map((QuestionResponseModel questionDetail) {
@@ -218,7 +218,7 @@ class SignUpScreen extends GetWidget<SignUpViewModel> {
     );
   }
 
-  isMobile(BuildContext context) {
+  bool isMobile(BuildContext context) {
     return MediaQuery.of(context).size.width < 600;
   }
 }

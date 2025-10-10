@@ -76,13 +76,16 @@ class ForgotPasswordViewModel extends GetxController {
     isLoading.value = true;
 
     final url = Uri.parse(
-      'https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${dotenv.env['web_apiKey'] ?? ""}',
+      'https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${dotenv.env[AppKeys.webApiKey] ?? ""}',
     );
 
     final response = await http.post(
       url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'requestType': 'PASSWORD_RESET', AppKeys.email: emailController.text}),
+      headers: {AppKeys.contentType: 'application/json'},
+      body: jsonEncode({
+        AppKeys.requestType: 'PASSWORD_RESET',
+        AppKeys.email: emailController.text,
+      }),
     );
 
     if (response.statusCode == 200) {
@@ -92,7 +95,7 @@ class ForgotPasswordViewModel extends GetxController {
       final error = jsonDecode(response.body);
       isLoading.value = false;
       AppToast.show(
-        title: "Error",
+        title: AppStrings.error,
         error['error']['message'].toString().replaceAll("_", " "),
         backgroundColor: Colors.red,
       );

@@ -42,13 +42,11 @@ class ImageEditor extends StatelessWidget {
                 appBarBackground: AppColors.lightBlack,
                 bottomBarBackground: AppColors.lightBlack,
               ),
-              widgets: TextEditorWidgets(),
             ),
             i18n: I18n(
               done: AppStrings.save,
               undo: AppStrings.undo,
               redo: AppStrings.redo,
-
               doneLoadingMsg: AppStrings.savingPleaseWait,
               importStateHistoryMsg: AppStrings.loadingPleaseWait,
               various: I18nVarious(loadingDialogMsg: AppStrings.loading),
@@ -84,24 +82,8 @@ class ImageEditor extends StatelessWidget {
             stateHistory: stateHistoryConfigs(),
             cropRotateEditor: cropRotateEditorConfigs(),
             stickerEditor: stickerEditorConfigs(),
-            filterEditor: FilterEditorConfigs(
-              icons: FilterEditorIcons(backButton: Icons.arrow_back_outlined),
-              enabled: true,
-              showLayers: true,
-              style: FilterEditorStyle(
-                background: AppColors.lightBlack,
-                appBarBackground: AppColors.lightBlack,
-              ),
-            ),
-            blurEditor: BlurEditorConfigs(
-              icons: BlurEditorIcons(backButton: Icons.arrow_back_outlined),
-              enabled: true,
-              showLayers: true,
-              style: BlurEditorStyle(
-                background: AppColors.lightBlack,
-                appBarBackgroundColor: AppColors.lightBlack,
-              ),
-            ),
+            filterEditor: filterEditorConfigs(),
+            blurEditor: blurEditorConfigs(),
           ),
           callbacks: ProImageEditorCallbacks(
             onCloseEditor: (EditorMode mode) async {
@@ -121,6 +103,7 @@ class ImageEditor extends StatelessWidget {
               );
               return Future.value();
             },
+
             mainEditorCallbacks: MainEditorCallbacks(
               onAddLayer: (layer) {
                 controller.onAddLayer(layer);
@@ -128,7 +111,6 @@ class ImageEditor extends StatelessWidget {
               onRemoveLayer: (layer) {
                 controller.onRemoveLayer(layer);
               },
-
               onRedo: () {
                 controller.onUndoAddRedoLayer();
               },
@@ -224,11 +206,14 @@ class ImageEditor extends StatelessWidget {
       showOpacityAdjustmentButton: true,
       showLineWidthAdjustmentButton: true,
       enableModePolygon: true,
+
       icons: PaintEditorIcons(backButton: Icons.arrow_back_outlined),
       style: PaintEditorStyle(
         background: AppColors.lightBlack,
         appBarBackground: AppColors.lightBlack,
         bottomBarBackground: AppColors.lightBlack,
+        lineWidthBottomSheetTitle: TextStyle(color: AppColors.antiqueWhite),
+        opacityBottomSheetTitle: TextStyle(color: AppColors.antiqueWhite),
       ),
     );
   }
@@ -271,6 +256,30 @@ class ImageEditor extends StatelessWidget {
         appBarBackground: AppColors.lightGrey,
         bottomBarBackground: AppColors.lightGrey,
         bottomBarColor: AppColors.lightGrey,
+      ),
+    );
+  }
+
+  FilterEditorConfigs filterEditorConfigs() {
+    return FilterEditorConfigs(
+      icons: FilterEditorIcons(backButton: Icons.arrow_back_outlined),
+      enabled: true,
+      showLayers: true,
+      style: FilterEditorStyle(
+        background: AppColors.lightBlack,
+        appBarBackground: AppColors.lightBlack,
+      ),
+    );
+  }
+
+  BlurEditorConfigs blurEditorConfigs() {
+    return BlurEditorConfigs(
+      icons: BlurEditorIcons(backButton: Icons.arrow_back_outlined),
+      enabled: true,
+      showLayers: false,
+      style: BlurEditorStyle(
+        background: AppColors.lightBlack,
+        appBarBackgroundColor: AppColors.lightBlack,
       ),
     );
   }

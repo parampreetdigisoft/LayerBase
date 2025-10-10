@@ -37,7 +37,6 @@ class LoginViewModel extends GetxController {
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
-    // scrollController.dispose();
   }
 
   String? emailValidator(String? value) {
@@ -47,7 +46,6 @@ class LoginViewModel extends GetxController {
     if (!emailRegExp.hasMatch(value)) {
       return AppStrings.enterAValidEmail;
     }
-
     return null;
   }
 
@@ -131,20 +129,19 @@ class LoginViewModel extends GetxController {
   }
 
   Future<UserCredential> signInWithGoogleWindow() async {
-    final clientId = dotenv.env['windows_clientId'];
-    final clientSecret = dotenv.env['windows_secretId'];
-
+    final clientId = dotenv.env[AppKeys.windowsClientId];
+    final clientSecret = dotenv.env[AppKeys.windowsSecretId];
     final redirectUri = 'http://localhost:8080/';
-    final scopes = ['openid', 'email', 'profile'];
+    final scopes = [AppKeys.openid, AppKeys.email, AppKeys.profile];
     final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 8080);
 
     final authUrl = Uri.https('accounts.google.com', '/o/oauth2/v2/auth', {
-      'response_type': 'code',
-      'client_id': clientId,
-      'redirect_uri': redirectUri,
-      'scope': scopes.join(' '),
-      'access_type': 'offline',
-      'prompt': 'consent',
+      AppKeys.responseType: AppKeys.code,
+      AppKeys.clientId: clientId,
+      AppKeys.redirectUri: redirectUri,
+      AppKeys.scope: scopes.join(' '),
+      AppKeys.accessType: AppKeys.offline,
+      AppKeys.prompt: AppKeys.consent,
     });
 
     if (!await launchUrl(authUrl, mode: LaunchMode.inAppWebView)) {
@@ -153,20 +150,20 @@ class LoginViewModel extends GetxController {
 
     final request = await server.first;
     final query = request.uri.queryParameters;
-    final code = query['code'];
+    final code = query[AppKeys.code];
 
     request.response
       ..statusCode = 200
-      ..headers.set('Content-Type', 'text/html')
+      ..headers.set(AppKeys.contentType, 'text/html')
       ..write('<html lang="en"><h2>You can now close this window.</h2></html>');
     await request.response.close();
     await server.close(force: true);
 
     final tokenResponse = await exchangeCodeForToken(code!, redirectUri, clientId!, clientSecret!);
-    sharedPreferences!.setString(AppKeys.idToken, tokenResponse['id_token'] ?? "");
+    sharedPreferences!.setString(AppKeys.idToken, tokenResponse[AppKeys.idToken] ?? "");
     final credential = GoogleAuthProvider.credential(
-      accessToken: tokenResponse['access_token'],
-      idToken: tokenResponse['id_token'],
+      accessToken: tokenResponse[AppKeys.accessToken],
+      idToken: tokenResponse[AppKeys.idToken],
     );
     var data = await FirebaseAuth.instance.signInWithCredential(credential);
     return data;
@@ -182,11 +179,11 @@ class LoginViewModel extends GetxController {
     final response = await http.post(
       tokenUrl,
       body: {
-        'code': code,
-        'client_id': clientId,
-        'client_secret': clientSecret,
-        'redirect_uri': redirectUri,
-        'grant_type': 'authorization_code',
+        AppKeys.code: code,
+        AppKeys.clientId: clientId,
+        AppKeys.clientSecret: clientSecret,
+        AppKeys.redirectUri: redirectUri,
+        AppKeys.grantType: AppKeys.authorizationCode,
       },
     );
     if (response.statusCode != 200) {
@@ -200,24 +197,24 @@ class LoginViewModel extends GetxController {
     sharedPreferences!.clear();
     isLoading.value = true;
     final url = Uri.parse(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${dotenv.env['web_apiKey'] ?? ""}',
+      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${dotenv.env[AppKeys.webApiKey] ?? ""}',
     );
     final Map<String, dynamic> map = {
       AppKeys.email: emailController.text,
       AppKeys.password: passwordController.text,
-      "returnSecureToken": true,
+      AppKeys.returnSecureToken: true,
     };
 
     final response = await http.post(
       url,
-      headers: {'Content-Type': 'application/json'},
+      headers: {AppKeys.contentType: 'application/json'},
       body: jsonEncode(map),
     );
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       debugPrint("data::::::$data");
-      sharedPreferences!.setString(AppKeys.idToken, data['refreshToken'].toString());
+      sharedPreferences!.setString(AppKeys.idToken, data[AppKeys.refreshToken].toString());
       sharedPreferences!.setString(AppKeys.email, data[AppKeys.email] ?? "");
       sharedPreferences!.setString(AppKeys.displayName, data[AppKeys.displayName] ?? "");
       Navigator.pushReplacementNamed(Get.context!, Routes.homeScreen);

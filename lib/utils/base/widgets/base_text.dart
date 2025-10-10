@@ -4,7 +4,7 @@ class BaseText extends StatelessWidget {
   const BaseText({
     super.key,
     this.fontSize,
-    this.textColor=Colors.black,
+    this.textColor = Colors.black,
     this.text = '',
     this.fontWeight = FontWeight.normal,
     this.textAlign = TextAlign.left,
@@ -27,11 +27,7 @@ class BaseText extends StatelessWidget {
         child: Text(
           text,
           textAlign: textAlign,
-          style: TextStyle(
-            fontSize: fontSize,
-            color: textColor,
-            fontWeight: fontWeight,
-          ),
+          style: TextStyle(fontSize: fontSize, color: textColor, fontWeight: fontWeight),
         ),
       ),
     );

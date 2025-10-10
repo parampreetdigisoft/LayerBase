@@ -51,7 +51,7 @@ class SidLayerList extends StatelessWidget {
     );
   }
 
-  reorderableList() {
+  Widget reorderableList() {
     return Obx(
       () => ReorderableListView.builder(
         itemCount: controller.activeLayersList!.length,
@@ -75,7 +75,7 @@ class SidLayerList extends StatelessWidget {
     );
   }
 
-  layerItems(int index, BuildContext context) {
+  Widget layerItems(int index, BuildContext context) {
     return InkWell(
       onTap: () {
         controller.onSideLayerTapped(index);
@@ -123,7 +123,7 @@ class SidLayerList extends StatelessWidget {
     };
   }
 
-  dragButton(int index) {
+  Widget dragButton(int index) {
     return iconLayout(
       index,
       tooltipText: AppStrings.holdToDrag,
@@ -132,7 +132,7 @@ class SidLayerList extends StatelessWidget {
     );
   }
 
-  hideAndShowBtn(int index) {
+  Widget hideAndShowBtn(int index) {
     return iconLayout(
       index,
       tooltipText: !controller.selectedItems[index] ? AppStrings.show : AppStrings.hide,
@@ -145,7 +145,7 @@ class SidLayerList extends StatelessWidget {
     );
   }
 
-  deleteButton(BuildContext context, int index) {
+  Widget deleteButton(BuildContext context, int index) {
     return iconLayout(
       index,
       tooltipText: AppStrings.delete,
@@ -164,7 +164,7 @@ class SidLayerList extends StatelessWidget {
     );
   }
 
-  iconLayout(int index, {String? tooltipText, IconData? icon, VoidCallback? onPressed}) {
+  Widget iconLayout(int index, {String? tooltipText, IconData? icon, VoidCallback? onPressed}) {
     return IconButton(
       tooltip: tooltipText,
       style: IconButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size(0, 0)),
@@ -175,7 +175,7 @@ class SidLayerList extends StatelessWidget {
     );
   }
 
-  showImageWithLayer(int index) {
+  Widget showImageWithLayer(int index) {
     return Expanded(
       child: SizedBox(
         height: spacerSize45,
@@ -193,12 +193,11 @@ class SidLayerList extends StatelessWidget {
     );
   }
 
-  getLayers(int index) {
+  Widget getLayers(int index) {
     Layer layer = controller.activeLayersList![index];
     switch (layer) {
       case (WidgetLayer _):
         return SizedBox(child: layer.widget);
-
       case (TextLayer _):
         return Text(
           layer.text,
@@ -207,8 +206,7 @@ class SidLayerList extends StatelessWidget {
         );
 
       case (EmojiLayer _):
-        return BaseText(text: layer.emoji, fontSize: spacerSize20);
-
+        return BaseText(text: layer.emoji, fontSize: spacerSize15);
       case (PaintLayer _):
         final paintData = layer.toMap();
         final offsets = (paintData[AppKeys.item][AppKeys.offsets] as List)

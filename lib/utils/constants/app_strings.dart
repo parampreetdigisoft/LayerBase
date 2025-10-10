@@ -36,7 +36,7 @@ class AppStrings {
       "Your password has been successfully reset.\nPlease login with new password.";
   static const required = "required!";
   static const validate = "Validate!";
-  static const error = "Error!";
+  static const error = "Error";
   static const noUserFound = "No user found.";
   static const wrongPasswordEntered = "Wrong password entered";
   static const googleSignInFailed = "Google sign-in failed";
@@ -84,8 +84,8 @@ class AppStrings {
 
   static const deleteLayer = "Delete layer";
   static const deleteImage = "Delete Image";
-  static const deleteThisLayer = " delete this Layer?";
-  static const deleteThisImage = " delete this Image?";
+  static const deleteThisLayer = "delete this Layer?";
+  static const deleteThisImage = "delete this Image?";
   static const profile = "Profile";
   static const fileUpload = "File Upload";
   static const layerHistory = "Layers History";
