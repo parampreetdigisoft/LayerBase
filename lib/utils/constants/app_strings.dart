@@ -13,17 +13,19 @@ class AppStrings {
   static const confirmPassword = 'Confirm Password';
   static const enterYourPassword = 'Enter your password';
   static const createYourPassword = 'Create your password';
-  static const dontHaveAccount = 'Don\'t have an account?';
-  static const alreadyHaveAccount = 'Already have an account?';
+  static const dontHaveAccount = 'Don\'t have an account?\t';
+  static const alreadyHaveAccount = 'Already have an account?\t';
   static const register = 'Register';
   static const or = 'OR';
-  static const signInWithGoogle = 'Sign in with Google';
+  static const isText = 'is';
+  static const logInWithGoogle = 'Log in with Google';
+  static const continueAsAGuest = 'Continue as a Guest';
   static const signInWithFacebook = 'Sign in with Facebook';
   static const signInToYourAccount = 'Sign in to your account';
   static const forgotPassword = 'Forgot Password?';
   static const resetPassword = 'Reset Password';
   static const continueWithoutLogin = 'Continue without login';
-  static const createAndAccount = "Create an account";
+  static const createAndAccount = "Create an Account";
   static const signUp = "Sign Up";
   static const chooseMySecurityQuestions = "Choose My Security Questions";
   static const submit = "Submit";
@@ -32,9 +34,9 @@ class AppStrings {
   static const passwordChanged = "Password Changed";
   static const passwordChangedSuccessfully =
       "Your password has been successfully reset.\nPlease login with new password.";
-  static const required = "Required!";
+  static const required = "required!";
   static const validate = "Validate!";
-  static const error = "Error!";
+  static const error = "Error";
   static const noUserFound = "No user found.";
   static const wrongPasswordEntered = "Wrong password entered";
   static const googleSignInFailed = "Google sign-in failed";
@@ -42,43 +44,83 @@ class AppStrings {
   static const sent = "Sent";
   static const ok = "ok";
   static const cloudStorageAccess = "Cloud Storage Access";
-  static const toAccessCloudStorageFiles =
-      "To access the cloud storage files, you first need to ";
+  static const toAccessCloudStorageFiles = "To access the cloud storage files, you first need to ";
   static const withYourEmailAccount = "\twith your email account.";
   static const localFiles = "Local Files";
   static const cloudFiles = "Cloud Files";
   static const browseImage = "Browse Image";
   static const delete = "Delete";
+  static const download = "Download";
+  static const information = "Information";
   static const invalidDataEntered = "Invalid Data Entered";
+  static const save = "Save";
+  static const undo = "Undo";
+  static const redo = "Redo";
+  static const savingPleaseWait = "Saving please wait ...";
+  static const loadingPleaseWait = "Loading please wait ...";
+  static const loading = "Loading ...";
 
   //Message Strings.
   static const passwordNotStrong = 'The password isn\'t strong enough';
   static const emailAlreadyUsed = 'That email is already used for an account';
-  static const yourAccountHasBeenCreated =
-      'Your account has been created successfully.';
-  static const passwordResetLink =
-      'We\'ve sent a password reset link to your email address.';
+  static const yourAccountHasBeenCreated = 'Your account has been created successfully.';
+  static const passwordResetLink = 'We\'ve sent a password reset link to your email address.';
 
   //Security Questions
-  static const whatWasYourChildhoodNickname =
-      'What was your childhood nickname?';
+  static const whatWasYourChildhoodNickname = 'What was your childhood nickname?';
   static const whatIsYourFavoriteFood = 'What is your favorite food?';
-  static const whereDidYouGoOnYourFirstVacation =
-      'Where did you go on your first vacation?';
-  static const whatIsYourMothersMaidenName =
-      'What is your mother’s maiden name?';
+  static const whereDidYouGoOnYourFirstVacation = 'Where did you go on your first vacation?';
+  static const whatIsYourMothersMaidenName = 'What is your mother’s maiden name?';
   static const whatIsTheNameOfTheStreetYouGrewUpOn =
       'What is the name of the street you grew up on?';
-  static const whatWasTheNameOfTheFirstPet =
-      'What was the name of your first pet?';
-  static const whatIsYourFavoriteTeachersName =
-      'What is your favorite teacher\'s name?';
-  static const whatWasTheNameOfTheElementarySchool =
-      'What was the name of your elementary school?';
+  static const whatWasTheNameOfTheFirstPet = 'What was the name of your first pet?';
+  static const whatIsYourFavoriteTeachersName = 'What is your favorite teacher\'s name?';
+  static const whatWasTheNameOfTheElementarySchool = 'What was the name of your elementary school?';
   static const whatIsYourFavoriteMovie = 'What is your favorite movie?';
   static const whatWasTheMakeAndModelOfTheFirstCar =
       'What was the make and model of your first car?';
-  static const whoIsYourFavoriteSportsTeam =
-      'Who is your favorite sports team?';
+  static const whoIsYourFavoriteSportsTeam = 'Who is your favorite sports team?';
   static const inWhatCityWereYouBorn = 'In what city were you born?';
+
+  static const deleteLayer = "Delete layer";
+  static const deleteImage = "Delete Image";
+  static const deleteThisLayer = "delete this Layer?";
+  static const deleteThisImage = "delete this Image?";
+  static const profile = "Profile";
+  static const fileUpload = "File Upload";
+  static const layerHistory = "Layers History";
+  static const noLayers = "No Layers";
+  static const clickHereToBrowseAnImage = "Click here to browse an image";
+  static const selectImageDesc =
+      "Click here to add an image \nand start editing. Customize, enhance, \nand make it your own with our editor.";
+  static const hide = "Hide";
+  static const show = "Show";
+
+  static const holdToDrag = "Hold to Drag";
+  static const noImageFound = "No images found.";
+  static const areYouSureWantTo = "Are you sure you want to";
+  static const logout = "Logout";
+  static const downloadSuccessfully = "Download successfully";
+  static const file = "File";
+  static const image = "Image";
+  static const savedSuccessfully = "Saved Successfully";
+  static const aiGenerate = "Ai Generate";
+  static const closeImageEditor = "Close Image Editor";
+  static const closeImageEditorDesc =
+      "You have unsaved changes.\n$areYouSureWantTo\tclose the editor ?";
+  static const yes = "Yes";
+  static const no = "No";
+  static const balance = "Balance";
+  static const import = "Import";
+  static const export = "Export";
+  static const local = "Local";
+  static const cloud = "Cloud";
+  static const guestModeDesc =
+      "You’re currently using the app as a guest.\nPlease log in to continue.";
+
+  /// validation String
+  static const passwordValidationDesc =
+      "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.";
+  static const enterAValidEmail = "Enter a valid email address";
+  static const passwordDoNotMatch = "Passwords do not match";
 }

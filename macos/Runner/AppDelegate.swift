@@ -7,7 +7,6 @@ class AppDelegate: FlutterAppDelegate {
 
     if let window = NSApplication.shared.windows.first {
         window.title = "Layerbase"
-
         // Set icon in title bar
         let imageView = NSImageView(frame: NSRect(x: 0, y: 0, width: 18, height: 18))
         imageView.image = NSImage(named: "Icon")

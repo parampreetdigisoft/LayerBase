@@ -1,33 +1,59 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
 import 'package:layerbase/utils/constants/app_keys.dart';
 import 'package:layerbase/utils/constants/app_strings.dart';
 import 'package:layerbase/utils/routes.dart' show Routes;
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:layerbase/utils/shared_prefs_service.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../utils/base/dialogs/base_dialog.dart';
 import '../../utils/constants/app_constants.dart';
-import 'package:http/http.dart' as http;
 
 class LoginViewModel extends GetxController {
-  RxBool isLoading = false.obs;
-  RxBool isPasswordObscure = true.obs;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   final GoogleSignIn _googleSignIn = GoogleSignIn.instance;
   final formKey = GlobalKey<FormState>();
+  RxBool isLoading = false.obs;
+  RxBool isPasswordObscure = true.obs;
   SharedPrefsService? sharedPreferences;
-  ScrollController scrollController = ScrollController();
 
   @override
   onInit() {
     super.onInit();
     sharedPreferences = SharedPrefsService.instance;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+  }
+
+  String? emailValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return "${AppStrings.email}\t${AppStrings.isText}\t${AppStrings.required}";
+    }
+    if (!emailRegExp.hasMatch(value)) {
+      return AppStrings.enterAValidEmail;
+    }
+    return null;
+  }
+
+  String? passwordValidator(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return "${AppStrings.password}\t${AppStrings.isText}\t${AppStrings.required}";
+    }
+    return null;
   }
 
   Future<UserCredential?> signInWithGoogle() async {
@@ -47,16 +73,18 @@ class LoginViewModel extends GetxController {
       return data;
     } on FirebaseAuthException catch (e) {
       debugPrint(e.message);
-      BaseSnackBar.show(
+      AppToast.show(
         title: AppStrings.error,
-        message: e.message ?? AppStrings.googleSignInFailed,
+        e.message ?? AppStrings.googleSignInFailed,
+        backgroundColor: Colors.red,
       );
       return null;
     } catch (e) {
       debugPrint(e.toString());
-      BaseSnackBar.show(
+      AppToast.show(
         title: AppStrings.error,
-        message: "${AppStrings.googleSignInFailed}: $e",
+        "${AppStrings.googleSignInFailed}:$e",
+        backgroundColor: Colors.red,
       );
       return null;
     } finally {
@@ -68,118 +96,135 @@ class LoginViewModel extends GetxController {
     sharedPreferences!.clear();
     isLoading.value = true;
     try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-            email: emailController.text,
-            password: passwordController.text,
-          );
-      sharedPreferences!.setString(
-        AppKeys.idToken,
-        userCredential.user!.refreshToken.toString(),
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
       );
+      sharedPreferences!.setString(AppKeys.email, userCredential.user!.email ?? "");
+      sharedPreferences!.setString(AppKeys.displayName, userCredential.user!.displayName ?? "");
+      sharedPreferences!.setString(AppKeys.idToken, userCredential.user!.refreshToken.toString());
 
-      Navigator.pushReplacementNamed(Get.context!, Routes.imageGallery);
+      Navigator.pushReplacementNamed(Get.context!, Routes.homeScreen);
     } on FirebaseAuthException catch (exception) {
       if (exception.code == AppKeys.userNotFound) {
-        BaseSnackBar.show(
+        AppToast.show(
           title: AppStrings.validate,
-          message: AppStrings.noUserFound,
+          AppStrings.noUserFound,
+          backgroundColor: Colors.red,
         );
       } else if (exception.code == AppKeys.wrongPassword) {
-        BaseSnackBar.show(
+        AppToast.show(
           title: AppStrings.validate,
-          message: AppStrings.wrongPasswordEntered,
+          AppStrings.wrongPasswordEntered,
+          backgroundColor: Colors.red,
         );
       } else {
-        BaseSnackBar.show(
-          title: AppStrings.error,
-          message: '${exception.message}',
-        );
-
-        BaseSnackBar.show(
-          title: AppStrings.validate,
-          message: '${exception.message}',
-        );
+        AppToast.show(title: AppStrings.error, '${exception.message}', backgroundColor: Colors.red);
       }
     } catch (e) {
-      debugPrint("Unexpected error: $e");
+      debugPrint(e.toString());
     } finally {
       isLoading.value = false;
     }
   }
 
-  Future<UserCredential?> logInWithFacebook() async {
-    try {
-      final LoginResult result = await FacebookAuth.instance.login();
+  Future<UserCredential> signInWithGoogleWindow() async {
+    final clientId = dotenv.env[AppKeys.windowsClientId];
+    final clientSecret = dotenv.env[AppKeys.windowsSecretId];
+    final redirectUri = 'http://localhost:8080/';
+    final scopes = [AppKeys.openid, AppKeys.email, AppKeys.profile];
+    final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 8080);
 
-      if (result.status == LoginStatus.success) {
-        final OAuthCredential credential = FacebookAuthProvider.credential(
-          result.accessToken!.tokenString,
-        );
+    final authUrl = Uri.https('accounts.google.com', '/o/oauth2/v2/auth', {
+      AppKeys.responseType: AppKeys.code,
+      AppKeys.clientId: clientId,
+      AppKeys.redirectUri: redirectUri,
+      AppKeys.scope: scopes.join(' '),
+      AppKeys.accessType: AppKeys.offline,
+      AppKeys.prompt: AppKeys.consent,
+    });
 
-        final data = await FirebaseAuth.instance.signInWithCredential(
-          credential,
-        );
-        sharedPreferences!.setString(
-          AppKeys.idToken,
-          result.accessToken!.tokenString.toString(),
-        );
-
-        return data;
-      } else {
-        debugPrint(result.message);
-        return null;
-      }
-    } catch (e) {
-      debugPrint("Unexpected error: $e");
-      return null;
+    if (!await launchUrl(authUrl, mode: LaunchMode.inAppWebView)) {
+      throw Exception('Could not launch browser for OAuth');
     }
+
+    final request = await server.first;
+    final query = request.uri.queryParameters;
+    final code = query[AppKeys.code];
+
+    request.response
+      ..statusCode = 200
+      ..headers.set(AppKeys.contentType, 'text/html')
+      ..write('<html lang="en"><h2>You can now close this window.</h2></html>');
+    await request.response.close();
+    await server.close(force: true);
+
+    final tokenResponse = await exchangeCodeForToken(code!, redirectUri, clientId!, clientSecret!);
+    sharedPreferences!.setString(AppKeys.idToken, tokenResponse[AppKeys.idToken] ?? "");
+    final credential = GoogleAuthProvider.credential(
+      accessToken: tokenResponse[AppKeys.accessToken],
+      idToken: tokenResponse[AppKeys.idToken],
+    );
+    var data = await FirebaseAuth.instance.signInWithCredential(credential);
+    return data;
   }
 
-  forgotPassword(BuildContext context) {
-    Navigator.pushNamed(context, Routes.forgotPassword);
+  Future<Map<String, dynamic>> exchangeCodeForToken(
+    String code,
+    String redirectUri,
+    String clientId,
+    String clientSecret,
+  ) async {
+    final tokenUrl = Uri.parse('https://oauth2.googleapis.com/token');
+    final response = await http.post(
+      tokenUrl,
+      body: {
+        AppKeys.code: code,
+        AppKeys.clientId: clientId,
+        AppKeys.clientSecret: clientSecret,
+        AppKeys.redirectUri: redirectUri,
+        AppKeys.grantType: AppKeys.authorizationCode,
+      },
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Token exchange failed: ${response.body}');
+    }
+
+    return jsonDecode(response.body);
   }
 
   Future<void> signInWithEmailRest(String email, String password) async {
     sharedPreferences!.clear();
     isLoading.value = true;
-    isLoading.refresh();
     final url = Uri.parse(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${dotenv.env['web_apiKey'] ?? ""}',
+      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${dotenv.env[AppKeys.webApiKey] ?? ""}',
     );
+    final Map<String, dynamic> map = {
+      AppKeys.email: emailController.text,
+      AppKeys.password: passwordController.text,
+      AppKeys.returnSecureToken: true,
+    };
 
     final response = await http.post(
       url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        "email": email,
-        "password": password,
-        "returnSecureToken": true,
-      }),
+      headers: {AppKeys.contentType: 'application/json'},
+      body: jsonEncode(map),
     );
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      sharedPreferences!.setString(
-        AppKeys.idToken,
-        data['refreshToken'].toString(),
-      );
-      isLoading.value = false;
-      Navigator.pushReplacementNamed(Get.context!, Routes.imageGallery);
+      debugPrint("data::::::$data");
+      sharedPreferences!.setString(AppKeys.idToken, data[AppKeys.refreshToken].toString());
+      sharedPreferences!.setString(AppKeys.email, data[AppKeys.email] ?? "");
+      sharedPreferences!.setString(AppKeys.displayName, data[AppKeys.displayName] ?? "");
+      Navigator.pushReplacementNamed(Get.context!, Routes.homeScreen);
     } else {
       isLoading.value = false;
-      BaseSnackBar.show(
+      AppToast.show(
         title: AppStrings.validate,
-        message: AppStrings.noUserFound,
+        AppStrings.noUserFound,
+        backgroundColor: Colors.red,
       );
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    emailController.dispose();
-    passwordController.dispose();
-    scrollController.dispose();
   }
 }
