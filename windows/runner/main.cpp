@@ -24,16 +24,22 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
 
   project.set_dart_entrypoint_arguments(std::move(command_line_arguments));
 
-  FlutterWindow window(project);
+    // ADDED CODE ↓↓↓  (remove default white splash background) by aditya
+    WNDCLASSW window_class = {};
+    GetClassInfoW(nullptr, L"FLUTTER_WINDOW_CLASS", &window_class);
+    window_class.hbrBackground = CreateSolidBrush(RGB(0, 0, 0)); // black (or nullptr for transparent)
+    RegisterClassW(&window_class);
+
+FlutterWindow window(project);
   Win32Window::Point origin(10, 10);
   Win32Window::Size size(1280, 720);
-  if (!window.Create(L"layerbase", origin, size)) {
+if (!window.Create(L"Layerflow", origin, size)) {
     return EXIT_FAILURE;
   }
   window.SetQuitOnClose(true);
 
   ::MSG msg;
-  while (::GetMessage(&msg, nullptr, 0, 0)) {
+  while (::GetMessage(&msg,nullptr, 0, 0)) {
     ::TranslateMessage(&msg);
     ::DispatchMessage(&msg);
   }

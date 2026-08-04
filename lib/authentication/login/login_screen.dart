@@ -1,316 +1,138 @@
 import 'package:flutter/foundation.dart';
-import 'package:layerbase/authentication/login/login_view_model.dart';
-import 'package:layerbase/base/widgets/base_button.dart';
-import 'package:layerbase/base/widgets/base_form.dart';
-import 'package:layerbase/base/widgets/base_text.dart';
-import 'package:layerbase/base/widgets/base_text_button.dart';
-import 'package:layerbase/base/widgets/base_text_field.dart';
-import 'package:layerbase/utils/constants/app_keys.dart';
-import 'package:layerbase/utils/routes.dart';
-import 'package:layerbase/utils/constants/app_assets.dart';
-import 'package:layerbase/utils/constants/app_color.dart';
-import 'package:layerbase/utils/constants/app_constants.dart';
-import 'package:layerbase/utils/constants/app_strings.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:layerbase/authentication/login/login_view_model.dart';
+import 'package:layerbase/utils/constants/app_assets.dart';
+import 'package:layerbase/utils/constants/app_color.dart';
+import 'package:layerbase/utils/constants/app_constants.dart';
+import 'package:layerbase/utils/constants/app_keys.dart';
+import 'package:layerbase/utils/constants/app_strings.dart';
+import 'package:layerbase/utils/routes.dart';
+
+import '../../utils/base/widgets/base_button.dart';
+import '../../utils/base/widgets/base_text.dart';
+import '../../utils/base/widgets/base_text_field.dart';
 
 class LoginScreen extends GetWidget<LoginViewModel> {
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Image.asset(
-            AppAssets.authBackgroundImage,
-            fit: BoxFit.fill,
-            width: MediaQuery.of(context).size.width * .6,
-            height: MediaQuery.of(context).size.height * 1.2,
-          ),
-          Positioned.fill(
-            left: MediaQuery.of(context).size.width * .1,
-            child: Align(
-              child: appLogo(
-                context,
-                AppAssets.appLogoWhite,
-                MediaQuery.of(context).size.width * .3,
-              ),
-              alignment: Alignment.centerLeft,
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: SizedBox(
-              width: isMobile(context)
-                  ? MediaQuery.of(context).size.width
-                  : MediaQuery.of(context).size.width * .5,
-              height: MediaQuery.of(context).size.height,
-              child: Card(
-                shadowColor: Colors.black,
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(
-                      isMobile(context) ? spacerSize0 : spacerSize50,
-                    ),
-                    bottomLeft: Radius.circular(
-                      isMobile(context) ? spacerSize0 : spacerSize50,
-                    ),
-                  ),
-                ),
-                elevation: 5,
-                margin: EdgeInsets.zero,
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  child: Scrollbar(
-                    thumbVisibility: true,
-                    controller: controller.scrollController,
-                    child: SingleChildScrollView(
-                      controller: controller.scrollController,
-                      child:
-                          Column(
-                            children: [
-                              SizedBox(
-                                height: isMobile(context)
-                                    ? MediaQuery.of(context).size.height * .05
-                                    : MediaQuery.of(context).size.height * .1,
-                              ),
-
-                              if (isMobile(context))
-                                appLogo(
-                                  context,
-                                  AppAssets.appLogo,
-                                  MediaQuery.of(context).size.width * .5,
-                                ),
-                              SizedBox(height: spacerSize20),
-                              Center(
-                                child: const BaseText(
-                                  text: AppStrings.signInToYourAccount,
-                                  fontSize: fontSize30,
-                                  textColor: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              SizedBox(height: spacerSize60),
-                              BaseForm(
-                                formKey: controller.formKey,
-                                child: Column(
-                                  children: [
-                                    emailField(),
-                                    const SizedBox(height: spacerSize30),
-                                    passwordField(),
-                                  ],
-                                ),
-                              ),
-
-                              const SizedBox(height: spacerSize10),
-                              Align(
-                                alignment: Alignment.bottomRight,
-                                child: BaseText(
-                                  fontSize: fontSize14,
-                                  text: AppStrings.forgotPassword,
-                                  onPressed: () {
-                                    controller.forgotPassword(context);
-                                  },
-                                ),
-                              ),
-
-                              const SizedBox(height: spacerSize45),
-                              login(context),
-
-                              const SizedBox(height: spacerSize25),
-                              Text.rich(
-                                TextSpan(
-                                  children: [
-                                    TextSpan(text: AppStrings.dontHaveAccount),
-                                    WidgetSpan(
-                                      child: SizedBox(width: spacerSize5),
-                                    ),
-                                    TextSpan(
-                                      text: AppStrings.register,
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          Navigator.pushNamed(
-                                            context,
-                                            Routes.signUp,
-                                          );
-                                        },
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.darkBlue,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              const SizedBox(height: spacerSize25),
-                              const Row(
-                                children: <Widget>[
-                                  Expanded(child: Divider()),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 8.0,
-                                    ),
-                                    child: Text(AppStrings.or),
-                                  ),
-                                  Expanded(child: Divider()),
-                                ],
-                              ),
-                              const SizedBox(height: spacerSize25),
-
-                              if (defaultTargetPlatform != TargetPlatform.linux)
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                      icon: Image.asset(
-                                        AppAssets.googleIcon,
-                                        fit: BoxFit.fill,
-                                        scale: 2,
-                                      ),
-                                      onPressed: () {
-                                        controller.signInWithGoogle().then((
-                                          value,
-                                        ) {
-                                          if (value != null) {
-                                            Navigator.pushReplacementNamed(
-                                              Get.context!,
-                                              Routes.imageGallery,
-                                            );
-                                          } else {
-                                            Navigator.pushReplacementNamed(
-                                              Get.context!,
-                                              Routes.logIn,
-                                            );
-                                          }
-                                        });
-                                      },
-                                      tooltip: AppStrings.signInWithGoogle,
-                                    ),
-                                    /*  const SizedBox(width: spacerSize25),
-                                  // Spacing between icons
-                                  IconButton(
-                                    icon: Image.asset(
-                                      AppAssets.facebookIcon,
-                                      fit: BoxFit.fill,
-                                      scale: 2,
-                                    ),
-                                    onPressed: () {
-                                      controller.logInWithFacebook().then((
-                                        value,
-                                      ) {
-                                        if(value!=null){
-                                          Navigator.pushReplacementNamed(
-                                            Get.context!,
-                                            Routes.imageGallery,
-                                          );
-                                        }else{
-                                          Navigator.pushReplacementNamed(
-                                            Get.context!,
-                                            Routes.logIn
-                                          );
-                                        }
-
-
-                                      });
-                                    },
-                                    tooltip: AppStrings.signInWithFacebook,
-                                  ),*/
-                                  ],
-                                ),
-                              const SizedBox(height: spacerSize16),
-
-                              BaseTextButton(
-                                onPressed: () {
-                                  controller.sharedPreferences!.setBool(
-                                    AppKeys.isGuestLoggedIn,
-                                    true,
-                                  );
-                                  Navigator.pushNamed(
-                                    context,
-                                    Routes.imageGallery,
-                                  );
-                                },
-                                textLabel: AppStrings.continueWithoutLogin,
-                                fontSize: fontSize14,
-                                textColor: AppColors.darkBlue,
-                              ),
-                            ],
-                          ).marginSymmetric(
-                            vertical: spacerSize20,
-                            horizontal: MediaQuery.of(context).size.width * .03,
-                          ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Positioned.fill(
-            left: MediaQuery.of(context).size.width * .1,
-            child: Obx(() {
-              if (controller.isLoading.value) {
-                return const Center(
-                  child: CircularProgressIndicator(color: AppColors.darkBlue),
-                );
-              }
-              return const SizedBox.shrink();
-            }),
-          ),
-        ],
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(image: AssetImage(AppAssets.authBg), fit: BoxFit.cover),
       ),
-    );
-  }
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Form(
+          key: controller.formKey,
+          child: Row(
+            children: [
+              Expanded(
+                child: Image.asset(AppAssets.appLogo, height: spacerSize60, width: spacerSize300),
+              ),
+              Expanded(
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  decoration: BoxDecoration(
+                    color: AppColors.lightGrey,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(isMobile(context) ? spacerSize0 : spacerSize30),
+                      bottomLeft: Radius.circular(isMobile(context) ? spacerSize0 : spacerSize30),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: spacerSize135),
+                    child: Column(
+                      children: [
+                        Expanded(flex: 3, child: SizedBox.shrink()),
+                        BaseText(
+                          text: AppStrings.signInToYourAccount,
+                          textColor: AppColors.lightPurple,
+                          fontSize: spacerSize40,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        SizedBox(height: spacerSize35),
 
-  appLogo(BuildContext context, String appAsset, double width) {
-    return SizedBox(
-      width: width,
-      child: Image.asset(appAsset, fit: BoxFit.fill),
-    );
-  }
+                        emailField(),
+                        SizedBox(height: spacerSize35),
+                        Obx(() => passwordField()),
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: TextButton(
+                            style: TextButton.styleFrom(padding: EdgeInsets.all(0)),
+                            onPressed: () {
+                              Navigator.pushNamed(context, Routes.forgotPassword);
+                            },
+                            child: BaseText(
+                              text: AppStrings.forgotPassword,
+                              textColor: AppColors.greyColor,
+                              fontSize: fontSize16,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: spacerSize20),
 
-  emailField() {
-    return BaseTextField(
-      textEditingController: controller.emailController,
-      hintText: AppStrings.enterYourEmail,
-      labelText: AppStrings.email,
-      prefixIcon: const Icon(Icons.email),
-      keyboardType: TextInputType.emailAddress,
-    );
-  }
+                        loginBtn(context),
+                        SizedBox(height: spacerSize20),
+                        doNotHaveAccount(context),
+                        SizedBox(height: spacerSize20),
+                        orText(),
+                        SizedBox(height: spacerSize20),
+                        googleAndGuestBtn(context),
 
-  passwordField() {
-    return Obx(
-      () => BaseTextField(
-        textEditingController: controller.passwordController,
-        labelText: AppStrings.password,
-        hintText: AppStrings.enterYourPassword,
-        prefixIcon: const Icon(Icons.lock),
-        keyboardType: TextInputType.visiblePassword,
-        isTextObscure: controller.isPasswordObscure.value,
-        suffixIcon: IconButton(
-          onPressed: () {
-            controller.isPasswordObscure.value =
-                !controller.isPasswordObscure.value;
-          },
-          icon: controller.isPasswordObscure.value
-              ? Icon(Icons.visibility)
-              : Icon(Icons.visibility_off),
+                        Expanded(flex: 2, child: SizedBox.shrink()),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  login(BuildContext context) {
-    return SizedBox(
-      width: spacerSize250,
-      child: BaseButton(
+  Widget emailField() {
+    return BaseTextField(
+      controller: controller.emailController,
+      hintText: AppStrings.email,
+      prefixIcon: Icon(Icons.email_outlined, color: AppColors.lightPink, size: spacerSize20),
+      validator: controller.emailValidator,
+    );
+  }
+
+  Widget passwordField() {
+    return BaseTextField(
+      controller: controller.passwordController,
+      hintText: AppStrings.password,
+      prefixIcon: Icon(Icons.lock_outline_rounded, color: AppColors.lightPink, size: spacerSize20),
+      obscureText: controller.isPasswordObscure.value,
+      validator: controller.passwordValidator,
+      suffixIcon: Obx(
+        () => IconButton(
+          onPressed: () {
+            controller.isPasswordObscure.value = !controller.isPasswordObscure.value;
+          },
+          icon: Icon(
+            controller.isPasswordObscure.value ? Icons.visibility : Icons.visibility_off,
+            color: AppColors.lightPink,
+            size: spacerSize20,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget loginBtn(BuildContext context) {
+    return Obx(
+      () => BaseButton(
         onPressed: () {
           if (controller.formKey.currentState!.validate()) {
-            if (defaultTargetPlatform == TargetPlatform.linux) {
+            if (defaultTargetPlatform == TargetPlatform.linux ||
+                defaultTargetPlatform == TargetPlatform.windows) {
               controller.signInWithEmailRest(
                 controller.emailController.text,
                 controller.passwordController.text,
@@ -322,13 +144,139 @@ class LoginScreen extends GetWidget<LoginViewModel> {
         },
         backgroundColor: AppColors.darkBlue,
         buttonLabel: AppStrings.login,
-        fontSize: fontSize18,
+        fontSize: fontSize16,
         textColor: Colors.white,
+        showLoader: controller.isLoading.value,
       ),
     );
   }
 
-  isMobile(BuildContext context) {
+  Widget doNotHaveAccount(BuildContext context) {
+    return RichText(
+      text: TextSpan(
+        text: AppStrings.dontHaveAccount,
+        style: TextStyle(color: AppColors.greyColor, fontSize: fontSize16),
+        children: [
+          TextSpan(
+            text: AppStrings.register,
+            style: TextStyle(
+              color: AppColors.lightPurple,
+              fontSize: fontSize16,
+              fontWeight: FontWeight.w500,
+            ),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                Navigator.pushNamed(context, Routes.signUp);
+              },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget orText() {
+    return Row(
+      children: [
+        Expanded(
+          child: Image.asset(AppAssets.waveLine, fit: BoxFit.fill, width: spacerSize18),
+        ),
+        BaseText(text: AppStrings.or, textColor: AppColors.greyColor),
+        Expanded(
+          child: Image.asset(AppAssets.waveLine, fit: BoxFit.fill, width: spacerSize18),
+        ),
+      ],
+    );
+  }
+
+  Widget googleAndGuestBtn(BuildContext context) {
+    return Row(
+      spacing: spacerSize5,
+      children: [
+        IconButton(
+          style: IconButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size(0, 0)),
+
+          onPressed: () {
+            controller.sharedPreferences!.clear();
+            defaultTargetPlatform == TargetPlatform.windows
+                ? controller.signInWithGoogleWindow().then((value) {
+                    navigateToHome(value);
+                  })
+                : controller.signInWithGoogle().then((value) {
+                    navigateToHome(value);
+                  });
+          },
+          tooltip: AppStrings.logInWithGoogle,
+          icon: Container(
+            padding: EdgeInsets.all(spacerSize12),
+            decoration: BoxDecoration(
+              color: AppColors.darkSlatePurple,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(spacerSize20),
+                bottomLeft: Radius.circular(spacerSize20),
+                topRight: Radius.circular(spacerSize10),
+                bottomRight: Radius.circular(spacerSize10),
+              ),
+            ),
+            child: Row(
+              spacing: spacerSize8,
+              children: [
+                Image.asset(AppAssets.googleIcon, height: spacerSize20, width: spacerSize20),
+                Text(
+                  AppStrings.logInWithGoogle,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white, fontSize: fontSize14),
+                ),
+              ],
+            ),
+          ),
+        ),
+        IconButton(
+          style: IconButton.styleFrom(padding: EdgeInsets.zero, minimumSize: Size(0, 0)),
+
+          onPressed: () {
+            controller.sharedPreferences!.setBool(AppKeys.isGuestLoggedIn, true);
+            Navigator.pushNamed(context, Routes.homeScreen);
+          },
+          tooltip: AppStrings.continueAsAGuest,
+          icon: Container(
+            padding: EdgeInsets.symmetric(horizontal: spacerSize24, vertical: spacerSize12),
+            decoration: BoxDecoration(
+              color: AppColors.darkSlatePurple,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(spacerSize10),
+                bottomLeft: Radius.circular(spacerSize10),
+                topRight: Radius.circular(spacerSize20),
+                bottomRight: Radius.circular(spacerSize20),
+              ),
+            ),
+            child: Text(
+              AppStrings.continueAsAGuest,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: fontSize14),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void navigateToHome(dynamic value) {
+    if (value != null) {
+      Navigator.pushNamedAndRemoveUntil(
+        Get.context!,
+        Routes.homeScreen,
+        (Route<dynamic> route) => false,
+      );
+    } else {
+      Navigator.pushNamedAndRemoveUntil(
+        Get.context!,
+        Routes.logIn,
+        (Route<dynamic> route) => false,
+      );
+    }
+  }
+
+  bool isMobile(BuildContext context) {
     return MediaQuery.of(context).size.width < 600;
   }
 }

@@ -1,7 +1,15 @@
-/*FontSize*/
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+var deviceWidth = MediaQuery.of(Get.context!).size.width;
+var deviceHeight = MediaQuery.of(Get.context!).size.height;
+
+final passwordRegExp = RegExp(
+  r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#\$%^&*(),.?":{}|<>]).{8,}$',
+);
+final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+
+const double fontSize13 = 13;
 const double fontSize14 = 14;
 const double fontSize16 = 16;
 const double fontSize18 = 18;
@@ -10,17 +18,18 @@ const double fontSize22 = 22;
 const double fontSize24 = 24;
 const double fontSize30 = 30;
 
-/*Size*/
-
 const double spacerSize0 = 0;
 const double spacerSize2 = 2;
+const double spacerSize3 = 3;
 const double spacerSize4 = 4;
 const double spacerSize5 = 5;
 const double spacerSize8 = 8;
+const double spacerSize9 = 9;
 const double spacerSize10 = 10;
 const double spacerSize12 = 12;
 const double spacerSize15 = 15;
 const double spacerSize16 = 16;
+const double spacerSize18 = 18;
 const double spacerSize20 = 20;
 const double spacerSize24 = 24;
 const double spacerSize25 = 25;
@@ -30,6 +39,7 @@ const double spacerSize40 = 40;
 const double spacerSize45 = 45;
 const double spacerSize48 = 48;
 const double spacerSize50 = 50;
+const double spacerSize53 = 53;
 const double spacerSize55 = 55;
 const double spacerSize60 = 60;
 const double spacerSize65 = 65;
@@ -61,8 +71,35 @@ const double spacerSize400 = 400;
 const double spacerSize500 = 500;
 const double spacerSize600 = 600;
 
-class BaseSnackBar {
-  static show({String title = '', String message = ''}) {
-    Get.snackbar(title, message, colorText: Colors.white);
+var extensions = [
+  'png',
+  'jpg',
+  'jpeg',
+  'gif',
+  'cr2',
+  'tiff',
+  'psd',
+  'dng',
+  'NEF',
+  'nrw',
+  'cr3',
+  'arw',
+  'srf',
+  'sr2',
+  'orf',
+  'raw',
+  'rw2',
+  'raf',
+  'dcr',
+  'k25',
+  'kdc',
+];
+
+const String appFontFamily = "Outfit";
+
+extension ToCapitalized on String {
+  String toCapitalized() {
+    if (isEmpty) return this;
+    return this[0].toUpperCase() + substring(1);
   }
 }
